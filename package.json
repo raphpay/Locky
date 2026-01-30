@@ -1,0 +1,24 @@
+{
+  "name": "Locky",
+  "version": "0.0.1",
+  "description": "Secure and private password manager",
+  "main": "main.js",
+  "author": "raphpay",
+  "license": "none",
+  "private": false,
+  "scripts": {
+    "dev": "concurrently \"yarn dev:frontend\" \"yarn dev:electron\"",
+    "dev:frontend": "cd frontend && yarn dev",
+    "dev:electron": "wait-on http://localhost:5173 && electron .",
+    "build": "cd frontend && yarn build",
+    "make": "electron-forge make",
+    "start": "electron-forge start"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^7.11.1",
+    "concurrently": "^9.2.1",
+    "elecron": "^0.0.1-security",
+    "electron": "^40.1.0",
+    "wait-on": "^9.0.3"
+  }
+}
