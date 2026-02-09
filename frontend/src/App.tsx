@@ -1,29 +1,23 @@
-import { useState } from "react";
+import { useNavigate } from "react-router";
 import "./App.css";
-import signIn from "./features/auth/signIn";
-
-import signUserOut from "./features/auth/signOut";
-import createUser from "./features/user/createUser";
-import generateRecoverySeed from "./features/recoverySeed/generateRecoverySeed";
-import SignIn from "./features/masterPassword/screens/SignIn";
+import Routes from "./features/navigation/Routes";
 
 function App() {
-  const [userID, setUserID] = useState<string | null>(null);
-  const [masterPassword, setMasterPassword] = useState<string>("");
+  const navigate = useNavigate();
 
-  async function handleSignOut() {
-    await signUserOut();
-    setUserID(null);
-    // setPhrase(null);
+  function handleLogIn() {
+    navigate(Routes.LOGIN);
+  }
+
+  function handleSignUp() {
+    navigate(Routes.SIGNUP);
   }
 
   return (
-    <>
-      <SignIn
-        masterPassword={masterPassword}
-        setMasterPassword={setMasterPassword}
-      />
-    </>
+    <div className="flex flex-col gap-2">
+      <button onClick={handleLogIn}>Log In</button>
+      <button onClick={handleSignUp}>Sign Up</button>
+    </div>
   );
 }
 

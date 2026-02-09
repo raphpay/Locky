@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import generateRecoverySeed from "../../recoverySeed/generateRecoverySeed";
 import signIn from "../../auth/signIn";
 import createUser from "../../user/createUser";
+import { useNavigate } from "react-router";
 
 // import signIn from "./features/auth/signIn";
 
@@ -11,7 +12,9 @@ import createUser from "../../user/createUser";
 
 interface Props {
   masterPassword: string;
+  userID: string | null;
   setMasterPassword: (password: string) => void;
+  setUserID: (userID: string | null) => void;
 }
 
 enum PhraseStatus {
@@ -21,7 +24,14 @@ enum PhraseStatus {
   COPIED_AND_REVEALED = "copied-and-revealed",
 }
 
-function SignIn({ masterPassword, setMasterPassword }: Props) {
+function SignUp({
+  masterPassword,
+  userID,
+  setMasterPassword,
+  setUserID,
+}: Props) {
+  const navigate = useNavigate();
+
   const [showPhrase, setShowPhrase] = useState<boolean>(false);
   const [phraseStatus, setPhraseStatus] = useState<PhraseStatus>(
     PhraseStatus.HIDDEN,
@@ -30,8 +40,6 @@ function SignIn({ masterPassword, setMasterPassword }: Props) {
     useState<string>("Copier la phrase");
   const [showInput, setShowInput] = useState<boolean>(false);
   const [phrase, setPhrase] = useState<string>("");
-  // ?? Do we need this here, or globally, or not at all ??
-  const [userID, setUserID] = useState<string | null>(null);
 
   function handleMnemonicCopy() {
     navigator.clipboard.writeText(phrase);
@@ -76,6 +84,10 @@ function SignIn({ masterPassword, setMasterPassword }: Props) {
     }
   }
 
+  function handleNavigateBack() {
+    navigate(-1);
+  }
+
   useEffect(() => {
     setTimeout(() => {
       const mnemonic = generateRecoverySeed();
@@ -86,7 +98,10 @@ function SignIn({ masterPassword, setMasterPassword }: Props) {
   }, []);
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-1 flex-col gap-2">
+      <button className="absolute top-2 left-2" onClick={handleNavigateBack}>
+        Retour
+      </button>
       <h1>Bonjour, et bienvenue sur Locky!</h1>
 
       {showPhrase && (
@@ -133,4 +148,4 @@ function SignIn({ masterPassword, setMasterPassword }: Props) {
   );
 }
 
-export default SignIn;
+export default SignUp;
