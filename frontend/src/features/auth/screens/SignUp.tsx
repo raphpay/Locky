@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import generateRecoverySeed from "../../recoverySeed/generateRecoverySeed";
-import createUser from "../../user/createUser";
+
 import { useNavigate } from "react-router";
 import ROUTES from "../../navigation/ROUTES";
 import AuthService from "../AuthService";
+import UserService from "../../user/UserService";
+import RecoverySeedService from "../../recoverySeed/RecoverySeedService";
 
 interface Props {
   masterPassword: string;
@@ -69,11 +70,11 @@ function SignUp({
       const userCred = await AuthService.signIn();
       setUserID(userCred);
 
-      const mnemonic = generateRecoverySeed();
+      const mnemonic = RecoverySeedService.generateRecoverySeed();
       setPhrase(mnemonic);
 
       if (userCred !== null)
-        await createUser(userCred, mnemonic, masterPassword);
+        await UserService.create(userCred, mnemonic, masterPassword);
 
       navigate(ROUTES.HOME);
     } catch (error) {

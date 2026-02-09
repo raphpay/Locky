@@ -1,14 +1,16 @@
 import { getAuth, signInAnonymously, signOut } from "firebase/auth";
-
 import CacheService from "../cache/CacheService";
 import CACHE_KEYS from "../cache/CACHE_KEYS";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase/init";
-import COLLECTIONS from "../firebase/collections";
-import SecurityService from "../securityService";
 import SessionManager from "../session/SessionManager";
+
 const AuthService = {
-  async login(masterPassword: string): Promise<boolean | null> {
+  /**
+   * Login to the application using a master password.
+   * @param masterPassword The master password to use for authentication.
+   */
+  async login(masterPassword: string) {
     const auth = getAuth();
 
     // 1. S'assurer qu'on est connecté à Firebase Auth AVANT de lire Firestore
@@ -49,10 +51,12 @@ const AuthService = {
     }
 
     SessionManager.setMasterKey(masterKey);
-
-    return true;
   },
 
+  /**
+   * Sign in anonymously using Firebase Authentication.
+   * @returns The user ID if successful, null otherwise.
+   */
   async signIn(): Promise<string | null> {
     const auth = getAuth();
 
@@ -66,6 +70,9 @@ const AuthService = {
     return null;
   },
 
+  /**
+   * Sign out using Firebase Authentication.
+   */
   async signOut() {
     const auth = getAuth();
     try {

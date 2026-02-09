@@ -15,11 +15,7 @@ function LogIn({ masterPassword, setMasterPassword }: Props) {
   }
 
   async function handleLogIn() {
-    const isLoggedIn = await AuthService.login(masterPassword);
-    if (!isLoggedIn) {
-      throw new Error("Invalid master password");
-    }
-
+    await AuthService.login(masterPassword);
     navigate(ROUTES.HOME);
   }
 
