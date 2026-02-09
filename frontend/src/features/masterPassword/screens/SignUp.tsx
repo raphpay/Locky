@@ -3,12 +3,7 @@ import generateRecoverySeed from "../../recoverySeed/generateRecoverySeed";
 import signIn from "../../auth/signIn";
 import createUser from "../../user/createUser";
 import { useNavigate } from "react-router";
-
-// import signIn from "./features/auth/signIn";
-
-// import signUserOut from "./features/auth/signOut";
-// import createUser from "./features/user/createUser";
-// import generateRecoverySeed from "./features/recoverySeed/generateRecoverySeed";
+import ROUTES from "../../navigation/ROUTES";
 
 interface Props {
   masterPassword: string;
@@ -79,6 +74,8 @@ function SignUp({
 
       if (userCred !== null)
         await createUser(userCred, mnemonic, masterPassword);
+
+      navigate(ROUTES.HOME);
     } catch (error) {
       console.error("Error signing in:", error);
     }

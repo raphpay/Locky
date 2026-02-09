@@ -1,8 +1,6 @@
-import { useEffect, useState } from "react";
-import generateRecoverySeed from "../../recoverySeed/generateRecoverySeed";
-import signIn from "../../auth/signIn";
-import createUser from "../../user/createUser";
 import { useNavigate } from "react-router";
+import logIn from "../../auth/logIn";
+import ROUTES from "../../navigation/ROUTES";
 
 // import signIn from "./features/auth/signIn";
 
@@ -25,10 +23,17 @@ function LogIn({
 }: Props) {
   const navigate = useNavigate();
 
-  async function handleLogIn() {}
-
   function handleNavigateBack() {
     navigate(-1);
+  }
+
+  async function handleLogIn() {
+    const isLoggedIn = await logIn(masterPassword);
+    if (!isLoggedIn) {
+      throw new Error("Invalid master password");
+    }
+
+    navigate(ROUTES.HOME);
   }
 
   return (

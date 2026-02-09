@@ -1,7 +1,8 @@
-enum Routes {
+enum ROUTES {
+  ROOT = "/",
   LOGIN = "/login",
   SIGNUP = "/signup",
   HOME = "/home",
 }
 
-export default Routes;
+export default ROUTES;

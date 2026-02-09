@@ -4,6 +4,7 @@ import { Routes } from "react-router";
 import App from "../../App";
 import SignUp from "../masterPassword/screens/SignUp";
 import LogIn from "../masterPassword/screens/LogIn";
+import Home from "../home/screens/Home";
 
 function Navigation() {
   const [masterPassword, setMasterPassword] = useState<string>("");
@@ -36,6 +37,8 @@ function Navigation() {
           />
         }
       />
+
+      <Route path="/home" element={<Home />} />
 
       <Route />
     </Routes>
