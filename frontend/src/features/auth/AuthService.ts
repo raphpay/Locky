@@ -4,6 +4,7 @@ import CACHE_KEYS from "../cache/CACHE_KEYS";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase/init";
 import SessionManager from "../session/SessionManager";
+import COLLECTIONS from "../firebase/COLLECTIONS";
 
 const AuthService = {
   /**
@@ -16,7 +17,6 @@ const AuthService = {
     // 1. S'assurer qu'on est connecté à Firebase Auth AVANT de lire Firestore
     // Si déjà connecté, Firebase récupère la session, sinon il en crée une nouvelle.
     if (!auth.currentUser) {
-      console.log("if");
       await signInAnonymously(auth);
     }
 
@@ -41,7 +41,7 @@ const AuthService = {
     // 3. Ici tu utiliseras ton SecurityService pour déchiffrer la wrappedKey
     // avec le masterPassword reçu en argument...
 
-    const masterKey = SecurityService.unlockMasterKey(
+    const masterKey = SessionManager.unlockMasterKey(
       data.wrappedKey,
       masterPassword,
     );
