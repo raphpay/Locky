@@ -10,6 +10,7 @@ import ROUTES from "./ROUTES";
 import { useNavigate } from "react-router";
 import CacheService from "../cache/CacheService";
 import CACHE_KEYS from "../cache/CACHE_KEYS";
+import CreatePassword from "../password/screens/CreatePassword";
 
 function Navigation() {
   const navigate = useNavigate();
@@ -54,6 +55,7 @@ function Navigation() {
       />
 
       <Route path="/home" element={<Home />} />
+      <Route path="/home/create-password" element={<CreatePassword />} />
 
       <Route />
     </Routes>

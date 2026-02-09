@@ -1,9 +1,8 @@
 import { useNavigate } from "react-router";
-import ROUTES from "../../navigation/ROUTES";
+import ROUTES from "../../navigation/Routes";
 import { useEffect, useState } from "react";
 import CacheService from "../../cache/CacheService";
 import CACHE_KEYS from "../../cache/CACHE_KEYS";
-import AuthService from "../../auth/AuthService";
 
 function Home() {
   const navigate = useNavigate();
