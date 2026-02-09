@@ -4,6 +4,7 @@ import signUserOut from "../../auth/signOut";
 import { useEffect, useState } from "react";
 import CacheService from "../../cache/CacheService";
 import CACHE_KEYS from "../../cache/CACHE_KEYS";
+import SessionManager from "../../session/SessionManager";
 
 function Home() {
   const navigate = useNavigate();

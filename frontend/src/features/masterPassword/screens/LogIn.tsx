@@ -10,17 +10,10 @@ import ROUTES from "../../navigation/ROUTES";
 
 interface Props {
   masterPassword: string;
-  userID: string | null;
   setMasterPassword: (password: string) => void;
-  setUserID: (userID: string | null) => void;
 }
 
-function LogIn({
-  masterPassword,
-  userID,
-  setMasterPassword,
-  setUserID,
-}: Props) {
+function LogIn({ masterPassword, setMasterPassword }: Props) {
   const navigate = useNavigate();
 
   function handleNavigateBack() {
@@ -41,10 +34,10 @@ function LogIn({
       <button className="absolute top-2 left-2" onClick={handleNavigateBack}>
         Retour
       </button>
-      <h1>Bonjour, et bienvenue sur Locky!</h1>
+      <h2 className="font-bold text-2xl">Les mots de passe sont bloqués</h2>
 
       <div className="flex flex-col justify-center items-center">
-        <p>Entrez maintenant votre mot de passe :</p>
+        <p>Entrez votre mot de passe pour dévérouiller l'app</p>
         <input
           value={masterPassword}
           onChange={(e) => setMasterPassword(e.target.value)}
@@ -56,15 +49,6 @@ function LogIn({
 
       {masterPassword !== "" && (
         <button onClick={handleLogIn}>Entrer dans l'application</button>
-      )}
-
-      {userID && (
-        <div className="flex flex-col items-center gap-2">
-          <h2 className="text-start">
-            Vous êtes connecté en tant que {userID}.
-          </h2>
-          {/*<button onClick={handleSignOut}>Se déconnecter</button>*/}
-        </div>
       )}
     </div>
   );

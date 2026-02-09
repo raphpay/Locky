@@ -1,14 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Route } from "react-router";
 import { Routes } from "react-router";
 import App from "../../App";
 import SignUp from "../masterPassword/screens/SignUp";
 import LogIn from "../masterPassword/screens/LogIn";
 import Home from "../home/screens/Home";
+import SessionManager from "../session/SessionManager";
+import ROUTES from "./ROUTES";
+import { useNavigate } from "react-router";
+import CacheService from "../cache/CacheService";
+import CACHE_KEYS from "../cache/CACHE_KEYS";
 
 function Navigation() {
+  const navigate = useNavigate();
   const [masterPassword, setMasterPassword] = useState<string>("");
   const [userID, setUserID] = useState<string | null>(null);
+
+  useEffect(() => {
+    const masterKey = SessionManager.getMasterKey();
+    if (!masterKey) {
+      navigate(ROUTES.ROOT);
+      const publicID = CacheService.retrieve(CACHE_KEYS.PUBLIC_ID);
+      if (publicID) {
+        navigate(ROUTES.LOGIN);
+      }
+    }
+  }, [navigate]);
 
   return (
     <Routes>
@@ -31,9 +48,7 @@ function Navigation() {
         element={
           <LogIn
             masterPassword={masterPassword}
-            userID={userID}
             setMasterPassword={setMasterPassword}
-            setUserID={setUserID}
           />
         }
       />
