@@ -1,13 +1,12 @@
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "../firebase/init";
 import CryptoJS from "crypto-js";
-import generateMasterKey from "../masterKey/generateMasterKey";
 import generateWrappedKey from "../wrappedKey/generateWrappedKey";
 import SessionManager from "../session/SessionManager";
 import CacheService from "../cache/CacheService";
 
-import COLLECTIONS from "../firebase/collections";
 import CACHE_KEYS from "../cache/CACHE_KEYS";
+import COLLECTIONS from "../firebase/COLLECTIONS";
 
 function generatePublicID(mnemonic: string): string {
   return CryptoJS.SHA256(mnemonic.trim().toLowerCase()).toString(
@@ -21,7 +20,7 @@ export default async function createUser(
   masterPassword: string,
 ) {
   const publicID = generatePublicID(mnemonic);
-  const masterKey = generateMasterKey(mnemonic);
+  const masterKey = SessionManager.generateMasterKey(mnemonic);
   const wrappedKey = generateWrappedKey(masterKey, masterPassword);
 
   // TODO: Change the first uid with a crypted uid after master password creation ( Issue #2 )
