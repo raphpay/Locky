@@ -11,20 +11,21 @@ function Home() {
 
   const id = CacheService.retrieve(CACHE_KEYS.PUBLIC_ID) as string;
 
+  function createPassword() {
+    navigate(ROUTES.CREATE_PASSWORD);
+  }
+
   useEffect(() => {
     setPublicID(id);
   }, [id]);
-
-  async function handleSignOut() {
-    await AuthService.signOut();
-    navigate(ROUTES.ROOT);
-  }
 
   return (
     <div className="flex flex-1 flex-col gap-2">
       <p>Home</p>
 
-      <button onClick={handleSignOut}>Sign Out</button>
+      <button className="absolute top-2 right-2" onClick={createPassword}>
+        + Create a password
+      </button>
 
       <p>Vous etes connecté en tant que {publicID}</p>
     </div>

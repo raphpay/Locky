@@ -4,7 +4,7 @@ import CACHE_KEYS from "../cache/CACHE_KEYS";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase/init";
 import SessionManager from "../session/SessionManager";
-import COLLECTIONS from "../firebase/COLLECTIONS";
+import COLLECTIONS from "../firebase/collections";
 
 const AuthService = {
   /**
@@ -36,7 +36,6 @@ const AuthService = {
     }
 
     const data = userSnap.data();
-    console.log("data", data, data.createdAt);
 
     // 3. Ici tu utiliseras ton SecurityService pour déchiffrer la wrappedKey
     // avec le masterPassword reçu en argument...

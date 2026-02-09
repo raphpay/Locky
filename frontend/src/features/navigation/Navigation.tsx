@@ -25,7 +25,7 @@ function Navigation() {
         navigate(ROUTES.LOGIN);
       }
     }
-  }, [navigate]);
+  }, []);
 
   return (
     <Routes>

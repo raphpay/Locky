@@ -1,6 +1,7 @@
 import * as bip39 from "@scure/bip39";
 import { wordlist as french } from "@scure/bip39/wordlists/french.js";
 import { Buffer } from "buffer";
+import CryptoJS from "crypto-js";
 
 // Private variable, not accessible from other tabs or the console
 let _masterKey: string | null = null;

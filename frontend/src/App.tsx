@@ -1,15 +1,17 @@
 import { useNavigate } from "react-router";
 import "./App.css";
-import ROUTES from "./features/navigation/ROUTES";
+import ROUTES from "./features/navigation/Routes";
 
 function App() {
   const navigate = useNavigate();
 
   function handleLogIn() {
+    console.log("1");
     navigate(ROUTES.LOGIN);
   }
 
   function handleSignUp() {
+    console.log("2");
     navigate(ROUTES.SIGNUP);
   }
 

@@ -5,6 +5,7 @@ import { db } from "../firebase/init";
 import COLLECTIONS from "../firebase/collections";
 import CacheService from "../cache/CacheService";
 import CACHE_KEYS from "../cache/CACHE_KEYS";
+import CryptoJS from "crypto-js";
 
 const UserService = {
   /**
