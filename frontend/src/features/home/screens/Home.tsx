@@ -1,10 +1,9 @@
 import { useNavigate } from "react-router";
 import ROUTES from "../../navigation/ROUTES";
-import signUserOut from "../../auth/signOut";
 import { useEffect, useState } from "react";
 import CacheService from "../../cache/CacheService";
 import CACHE_KEYS from "../../cache/CACHE_KEYS";
-import SessionManager from "../../session/SessionManager";
+import AuthService from "../../auth/AuthService";
 
 function Home() {
   const navigate = useNavigate();
@@ -17,7 +16,7 @@ function Home() {
   }, [id]);
 
   async function handleSignOut() {
-    signUserOut();
+    await AuthService.signOut();
     navigate(ROUTES.ROOT);
   }
 

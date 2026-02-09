@@ -1,12 +1,6 @@
 import { useNavigate } from "react-router";
-import logIn from "../../auth/logIn";
 import ROUTES from "../../navigation/ROUTES";
-
-// import signIn from "./features/auth/signIn";
-
-// import signUserOut from "./features/auth/signOut";
-// import createUser from "./features/user/createUser";
-// import generateRecoverySeed from "./features/recoverySeed/generateRecoverySeed";
+import AuthService from "../AuthService";
 
 interface Props {
   masterPassword: string;
@@ -21,7 +15,7 @@ function LogIn({ masterPassword, setMasterPassword }: Props) {
   }
 
   async function handleLogIn() {
-    const isLoggedIn = await logIn(masterPassword);
+    const isLoggedIn = await AuthService.login(masterPassword);
     if (!isLoggedIn) {
       throw new Error("Invalid master password");
     }

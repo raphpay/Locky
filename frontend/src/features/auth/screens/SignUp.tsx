@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import generateRecoverySeed from "../../recoverySeed/generateRecoverySeed";
-import signIn from "../../auth/signIn";
 import createUser from "../../user/createUser";
 import { useNavigate } from "react-router";
 import ROUTES from "../../navigation/ROUTES";
+import AuthService from "../AuthService";
 
 interface Props {
   masterPassword: string;
@@ -66,7 +66,7 @@ function SignUp({
 
   async function handleSignIn() {
     try {
-      const userCred = await signIn();
+      const userCred = await AuthService.signIn();
       setUserID(userCred);
 
       const mnemonic = generateRecoverySeed();
