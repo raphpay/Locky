@@ -1,8 +1,15 @@
 import useViewPasswordScreen from "../hooks/useViewPasswordScreen";
 
 function ViewPassword() {
-  const { data, isLoading, error, handleNavigateBack } =
-    useViewPasswordScreen();
+  const {
+    data,
+    isLoading,
+    error,
+    isHovered,
+    setIsHovered,
+    handleNavigateBack,
+    handleCopyPassword,
+  } = useViewPasswordScreen();
 
   if (isLoading)
     return (
@@ -14,7 +21,7 @@ function ViewPassword() {
   if (error)
     return (
       <div className="h-full w-full flex items-center justify-center">
-        Error while loading passwords
+        Error while loading password
       </div>
     );
 
@@ -26,10 +33,34 @@ function ViewPassword() {
 
       {data ? (
         <div className="flex flex-col gap-2">
-          <p>Website: {data.website}</p>
-          <p>Username: {data.username}</p>
-          <p>Password: {data.password}</p>
-          <p>Notes: {data.notes}</p>
+          <div>
+            <span className="text-sm text-gray-500 block">Site web</span>
+            <p className="font-medium">{data.website}</p>
+          </div>
+          <div>
+            <span className="text-sm text-gray-500 block">Identifiant</span>
+            <p className="font-medium">{data.username}</p>
+          </div>
+
+          <div>
+            <span className="text-sm text-gray-500 block">Password</span>
+            <div
+              className="p-2 rounded cursor-copy transition-all duration-200"
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+              onClick={handleCopyPassword}
+            >
+              {/* Logique d'affichage conditionnel */}
+              <p className="font-mono text-lg tracking-wider">
+                {isHovered ? data.password : "••••••••••••"}
+              </p>
+            </div>
+          </div>
+
+          <div>
+            <span className="text-sm text-gray-500 block">Notes</span>
+            <p className="font-medium">{data.notes}</p>
+          </div>
         </div>
       ) : (
         <p>Données invalides</p>
