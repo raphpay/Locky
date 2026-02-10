@@ -9,7 +9,10 @@ function ViewPassword() {
     isHovered,
     setIsHovered,
     handleNavigateBack,
+    handleCopyWebsite,
+    handleCopyUsername,
     handleCopyPassword,
+    handleCopyNotes,
   } = useViewPasswordScreen();
 
   if (isLoading)
@@ -36,11 +39,15 @@ function ViewPassword() {
         <div className="flex flex-col gap-2">
           <div>
             <span className="text-sm text-gray-500 block">Site web</span>
-            <p className="font-medium">{data.website}</p>
+            <div className="cursor-copy" onClick={handleCopyWebsite}>
+              <p className="font-medium">{data.website}</p>
+            </div>
           </div>
           <div>
             <span className="text-sm text-gray-500 block">Identifiant</span>
-            <p className="font-medium">{data.username}</p>
+            <div className="cursor-copy" onClick={handleCopyUsername}>
+              <p className="font-medium">{data.username}</p>
+            </div>
           </div>
 
           <div>
@@ -60,7 +67,9 @@ function ViewPassword() {
 
           <div>
             <span className="text-sm text-gray-500 block">Notes</span>
-            <p className="font-medium">{data.notes}</p>
+            <div className="cursor-copy" onClick={handleCopyNotes}>
+              <p className="font-medium">{data.notes}</p>
+            </div>
           </div>
         </div>
       ) : (
