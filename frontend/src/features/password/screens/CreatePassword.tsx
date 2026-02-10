@@ -1,8 +1,3 @@
-import { useNavigate } from "react-router";
-import ROUTES from "../../navigation/Routes";
-import { useState } from "react";
-import type PasswordFormData from "../model/PasswordFormData";
-import savePassword from "../api/savePassword";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -10,59 +5,19 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "../../../ui/components/radix/AlertDialog";
-
-enum DIALOG_STATUS {
-  SUCCESS = "SUCCESS",
-  ERROR = "ERROR",
-}
+import useCreatePasswordScreen from "../hooks/useCreatePasswordScreen";
 
 function CreatePassword() {
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState<PasswordFormData>({
-    username: "",
-    password: "",
-    website: "",
-    notes: "",
-  });
-  const [sendButtonDisabled, setSendButtonDisabled] = useState<boolean>(false);
-  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
-  const [dialogTitle, setDialogTitle] = useState<string>("");
-  const [dialogDescription, setDialogDescription] = useState<string>("");
-
-  function handleNavigateBack() {
-    navigate(ROUTES.HOME);
-  }
-
-  function handleDialogOpen(status: DIALOG_STATUS) {
-    switch (status) {
-      case DIALOG_STATUS.SUCCESS:
-        setDialogTitle("Succès");
-        setDialogDescription("Mot de passe créé avec succès.");
-        break;
-      case DIALOG_STATUS.ERROR:
-        setDialogTitle("Erreur");
-        setDialogDescription(
-          "Une erreur s'est produite lors de la création du mot de passe.",
-        );
-        break;
-    }
-    setIsDialogOpen(true);
-  }
-
-  async function handleSubmit() {
-    setSendButtonDisabled(true);
-    try {
-      await savePassword(formData);
-      handleDialogOpen(DIALOG_STATUS.SUCCESS);
-      setSendButtonDisabled(false);
-      setTimeout(() => {
-        navigate(ROUTES.HOME);
-      }, 1500);
-    } catch (error) {
-      console.error("Error creating password:", error);
-      setSendButtonDisabled(false);
-    }
-  }
+  const {
+    formData,
+    setFormData,
+    sendButtonDisabled,
+    isDialogOpen,
+    dialogTitle,
+    dialogDescription,
+    handleNavigateBack,
+    handleSubmit,
+  } = useCreatePasswordScreen();
 
   return (
     <div className="flex flex-1 flex-col gap-2">
