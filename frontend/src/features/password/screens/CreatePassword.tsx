@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router";
 import ROUTES from "../../navigation/Routes";
 import { useState } from "react";
-import type FormData from "../model/PasswordFormData";
+import type PasswordFormData from "../model/PasswordFormData";
 import savePassword from "../savePassword";
 import {
   AlertDialog,
@@ -18,7 +18,7 @@ enum DIALOG_STATUS {
 
 function CreatePassword() {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<PasswordFormData>({
     username: "",
     password: "",
     website: "",

@@ -1,22 +1,40 @@
 import { useNavigate } from "react-router";
 import ROUTES from "../../navigation/Routes";
-import { useEffect, useState } from "react";
-import CacheService from "../../cache/CacheService";
-import CACHE_KEYS from "../../cache/CACHE_KEYS";
+import { useQuery } from "@tanstack/react-query";
+import QUERY_KEYS from "../../cache/QUERY_KEYS";
+import { fetchPasswords } from "../../password/fetchPasswords";
 
 function Home() {
   const navigate = useNavigate();
-  const [publicID, setPublicID] = useState<string | null>(null);
 
-  const id = CacheService.retrieve(CACHE_KEYS.PUBLIC_ID) as string;
+  const {
+    data: passwords,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: [QUERY_KEYS.PASSWORDS],
+    queryFn: () => fetchPasswords(),
+  });
 
   function createPassword() {
     navigate(ROUTES.CREATE_PASSWORD);
   }
 
-  useEffect(() => {
-    setPublicID(id);
-  }, [id]);
+  if (isLoading)
+    return (
+      <div className="h-full w-full flex items-center justify-center">
+        Loading...
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className="h-full w-full flex items-center justify-center">
+        Error while loading passwords
+      </div>
+    );
+
+  console.log("data", passwords);
 
   return (
     <div className="flex flex-1 flex-col gap-2">
@@ -26,7 +44,25 @@ function Home() {
         + Create a password
       </button>
 
-      <p>Vous etes connecté en tant que {publicID}</p>
+      <div className="flex flex-col gap-2">
+        {passwords?.length === 0 ? (
+          <p>No passwords found</p>
+        ) : (
+          passwords?.map((password, index) => (
+            <div key={password.id ?? index} className="flex items-center gap-2">
+              <p>{password.username}</p>
+              <button
+                className="text-blue-500"
+                onClick={() =>
+                  navigate(ROUTES.VIEW_PASSWORD, { state: password })
+                }
+              >
+                View
+              </button>
+            </div>
+          ))
+        )}
+      </div>
     </div>
   );
 }
