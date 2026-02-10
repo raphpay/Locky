@@ -2,6 +2,11 @@ import { useLocation } from "react-router";
 import { usePasswordQuery } from "./usePassword";
 import { useNavigate } from "react-router";
 import { useState } from "react";
+import { toast } from "sonner";
+
+enum TOAST_MESSAGE {
+  PASSWORD_COPIED = "Le mot de passe a été copié.",
+}
 
 export default function useViewPasswordScreen() {
   const location = useLocation();
@@ -17,7 +22,7 @@ export default function useViewPasswordScreen() {
   function handleCopyPassword() {
     if (data) {
       navigator.clipboard.writeText(data.password);
-      // TODO: Show a toast message indicating that the password has been copied
+      toast.success(TOAST_MESSAGE.PASSWORD_COPIED, { position: "top-center" });
     }
   }
 

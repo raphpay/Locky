@@ -1,3 +1,4 @@
+import { Toaster } from "../../../ui/components/radix/Sonner";
 import useViewPasswordScreen from "../hooks/useViewPasswordScreen";
 
 function ViewPassword() {
@@ -65,6 +66,8 @@ function ViewPassword() {
       ) : (
         <p>Données invalides</p>
       )}
+
+      <Toaster />
     </div>
   );
 }
