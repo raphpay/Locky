@@ -34,8 +34,6 @@ function Home() {
       </div>
     );
 
-  console.log("data", passwords);
-
   return (
     <div className="flex flex-1 flex-col gap-2">
       <p>Home</p>

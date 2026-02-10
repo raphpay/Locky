@@ -4,10 +4,11 @@ import CacheService from "../cache/CacheService";
 import SessionManager from "../session/SessionManager";
 import { db } from "../firebase/init";
 import COLLECTIONS from "../firebase/collections";
+import SecurityService from "../security/SecurityService";
+import type FIRPasswordDecrypted from "./model/FIRPasswordDecrypted";
+import type FIRPasswordEncrypted from "./model/FIRPasswordEncrypted";
 
-import type PasswordFormData from "./model/PasswordFormData";
-
-export async function fetchPasswords(): Promise<PasswordFormData[] | null> {
+export async function fetchPasswords(): Promise<FIRPasswordDecrypted[] | null> {
   const masterKey = SessionManager.getMasterKey();
   const publicID = CacheService.retrieve(CACHE_KEYS.PUBLIC_ID) as string;
 
@@ -21,14 +22,21 @@ export async function fetchPasswords(): Promise<PasswordFormData[] | null> {
     publicID,
     COLLECTIONS.PASSWORDS,
   );
+
   const snapshot = await getDocs(colRef);
 
   return snapshot.docs.map((doc) => {
-    const data = doc.data() as PasswordFormData;
-    // TODO: Decrypt at least username
-    return {
+    const data = doc.data() as FIRPasswordEncrypted;
+    const decrypted: FIRPasswordDecrypted = {
       id: doc.id,
-      ...data,
+      username: SecurityService.decryptData(data.username_enc, masterKey),
+      password: data.password_enc,
+      website: SecurityService.decryptData(data.website_enc, masterKey),
+      notes: data.notes_enc
+        ? SecurityService.decryptData(data.notes_enc, masterKey)
+        : "",
     };
-  }) as PasswordFormData[];
+
+    return decrypted;
+  });
 }
