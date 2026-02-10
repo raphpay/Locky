@@ -1,13 +1,8 @@
 import { useNavigate } from "react-router";
 import ROUTES from "../../navigation/Routes";
 import { useState } from "react";
-
-interface FormData {
-  username: string;
-  password: string;
-  website: string;
-  note: string;
-}
+import type FormData from "../model/PasswordFormData";
+import savePassword from "../savePassword";
 
 function CreatePassword() {
   const navigate = useNavigate();
@@ -15,7 +10,7 @@ function CreatePassword() {
     username: "",
     password: "",
     website: "",
-    note: "",
+    notes: "",
   });
 
   function handleNavigateBack() {
@@ -24,9 +19,9 @@ function CreatePassword() {
 
   async function handleSubmit() {
     try {
-      // TODO: Implement password creation logic
-      console.log("Password created:", formData);
-      // navigate(ROUTES.HOME);
+      await savePassword(formData);
+      // TODO: Add a success message or redirect to a confirmation page
+      navigate(ROUTES.HOME);
     } catch (error) {
       console.error("Error creating password:", error);
     }
@@ -77,8 +72,8 @@ function CreatePassword() {
           id="note"
           name="note"
           placeholder="Notes ( optionnel )"
-          value={formData.note}
-          onChange={(e) => setFormData({ ...formData, note: e.target.value })}
+          value={formData.notes}
+          onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
         />
         <button type="button" onClick={handleSubmit}>
           Create Password
