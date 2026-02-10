@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 
 import { useNavigate } from "react-router";
-import ROUTES from "../../navigation/ROUTES";
+
 import AuthService from "../AuthService";
 import UserService from "../../user/UserService";
 import RecoverySeedService from "../../recoverySeed/RecoverySeedService";
+import ROUTES from "../../navigation/Routes";
 
 interface Props {
   masterPassword: string;
@@ -76,6 +77,7 @@ function SignUp({
       if (userCred !== null)
         await UserService.create(userCred, mnemonic, masterPassword);
 
+      console.log("1", userCred);
       navigate(ROUTES.HOME);
     } catch (error) {
       console.error("Error signing in:", error);
@@ -88,7 +90,7 @@ function SignUp({
 
   useEffect(() => {
     setTimeout(() => {
-      const mnemonic = generateRecoverySeed();
+      const mnemonic = RecoverySeedService.generateRecoverySeed();
       setPhrase(mnemonic);
       setPhraseStatus(PhraseStatus.SHOWN);
       setShowPhrase(true);

@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router";
 import ROUTES from "../../navigation/ROUTES";
 import AuthService from "../AuthService";
+import CacheService from "../../cache/CacheService";
 
 interface Props {
   masterPassword: string;
@@ -11,7 +12,7 @@ function LogIn({ masterPassword, setMasterPassword }: Props) {
   const navigate = useNavigate();
 
   function handleNavigateBack() {
-    navigate(-1);
+    navigate(ROUTES.ROOT);
   }
 
   async function handleLogIn() {
@@ -19,10 +20,19 @@ function LogIn({ masterPassword, setMasterPassword }: Props) {
     navigate(ROUTES.HOME);
   }
 
+  async function handleForceSignOut() {
+    await AuthService.signOut();
+    CacheService.clear();
+    navigate(ROUTES.ROOT);
+  }
+
   return (
     <div className="flex flex-col gap-2">
       <button className="absolute top-2 left-2" onClick={handleNavigateBack}>
         Retour
+      </button>
+      <button className="absolute top-2 right-2" onClick={handleForceSignOut}>
+        Force Sign out
       </button>
       <h2 className="font-bold text-2xl">Les mots de passe sont bloqués</h2>
 
