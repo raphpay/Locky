@@ -3,6 +3,19 @@ import ROUTES from "../../navigation/Routes";
 import { useState } from "react";
 import type FormData from "../model/PasswordFormData";
 import savePassword from "../savePassword";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "../../../ui/components/radix/AlertDialog";
+
+enum DIALOG_STATUS {
+  SUCCESS = "SUCCESS",
+  ERROR = "ERROR",
+}
 
 function CreatePassword() {
   const navigate = useNavigate();
@@ -12,16 +25,37 @@ function CreatePassword() {
     website: "",
     notes: "",
   });
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+  const [dialogTitle, setDialogTitle] = useState<string>("");
+  const [dialogDescription, setDialogDescription] = useState<string>("");
 
   function handleNavigateBack() {
     navigate(ROUTES.HOME);
   }
 
+  function handleDialogOpen(status: DIALOG_STATUS) {
+    switch (status) {
+      case DIALOG_STATUS.SUCCESS:
+        setDialogTitle("Succès");
+        setDialogDescription("Mot de passe créé avec succès.");
+        break;
+      case DIALOG_STATUS.ERROR:
+        setDialogTitle("Erreur");
+        setDialogDescription(
+          "Une erreur s'est produite lors de la création du mot de passe.",
+        );
+        break;
+    }
+    setIsDialogOpen(true);
+  }
+
   async function handleSubmit() {
     try {
       await savePassword(formData);
-      // TODO: Add a success message or redirect to a confirmation page
-      navigate(ROUTES.HOME);
+      handleDialogOpen(DIALOG_STATUS.SUCCESS);
+      setTimeout(() => {
+        navigate(ROUTES.HOME);
+      }, 1500);
     } catch (error) {
       console.error("Error creating password:", error);
     }
@@ -79,6 +113,15 @@ function CreatePassword() {
           Create Password
         </button>
       </form>
+
+      <AlertDialog defaultOpen={false} open={isDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{dialogTitle}</AlertDialogTitle>
+            <AlertDialogDescription>{dialogDescription}</AlertDialogDescription>
+          </AlertDialogHeader>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
