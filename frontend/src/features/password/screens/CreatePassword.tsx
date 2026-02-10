@@ -7,7 +7,6 @@ import {
   AlertDialog,
   AlertDialogContent,
   AlertDialogDescription,
-  AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
 } from "../../../ui/components/radix/AlertDialog";
@@ -25,6 +24,7 @@ function CreatePassword() {
     website: "",
     notes: "",
   });
+  const [sendButtonDisabled, setSendButtonDisabled] = useState<boolean>(false);
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [dialogTitle, setDialogTitle] = useState<string>("");
   const [dialogDescription, setDialogDescription] = useState<string>("");
@@ -50,14 +50,17 @@ function CreatePassword() {
   }
 
   async function handleSubmit() {
+    setSendButtonDisabled(true);
     try {
       await savePassword(formData);
       handleDialogOpen(DIALOG_STATUS.SUCCESS);
+      setSendButtonDisabled(false);
       setTimeout(() => {
         navigate(ROUTES.HOME);
       }, 1500);
     } catch (error) {
       console.error("Error creating password:", error);
+      setSendButtonDisabled(false);
     }
   }
 
@@ -109,7 +112,11 @@ function CreatePassword() {
           value={formData.notes}
           onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
         />
-        <button type="button" onClick={handleSubmit}>
+        <button
+          type="button"
+          onClick={handleSubmit}
+          disabled={sendButtonDisabled}
+        >
           Create Password
         </button>
       </form>
