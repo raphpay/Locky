@@ -1,24 +1,13 @@
-import { useNavigate } from "react-router";
-import ROUTES from "../../navigation/Routes";
-import { useQuery } from "@tanstack/react-query";
-import QUERY_KEYS from "../../cache/QUERY_KEYS";
-import { fetchPasswords } from "../../password/fetchPasswords";
+import useHomeScreen from "../hooks/useHomeScreen";
 
 function Home() {
-  const navigate = useNavigate();
-
   const {
-    data: passwords,
+    passwords,
     isLoading,
     error,
-  } = useQuery({
-    queryKey: [QUERY_KEYS.PASSWORDS],
-    queryFn: () => fetchPasswords(),
-  });
-
-  function createPassword() {
-    navigate(ROUTES.CREATE_PASSWORD);
-  }
+    createPassword,
+    navigateToViewPassword,
+  } = useHomeScreen();
 
   if (isLoading)
     return (
@@ -51,9 +40,7 @@ function Home() {
               <p>{password.username}</p>
               <button
                 className="text-blue-500"
-                onClick={() =>
-                  navigate(ROUTES.VIEW_PASSWORD, { state: password })
-                }
+                onClick={() => navigateToViewPassword(password.id)}
               >
                 View
               </button>

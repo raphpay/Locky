@@ -2,7 +2,7 @@ import { useNavigate } from "react-router";
 import ROUTES from "../../navigation/Routes";
 import { useState } from "react";
 import type PasswordFormData from "../model/PasswordFormData";
-import savePassword from "../savePassword";
+import savePassword from "../api/savePassword";
 import {
   AlertDialog,
   AlertDialogContent,
