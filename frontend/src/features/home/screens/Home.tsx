@@ -1,3 +1,5 @@
+import PasswordCard from "../../password/components/PasswordCard";
+import type FIRPasswordDecrypted from "../../password/model/FIRPasswordDecrypted";
 import useHomeScreen from "../hooks/useHomeScreen";
 
 function Home() {
@@ -24,29 +26,30 @@ function Home() {
     );
 
   return (
-    <div className="flex flex-1 flex-col gap-2">
-      <p>Home</p>
-
-      <button className="absolute top-2 right-2" onClick={createPassword}>
+    <div className="flex flex-col h-full p-4">
+      <button
+        className="absolute top-4 right-4 rounded-md"
+        onClick={createPassword}
+      >
         + Create a password
       </button>
 
-      <div className="flex flex-col gap-2">
-        {passwords?.length === 0 ? (
-          <p>No passwords found</p>
-        ) : (
-          passwords?.map((password, index) => (
-            <div key={password.id ?? index} className="flex items-center gap-2">
-              <p>{password.username}</p>
-              <button
-                className="text-blue-500"
-                onClick={() => navigateToViewPassword(password.id)}
-              >
-                View
-              </button>
-            </div>
-          ))
-        )}
+      <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
+        <div className="flex flex-col gap-2">
+          {passwords?.length === 0 ? (
+            <p className="text-center text-gray-500 mt-10">
+              No passwords found
+            </p>
+          ) : (
+            passwords?.map((password, index) => (
+              <PasswordCard
+                password={password}
+                key={password.id ?? index}
+                navigateToViewPassword={navigateToViewPassword}
+              />
+            ))
+          )}
+        </div>
       </div>
     </div>
   );
