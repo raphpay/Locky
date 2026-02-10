@@ -1,4 +1,5 @@
-export default interface PasswordFormData {
+export default interface FIRPasswordDecrypted {
+  id: string;
   username: string;
   password: string;
   website: string;

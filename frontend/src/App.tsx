@@ -6,12 +6,10 @@ function App() {
   const navigate = useNavigate();
 
   function handleLogIn() {
-    console.log("1");
     navigate(ROUTES.LOGIN);
   }
 
   function handleSignUp() {
-    console.log("2");
     navigate(ROUTES.SIGNUP);
   }
 
