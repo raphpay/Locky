@@ -34,6 +34,7 @@ export async function fetchPassword(id: string): Promise<FIRPasswordDecrypted> {
 
   return {
     id: docSnap.id,
+    title: SecurityService.decryptData(data.title_enc, masterKey),
     username: SecurityService.decryptData(data.username_enc, masterKey),
     password: SecurityService.decryptData(data.password_enc, masterKey),
     website: SecurityService.decryptData(data.website_enc, masterKey),
