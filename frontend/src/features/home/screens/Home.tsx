@@ -1,5 +1,6 @@
+import { Toaster } from "../../../ui/components/radix/Sonner";
+import { Spinner } from "../../../ui/components/radix/Spinner";
 import PasswordCard from "../../password/components/PasswordCard";
-import type FIRPasswordDecrypted from "../../password/model/FIRPasswordDecrypted";
 import useHomeScreen from "../hooks/useHomeScreen";
 
 function Home() {
@@ -7,8 +8,12 @@ function Home() {
     passwords,
     isLoading,
     error,
+    fileRef,
+    isSendingPasswords,
     createPassword,
     navigateToViewPassword,
+    handleImport,
+    handleFileChange,
   } = useHomeScreen();
 
   if (isLoading)
@@ -27,12 +32,13 @@ function Home() {
 
   return (
     <div className="flex flex-col h-full p-4">
-      <button
-        className="absolute top-4 right-4 rounded-md"
-        onClick={createPassword}
-      >
-        + Create a password
-      </button>
+      <div className="flex gap-2 absolute top-4 right-4">
+        <button className="rounded-md" onClick={createPassword}>
+          + Create a password
+        </button>
+
+        <button onClick={handleImport}>Importer des mots de passe</button>
+      </div>
 
       <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
         <div className="flex flex-col gap-2">
@@ -51,6 +57,28 @@ function Home() {
           )}
         </div>
       </div>
+
+      <input
+        type="file"
+        ref={fileRef}
+        onChange={handleFileChange}
+        className="hidden"
+        accept=".csv"
+      />
+
+      <Toaster />
+
+      {isSendingPasswords && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-[1px]">
+          {/* Box blanche ou transparente pour le spinner */}
+          <div className="bg-white p-6 rounded-xl shadow-xl flex flex-col items-center gap-3">
+            <Spinner className="size-10" />
+            <p className="text-sm font-medium text-gray-700">
+              Traitement en cours...
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
