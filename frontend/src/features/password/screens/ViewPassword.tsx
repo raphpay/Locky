@@ -1,3 +1,13 @@
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "../../../ui/components/radix/AlertDialog";
 import { Toaster } from "../../../ui/components/radix/Sonner";
 import useViewPasswordScreen from "../hooks/useViewPasswordScreen";
 
@@ -13,12 +23,15 @@ function ViewPassword() {
     editingData,
     setEditingData,
     isSaveButtonDisabled,
+    showDeletionAlert,
+    setShowDeletionAlert,
     handleNavigateBack,
     handleCopyWebsite,
     handleCopyUsername,
     handleCopyPassword,
     handleCopyNotes,
     handleSave,
+    confirmDeletion,
   } = useViewPasswordScreen();
 
   if (isLoading)
@@ -142,7 +155,35 @@ function ViewPassword() {
         <p>Données invalides</p>
       )}
 
+      {isEditing && (
+        <button
+          className="bg-red-400 hover:bg-red-300 cursor-pointer"
+          onClick={() => setShowDeletionAlert(true)}
+        >
+          Supprimer
+        </button>
+      )}
+
       <Toaster />
+
+      <AlertDialog defaultOpen={false} open={showDeletionAlert}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Supprimer le mot de passe</AlertDialogTitle>
+            <AlertDialogDescription>
+              Êtes-vous sûr de vouloir supprimer ce mot de passe ?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setShowDeletionAlert(false)}>
+              Annuler
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDeletion}>
+              Confirmer
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

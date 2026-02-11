@@ -24,6 +24,12 @@ export default async function updatePassword(formData: FIRPasswordDecrypted) {
     updatedAt: new Date().toISOString(),
   };
 
-  const docRef = doc(db, COLLECTIONS.USERS, publicID, "passwords", formData.id);
+  const docRef = doc(
+    db,
+    COLLECTIONS.USERS,
+    publicID,
+    COLLECTIONS.PASSWORDS,
+    formData.id,
+  );
   await updateDoc(docRef, encryptedData);
 }
