@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router";
 import { usePasswordsQuery } from "../../password/hooks/usePasswords";
 import ROUTES from "../../navigation/Routes";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { FileInput } from "lucide-react";
 import importPasswords from "../../password/api/importPasswords";
 import { useQueryClient } from "@tanstack/react-query";
@@ -17,6 +17,7 @@ export default function useHomeScreen() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { data: passwords, isLoading, error } = usePasswordsQuery();
+  const [isSendingPasswords, setIsSendingPasswords] = useState<boolean>(false);
 
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -38,16 +39,17 @@ export default function useHomeScreen() {
 
   async function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
-    console.log("file", file);
     if (file) {
-      console.log("file2");
+      setIsSendingPasswords(true);
       try {
         await importPasswords(file);
         queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PASSWORDS] });
         toast.success(TOAST_MESSAGE.IMPORT_SUCCESS, { position: "top-center" });
+        setIsSendingPasswords(false);
       } catch (error) {
         console.error(error);
         toast.error(TOAST_MESSAGE.IMPORT_ERROR, { position: "top-center" });
+        setIsSendingPasswords(false);
       }
     }
   }
@@ -57,6 +59,7 @@ export default function useHomeScreen() {
     isLoading,
     error,
     fileRef,
+    isSendingPasswords,
     createPassword,
     navigateToViewPassword,
     handleImport,

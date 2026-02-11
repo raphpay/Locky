@@ -1,3 +1,5 @@
+import { Toaster } from "../../../ui/components/radix/Sonner";
+import { Spinner } from "../../../ui/components/radix/Spinner";
 import PasswordCard from "../../password/components/PasswordCard";
 import useHomeScreen from "../hooks/useHomeScreen";
 
@@ -7,6 +9,7 @@ function Home() {
     isLoading,
     error,
     fileRef,
+    isSendingPasswords,
     createPassword,
     navigateToViewPassword,
     handleImport,
@@ -62,6 +65,20 @@ function Home() {
         className="hidden"
         accept=".csv"
       />
+
+      <Toaster />
+
+      {isSendingPasswords && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-[1px]">
+          {/* Box blanche ou transparente pour le spinner */}
+          <div className="bg-white p-6 rounded-xl shadow-xl flex flex-col items-center gap-3">
+            <Spinner className="size-10" />
+            <p className="text-sm font-medium text-gray-700">
+              Traitement en cours...
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
