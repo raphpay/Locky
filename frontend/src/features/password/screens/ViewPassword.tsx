@@ -50,7 +50,7 @@ function ViewPassword() {
 
   return (
     <div className="flex flex-1 flex-col gap-2">
-      <div className="absolute top-2 right-2">
+      <div className="absolute top-2 right-2 flex gap-2">
         <button onClick={handleNavigateBack}>Retour</button>
         <button
           className={isEditing ? "text-green-600 font-bold" : "text-blue-600"}
