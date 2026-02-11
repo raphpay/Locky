@@ -4,4 +4,6 @@ export default interface FIRPasswordDecrypted {
   password: string;
   website: string;
   notes: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
