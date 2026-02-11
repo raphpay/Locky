@@ -1,5 +1,4 @@
 import PasswordCard from "../../password/components/PasswordCard";
-import type FIRPasswordDecrypted from "../../password/model/FIRPasswordDecrypted";
 import useHomeScreen from "../hooks/useHomeScreen";
 
 function Home() {
@@ -7,8 +6,11 @@ function Home() {
     passwords,
     isLoading,
     error,
+    fileRef,
     createPassword,
     navigateToViewPassword,
+    handleImport,
+    handleFileChange,
   } = useHomeScreen();
 
   if (isLoading)
@@ -27,12 +29,13 @@ function Home() {
 
   return (
     <div className="flex flex-col h-full p-4">
-      <button
-        className="absolute top-4 right-4 rounded-md"
-        onClick={createPassword}
-      >
-        + Create a password
-      </button>
+      <div className="flex gap-2 absolute top-4 right-4">
+        <button className="rounded-md" onClick={createPassword}>
+          + Create a password
+        </button>
+
+        <button onClick={handleImport}>Importer des mots de passe</button>
+      </div>
 
       <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
         <div className="flex flex-col gap-2">
@@ -51,6 +54,14 @@ function Home() {
           )}
         </div>
       </div>
+
+      <input
+        type="file"
+        ref={fileRef}
+        onChange={handleFileChange}
+        className="hidden"
+        accept=".csv"
+      />
     </div>
   );
 }
