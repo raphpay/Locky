@@ -29,6 +29,7 @@ export async function fetchPasswords(): Promise<FIRPasswordDecrypted[]> {
     const data = doc.data() as FIRPasswordEncrypted;
     const decrypted: FIRPasswordDecrypted = {
       id: doc.id,
+      title: SecurityService.decryptData(data.title_enc, masterKey),
       username: SecurityService.decryptData(data.username_enc, masterKey),
       password: data.password_enc,
       website: SecurityService.decryptData(data.website_enc, masterKey),
