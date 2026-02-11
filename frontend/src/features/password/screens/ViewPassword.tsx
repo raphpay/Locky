@@ -80,7 +80,7 @@ function ViewPassword() {
               />
             ) : (
               <div className="cursor-copy" onClick={handleCopyWebsite}>
-                <h2 className="font-bold text-3xl">{data.title}</h2>
+                <h2 className="font-bold text-2xl">{data.title}</h2>
               </div>
             )}
           </div>

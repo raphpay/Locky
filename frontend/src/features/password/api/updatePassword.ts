@@ -17,6 +17,7 @@ export default async function updatePassword(formData: FIRPasswordDecrypted) {
 
   const encryptedData = {
     id: formData.id,
+    title_enc: SecurityService.encryptData(formData.title, masterKey),
     username_enc: SecurityService.encryptData(formData.username, masterKey),
     password_enc: SecurityService.encryptData(formData.password, masterKey),
     website_enc: SecurityService.encryptData(formData.website, masterKey),
