@@ -13,14 +13,12 @@ function PasswordCard({ password, navigateToViewPassword }: Props) {
       onClick={() => navigateToViewPassword(password.id)}
     >
       <div className="rounded-full bg-gray-200 text-gray-700 font-bold w-12 h-12 shrink-0 flex items-center justify-center">
-        {password.title
-          ? password.title[0].toUpperCase()
-          : password.website[0].toUpperCase()}
+        {password.title[0].toUpperCase()}
       </div>
 
       <div className="flex flex-col flex-1 items-start">
         <p className="font-semibold text-lg text-gray-900 leading-tight">
-          {password.title ? password.title : password.website}
+          {password.title}
         </p>
         <p className="text-sm text-gray-500">{password.username}</p>
       </div>

@@ -67,6 +67,25 @@ function ViewPassword() {
       {data ? (
         <div className="flex flex-col gap-2">
           <div>
+            {isEditing && editingData ? (
+              <input
+                id="title"
+                type="text"
+                className="border rounded-sm p-1"
+                placeholder="Titre"
+                value={editingData.title}
+                onChange={(e) =>
+                  setEditingData({ ...editingData, title: e.target.value })
+                }
+              />
+            ) : (
+              <div className="cursor-copy" onClick={handleCopyWebsite}>
+                <h2 className="font-bold text-3xl">{data.title}</h2>
+              </div>
+            )}
+          </div>
+
+          <div>
             <span className="text-sm text-gray-500 block">Site web</span>
             {isEditing && editingData ? (
               <input
