@@ -1,3 +1,12 @@
+import { Button } from "../../../ui/components/radix/Button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../../../ui/components/radix/DropdownMenu";
 import { Toaster } from "../../../ui/components/radix/Sonner";
 import { Spinner } from "../../../ui/components/radix/Spinner";
 import PasswordCard from "../../password/components/PasswordCard";
@@ -30,9 +39,32 @@ function Home() {
       </div>
     );
 
+  function Dropdown() {
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline">Ranger par</Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuGroup>
+            <DropdownMenuItem>Titre</DropdownMenuItem>
+            <DropdownMenuItem>Site Web</DropdownMenuItem>
+            <DropdownMenuItem>Date de création</DropdownMenuItem>
+            <DropdownMenuItem>Date de modification</DropdownMenuItem>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem>Plus récent en premier</DropdownMenuItem>
+          <DropdownMenuItem>Plus ancien en premier</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  }
+
   return (
     <div className="flex flex-col h-full p-4">
       <div className="flex gap-2 absolute top-4 right-4">
+        {Dropdown()}
+
         <button className="rounded-md" onClick={createPassword}>
           + Create a password
         </button>
