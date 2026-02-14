@@ -1,24 +1,11 @@
-import { useEffect, useState } from "react";
+import PHRASE_STATUS from "../enum/phraseStatus";
+import useSignUpScreen from "../hooks/useSignUpScreen";
 
-import { useNavigate } from "react-router";
-
-import AuthService from "../AuthService";
-import UserService from "../../user/UserService";
-import RecoverySeedService from "../../recoverySeed/RecoverySeedService";
-import ROUTES from "../../navigation/Routes";
-
-interface Props {
+export interface SignUpProps {
   masterPassword: string;
   userID: string | null;
   setMasterPassword: (password: string) => void;
   setUserID: (userID: string | null) => void;
-}
-
-enum PhraseStatus {
-  HIDDEN = "hidden",
-  SHOWN = "revealed",
-  COPIED = "copied",
-  COPIED_AND_REVEALED = "copied-and-revealed",
 }
 
 function SignUp({
@@ -26,76 +13,17 @@ function SignUp({
   userID,
   setMasterPassword,
   setUserID,
-}: Props) {
-  const navigate = useNavigate();
-
-  const [showPhrase, setShowPhrase] = useState<boolean>(false);
-  const [phraseStatus, setPhraseStatus] = useState<PhraseStatus>(
-    PhraseStatus.HIDDEN,
-  );
-  const [copyButtonText, setCopyButtonText] =
-    useState<string>("Copier la phrase");
-  const [showInput, setShowInput] = useState<boolean>(false);
-  const [phrase, setPhrase] = useState<string>("");
-
-  function handleMnemonicCopy() {
-    navigator.clipboard.writeText(phrase);
-
-    switch (phraseStatus) {
-      case PhraseStatus.SHOWN:
-        setPhraseStatus(PhraseStatus.COPIED);
-        setShowPhrase(false);
-        setShowInput(true);
-        setCopyButtonText("Revoir la phrase");
-        break;
-      case PhraseStatus.COPIED:
-        setShowPhrase(true);
-        setShowInput(false);
-        setPhraseStatus(PhraseStatus.COPIED_AND_REVEALED);
-        setCopyButtonText("Copier la phrase");
-        break;
-      case PhraseStatus.COPIED_AND_REVEALED:
-        setPhraseStatus(PhraseStatus.COPIED);
-        setShowPhrase(false);
-        setShowInput(true);
-        setCopyButtonText("Revoir la phrase");
-        break;
-      default:
-        setPhraseStatus(PhraseStatus.COPIED);
-        break;
-    }
-  }
-
-  async function handleSignIn() {
-    try {
-      const userCred = await AuthService.signIn();
-      setUserID(userCred);
-
-      const mnemonic = RecoverySeedService.generateRecoverySeed();
-      setPhrase(mnemonic);
-
-      if (userCred !== null)
-        await UserService.create(userCred, mnemonic, masterPassword);
-
-      console.log("1", userCred);
-      navigate(ROUTES.HOME);
-    } catch (error) {
-      console.error("Error signing in:", error);
-    }
-  }
-
-  function handleNavigateBack() {
-    navigate(-1);
-  }
-
-  useEffect(() => {
-    setTimeout(() => {
-      const mnemonic = RecoverySeedService.generateRecoverySeed();
-      setPhrase(mnemonic);
-      setPhraseStatus(PhraseStatus.SHOWN);
-      setShowPhrase(true);
-    }, 1500);
-  }, []);
+}: SignUpProps) {
+  const {
+    showPhrase,
+    phrase,
+    phraseStatus,
+    copyButtonText,
+    showInput,
+    handleNavigateBack,
+    handleMnemonicCopy,
+    handleSignIn,
+  } = useSignUpScreen({ masterPassword, userID, setMasterPassword, setUserID });
 
   return (
     <div className="flex flex-1 flex-col gap-2">
@@ -116,7 +44,7 @@ function SignUp({
           <p>{phrase}</p>
         </div>
       )}
-      {phraseStatus !== PhraseStatus.HIDDEN && (
+      {phraseStatus !== PHRASE_STATUS.HIDDEN && (
         <button onClick={handleMnemonicCopy}>{copyButtonText}</button>
       )}
       {showInput && (

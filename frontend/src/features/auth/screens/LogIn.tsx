@@ -1,30 +1,16 @@
-import { useNavigate } from "react-router";
-import ROUTES from "../../navigation/ROUTES";
-import AuthService from "../AuthService";
-import CacheService from "../../cache/CacheService";
+import useLoginScreen from "../hooks/useLoginScreen";
 
-interface Props {
+export interface LoginProps {
   masterPassword: string;
   setMasterPassword: (password: string) => void;
 }
 
-function LogIn({ masterPassword, setMasterPassword }: Props) {
-  const navigate = useNavigate();
-
-  function handleNavigateBack() {
-    navigate(ROUTES.ROOT);
-  }
-
-  async function handleLogIn() {
-    await AuthService.login(masterPassword);
-    navigate(ROUTES.HOME);
-  }
-
-  async function handleForceSignOut() {
-    await AuthService.signOut();
-    CacheService.clear();
-    navigate(ROUTES.ROOT);
-  }
+function LogIn({ masterPassword, setMasterPassword }: LoginProps) {
+  const { handleNavigateBack, handleLogIn, handleForceSignOut } =
+    useLoginScreen({
+      masterPassword,
+      setMasterPassword,
+    });
 
   return (
     <div className="flex flex-col gap-2">
