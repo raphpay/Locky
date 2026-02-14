@@ -11,10 +11,11 @@ import { Toaster } from "../../../ui/components/radix/Sonner";
 import { Spinner } from "../../../ui/components/radix/Spinner";
 import PasswordCard from "../../password/components/PasswordCard";
 import useHomeScreen from "../hooks/useHomeScreen";
+import SORTING_SELECTION from "../sort/sortingSelection";
 
 function Home() {
   const {
-    passwords,
+    sortedPasswords,
     isLoading,
     error,
     fileRef,
@@ -23,6 +24,8 @@ function Home() {
     navigateToViewPassword,
     handleImport,
     handleFileChange,
+    handleSortSelection,
+    handleSortIsAscendingChange,
   } = useHomeScreen();
 
   if (isLoading)
@@ -39,6 +42,7 @@ function Home() {
       </div>
     );
 
+  // TODO: Move it to its separate component
   function Dropdown() {
     return (
       <DropdownMenu>
@@ -47,14 +51,50 @@ function Home() {
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuGroup>
-            <DropdownMenuItem>Titre</DropdownMenuItem>
-            <DropdownMenuItem>Site Web</DropdownMenuItem>
-            <DropdownMenuItem>Date de création</DropdownMenuItem>
-            <DropdownMenuItem>Date de modification</DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                handleSortSelection(SORTING_SELECTION.TITLE);
+              }}
+            >
+              Titre
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                handleSortSelection(SORTING_SELECTION.WEBSITE);
+              }}
+            >
+              Site Web
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                handleSortSelection(SORTING_SELECTION.CREATED_AT);
+              }}
+            >
+              Date de création
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                handleSortSelection(SORTING_SELECTION.UPDATED_AT);
+              }}
+            >
+              Date de modification
+            </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>Plus récent en premier</DropdownMenuItem>
-          <DropdownMenuItem>Plus ancien en premier</DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => {
+              handleSortIsAscendingChange(true);
+            }}
+          >
+            Ascendant
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => {
+              handleSortIsAscendingChange(false);
+            }}
+          >
+            Descendant
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     );
@@ -74,12 +114,12 @@ function Home() {
 
       <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
         <div className="flex flex-col gap-2">
-          {passwords?.length === 0 ? (
+          {sortedPasswords.length === 0 ? (
             <p className="text-center text-gray-500 mt-10">
               No passwords found
             </p>
           ) : (
-            passwords?.map((password, index) => (
+            sortedPasswords?.map((password, index) => (
               <PasswordCard
                 password={password}
                 key={password.id ?? index}
