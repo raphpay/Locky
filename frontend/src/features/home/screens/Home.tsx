@@ -2,18 +2,23 @@ import { Toaster } from "../../../ui/components/radix/Sonner";
 import { Spinner } from "../../../ui/components/radix/Spinner";
 import PasswordCard from "../../password/components/PasswordCard";
 import useHomeScreen from "../hooks/useHomeScreen";
+import SortingDropdown from "../components/SortingDropdown";
 
 function Home() {
   const {
-    passwords,
+    sortedPasswords,
     isLoading,
     error,
     fileRef,
     isSendingPasswords,
+    sortingSelection,
+    isSortingAscending,
     createPassword,
     navigateToViewPassword,
     handleImport,
     handleFileChange,
+    handleSortSelection,
+    handleSortIsAscendingChange,
   } = useHomeScreen();
 
   if (isLoading)
@@ -33,6 +38,13 @@ function Home() {
   return (
     <div className="flex flex-col h-full p-4">
       <div className="flex gap-2 absolute top-4 right-4">
+        <SortingDropdown
+          sortingSelection={sortingSelection}
+          onSortSelectionChange={handleSortSelection}
+          isSortingAscending={isSortingAscending}
+          onSortIsAscendingChange={handleSortIsAscendingChange}
+        />
+
         <button className="rounded-md" onClick={createPassword}>
           + Create a password
         </button>
@@ -42,12 +54,12 @@ function Home() {
 
       <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
         <div className="flex flex-col gap-2">
-          {passwords?.length === 0 ? (
+          {sortedPasswords.length === 0 ? (
             <p className="text-center text-gray-500 mt-10">
               No passwords found
             </p>
           ) : (
-            passwords?.map((password, index) => (
+            sortedPasswords?.map((password, index) => (
               <PasswordCard
                 password={password}
                 key={password.id ?? index}
