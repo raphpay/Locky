@@ -1,3 +1,4 @@
+import { Check } from "lucide-react";
 import { Button } from "../../../ui/components/radix/Button";
 import {
   DropdownMenu,
@@ -20,6 +21,8 @@ function Home() {
     error,
     fileRef,
     isSendingPasswords,
+    sortingSelection,
+    isSortingAscending,
     createPassword,
     navigateToViewPassword,
     handleImport,
@@ -55,7 +58,11 @@ function Home() {
               onClick={() => {
                 handleSortSelection(SORTING_SELECTION.TITLE);
               }}
+              className="flex items-center"
             >
+              {sortingSelection === SORTING_SELECTION.TITLE && (
+                <Check className="ml-2 h-4 w-4" />
+              )}
               Titre
             </DropdownMenuItem>
             <DropdownMenuItem
@@ -63,6 +70,9 @@ function Home() {
                 handleSortSelection(SORTING_SELECTION.WEBSITE);
               }}
             >
+              {sortingSelection === SORTING_SELECTION.WEBSITE && (
+                <Check className="ml-2 h-4 w-4" />
+              )}
               Site Web
             </DropdownMenuItem>
             <DropdownMenuItem
@@ -70,6 +80,9 @@ function Home() {
                 handleSortSelection(SORTING_SELECTION.CREATED_AT);
               }}
             >
+              {sortingSelection === SORTING_SELECTION.CREATED_AT && (
+                <Check className="ml-2 h-4 w-4" />
+              )}
               Date de création
             </DropdownMenuItem>
             <DropdownMenuItem
@@ -77,6 +90,9 @@ function Home() {
                 handleSortSelection(SORTING_SELECTION.UPDATED_AT);
               }}
             >
+              {sortingSelection === SORTING_SELECTION.UPDATED_AT && (
+                <Check className="ml-2 h-4 w-4" />
+              )}
               Date de modification
             </DropdownMenuItem>
           </DropdownMenuGroup>
@@ -86,6 +102,7 @@ function Home() {
               handleSortIsAscendingChange(true);
             }}
           >
+            {isSortingAscending && <Check className="ml-2 h-4 w-4" />}
             Ascendant
           </DropdownMenuItem>
           <DropdownMenuItem
@@ -93,6 +110,7 @@ function Home() {
               handleSortIsAscendingChange(false);
             }}
           >
+            {!isSortingAscending && <Check className="ml-2 h-4 w-4" />}
             Descendant
           </DropdownMenuItem>
         </DropdownMenuContent>

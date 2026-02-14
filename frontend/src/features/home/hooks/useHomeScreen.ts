@@ -106,6 +106,8 @@ export default function useHomeScreen() {
     error,
     fileRef,
     isSendingPasswords,
+    sortingSelection,
+    isSortingAscending,
     createPassword,
     navigateToViewPassword,
     handleImport,
