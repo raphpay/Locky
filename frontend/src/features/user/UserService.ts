@@ -38,10 +38,10 @@ const UserService = {
       await setDoc(doc(db, COLLECTIONS.USERS, publicID), {
         ownerUid: publicID,
         wrappedKey: wrappedKey,
-        wrappedPin: localPinWrap,
         createdAt: new Date().toISOString(),
       });
 
+      CacheService.store(CACHE_KEYS.PIN_WRAP, localPinWrap);
       CacheService.store(CACHE_KEYS.PUBLIC_ID, publicID);
     } catch (error) {
       console.error("Error creating user:", error);
