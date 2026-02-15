@@ -52,7 +52,9 @@ function Navigation() {
         path="/login"
         element={
           <LogIn
+            pin={pin}
             masterPassword={masterPassword}
+            setPin={setPin}
             setMasterPassword={setMasterPassword}
           />
         }
