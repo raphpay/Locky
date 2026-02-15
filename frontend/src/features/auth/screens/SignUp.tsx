@@ -82,24 +82,21 @@ function SignUp({
         </button>
       )}
 
-      {step === SIGN_UP_STEP.PIN ||
-        (step === SIGN_UP_STEP.FINAL && (
-          <div className="flex flex-col items-center gap-6">
-            <div>
-              <h2 className="text-xl font-bold">Créez votre code PIN :</h2>
-              <p className="text-gray-500">
-                Il sera demandé à chaque ouverture
-              </p>
-            </div>
-
-            {/*TODO: On hover, display the current PIN */}
-            <PinPad
-              pin={pin}
-              setPin={setPin}
-              onComplete={(finalPin) => handleFinalPin(finalPin)}
-            />
+      {(step === SIGN_UP_STEP.PIN || step === SIGN_UP_STEP.FINAL) && (
+        <div className="flex flex-col items-center gap-6">
+          <div>
+            <h2 className="text-xl font-bold">Créez votre code PIN :</h2>
+            <p className="text-gray-500">Il sera demandé à chaque ouverture</p>
           </div>
-        ))}
+
+          {/*TODO: On hover, display the current PIN */}
+          <PinPad
+            pin={pin}
+            setPin={setPin}
+            onComplete={(finalPin) => handleFinalPin(finalPin)}
+          />
+        </div>
+      )}
 
       {step === SIGN_UP_STEP.FINAL && (
         <Button onClick={handleSignIn}>Commencer à utiliser Locky</Button>
