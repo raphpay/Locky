@@ -6,13 +6,17 @@ import AuthService from "../AuthService";
 import RecoverySeedService from "../../recoverySeed/RecoverySeedService";
 import UserService from "../../user/UserService";
 import ROUTES from "../../navigation/Routes";
+import SIGN_UP_STEP from "../enum/signUpStep";
 
 export default function useSignUpScreen({
+  pin,
+  setPin,
+  setMasterPassword,
   masterPassword,
-  setUserID,
 }: SignUpProps) {
   const navigate = useNavigate();
 
+  const [step, setStep] = useState<SIGN_UP_STEP>(SIGN_UP_STEP.PHRASE);
   const [showPhrase, setShowPhrase] = useState<boolean>(false);
   const [phraseStatus, setPhraseStatus] = useState<PHRASE_STATUS>(
     PHRASE_STATUS.HIDDEN,
@@ -21,12 +25,15 @@ export default function useSignUpScreen({
     useState<string>("Copier la phrase");
   const [showInput, setShowInput] = useState<boolean>(false);
   const [phrase, setPhrase] = useState<string>("");
+  const [showValidatePasswordButton, setShowValidatePasswordButton] =
+    useState<boolean>(true);
 
   function handleMnemonicCopy() {
     navigator.clipboard.writeText(phrase);
 
     switch (phraseStatus) {
       case PHRASE_STATUS.SHOWN:
+        setStep(SIGN_UP_STEP.MASTER_PASSWORD);
         setPhraseStatus(PHRASE_STATUS.COPIED);
         setShowPhrase(false);
         setShowInput(true);
@@ -37,8 +44,10 @@ export default function useSignUpScreen({
         setShowInput(false);
         setPhraseStatus(PHRASE_STATUS.COPIED_AND_REVEALED);
         setCopyButtonText("Copier la phrase");
+        setStep(SIGN_UP_STEP.PHRASE);
         break;
       case PHRASE_STATUS.COPIED_AND_REVEALED:
+        setStep(SIGN_UP_STEP.MASTER_PASSWORD);
         setPhraseStatus(PHRASE_STATUS.COPIED);
         setShowPhrase(false);
         setShowInput(true);
@@ -50,26 +59,34 @@ export default function useSignUpScreen({
     }
   }
 
+  function handleSaveMasterPassword() {
+    setStep(SIGN_UP_STEP.PIN);
+    setShowValidatePasswordButton(false);
+  }
+
+  function handleNavigateBack() {
+    navigate(-1);
+  }
+
+  function handleFinalPin(finalPin: string) {
+    setStep(SIGN_UP_STEP.FINAL);
+    setPin(finalPin);
+  }
+
   async function handleSignIn() {
     try {
       const userCred = await AuthService.signIn();
-      setUserID(userCred);
 
       const mnemonic = RecoverySeedService.generateRecoverySeed();
       setPhrase(mnemonic);
 
       if (userCred !== null)
-        await UserService.create(userCred, mnemonic, masterPassword);
+        await UserService.create(mnemonic, masterPassword, pin);
 
-      console.log("1", userCred);
       navigate(ROUTES.HOME);
     } catch (error) {
       console.error("Error signing in:", error);
     }
-  }
-
-  function handleNavigateBack() {
-    navigate(-1);
   }
 
   useEffect(() => {
@@ -82,13 +99,17 @@ export default function useSignUpScreen({
   }, []);
 
   return {
+    step,
     showPhrase,
     phrase,
     phraseStatus,
     copyButtonText,
     showInput,
+    showValidatePasswordButton,
+    handleSaveMasterPassword,
     handleNavigateBack,
     handleMnemonicCopy,
     handleSignIn,
+    handleFinalPin,
   };
 }
