@@ -28,12 +28,6 @@ export default function useLoginScreen({ masterPassword, pin }: LoginProps) {
     }
   }
 
-  async function handleForceSignOut() {
-    await AuthService.signOut();
-    CacheService.clear();
-    navigate(ROUTES.ROOT);
-  }
-
   function handleForgot(nextStep: LOGIN_METHOD) {
     setStep(nextStep);
   }
@@ -53,7 +47,6 @@ export default function useLoginScreen({ masterPassword, pin }: LoginProps) {
     handleNavigateBack,
     handleLogIn,
     handleForgot,
-    handleForceSignOut,
     handleFinalPin,
   };
 }

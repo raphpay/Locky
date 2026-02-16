@@ -1,4 +1,5 @@
 import { Button } from "../../../ui/components/radix/Button";
+import { Spinner } from "../../../ui/components/radix/Spinner";
 import PinPad from "../components/PinPad";
 import LOGIN_METHOD from "../enum/loginMethod";
 import useLoginScreen from "../hooks/useLoginScreen";
@@ -25,13 +26,10 @@ function LogIn({ pin, masterPassword, setPin, setMasterPassword }: LoginProps) {
   });
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 bg-amber-300">
       <button className="absolute top-2 left-2" onClick={handleNavigateBack}>
         Retour
       </button>
-      {/*<button className="absolute top-2 right-2" onClick={handleForceSignOut}>
-        Force Sign out
-      </button>*/}
       <h2 className="font-bold text-2xl">Les mots de passe sont bloqués</h2>
 
       {step === LOGIN_METHOD.PIN && (
