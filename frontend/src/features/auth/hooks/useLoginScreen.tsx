@@ -5,8 +5,10 @@ import type { LoginProps } from "../screens/LogIn";
 import { useState } from "react";
 import LOGIN_METHOD from "../enum/loginMethod";
 
-export default function useLoginScreen({ masterPassword, pin }: LoginProps) {
+export default function useLoginScreen() {
   const navigate = useNavigate();
+  const [pin, setPin] = useState<string>("");
+  const [masterPassword, setMasterPassword] = useState<string>("");
   const [step, setStep] = useState<LOGIN_METHOD>(LOGIN_METHOD.PIN);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [recoveryPhrase, setRecoveryPhrase] = useState<string>("");
@@ -66,6 +68,10 @@ export default function useLoginScreen({ masterPassword, pin }: LoginProps) {
   }
 
   return {
+    pin,
+    setPin,
+    masterPassword,
+    setMasterPassword,
     step,
     isLoading,
     recoveryPhrase,

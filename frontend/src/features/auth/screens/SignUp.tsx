@@ -5,24 +5,12 @@ import PHRASE_STATUS from "../enum/phraseStatus";
 import SIGN_UP_STEP from "../enum/signUpStep";
 import useSignUpScreen from "../hooks/useSignUpScreen";
 
-export interface SignUpProps {
-  pin: string;
-  masterPassword: string;
-  userID: string | null;
-  setPin: (pin: string) => void;
-  setMasterPassword: (password: string) => void;
-  setUserID: (userID: string | null) => void;
-}
-
-function SignUp({
-  pin,
-  masterPassword,
-  userID,
-  setMasterPassword,
-  setPin,
-  setUserID,
-}: SignUpProps) {
+function SignUp() {
   const {
+    pin,
+    setPin,
+    masterPassword,
+    setMasterPassword,
     step,
     phrase,
     phraseStatus,
@@ -34,14 +22,7 @@ function SignUp({
     handleMnemonicCopy,
     handleSignIn,
     handleFinalPin,
-  } = useSignUpScreen({
-    pin,
-    masterPassword,
-    userID,
-    setPin,
-    setMasterPassword,
-    setUserID,
-  });
+  } = useSignUpScreen();
 
   return (
     <div className="flex flex-1 flex-col gap-2">
@@ -104,15 +85,6 @@ function SignUp({
 
       {step === SIGN_UP_STEP.FINAL && (
         <Button onClick={handleSignIn}>Commencer à utiliser Locky</Button>
-      )}
-
-      {userID && (
-        <div className="flex flex-col items-center gap-2">
-          <h2 className="text-start">
-            Vous êtes connecté en tant que {userID}.
-          </h2>
-          {/*<button onClick={handleSignOut}>Se déconnecter</button>*/}
-        </div>
       )}
     </div>
   );

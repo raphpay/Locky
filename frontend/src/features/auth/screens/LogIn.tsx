@@ -1,19 +1,15 @@
 import { Button } from "../../../ui/components/radix/Button";
-import SessionManager from "../../session/SessionManager";
 import LoadingSpinner from "../components/LoadingSpinner";
 import PinPad from "../components/PinPad";
 import LOGIN_METHOD from "../enum/loginMethod";
 import useLoginScreen from "../hooks/useLoginScreen";
 
-export interface LoginProps {
-  pin: string;
-  masterPassword: string;
-  setPin: (pin: string) => void;
-  setMasterPassword: (password: string) => void;
-}
-
-function LogIn({ pin, masterPassword, setPin, setMasterPassword }: LoginProps) {
+function LogIn() {
   const {
+    pin,
+    setPin,
+    masterPassword,
+    setMasterPassword,
     step,
     isLoading,
     recoveryPhrase,
@@ -22,12 +18,7 @@ function LogIn({ pin, masterPassword, setPin, setMasterPassword }: LoginProps) {
     handleLogIn,
     handleForgot,
     handleFinalPin,
-  } = useLoginScreen({
-    pin,
-    masterPassword,
-    setPin,
-    setMasterPassword,
-  });
+  } = useLoginScreen();
 
   return (
     <div className="flex flex-col gap-2">

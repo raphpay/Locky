@@ -29,37 +29,15 @@ function Navigation() {
         navigate(ROUTES.LOGIN);
       }
     }
-  }, []);
+  }, [navigate]);
 
   return (
     <Routes>
       <Route path="/" element={<App />} />
 
-      <Route
-        path="/signup"
-        element={
-          <SignUp
-            pin={pin}
-            masterPassword={masterPassword}
-            userID={userID}
-            setPin={setPin}
-            setMasterPassword={setMasterPassword}
-            setUserID={setUserID}
-          />
-        }
-      />
+      <Route path="/signup" element={<SignUp />} />
 
-      <Route
-        path="/login"
-        element={
-          <LogIn
-            pin={pin}
-            masterPassword={masterPassword}
-            setPin={setPin}
-            setMasterPassword={setMasterPassword}
-          />
-        }
-      />
+      <Route path="/login" element={<LogIn />} />
 
       <Route path="/home" element={<Home />} />
       <Route path="/home/create-password" element={<CreatePassword />} />
