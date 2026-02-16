@@ -37,7 +37,12 @@ function LogIn({ pin, masterPassword, setPin, setMasterPassword }: LoginProps) {
       {step === LOGIN_METHOD.PIN && (
         <div className="flex flex-col justify-center items-center">
           <p>Entrez votre code PIN pour dévérouiller l'app</p>
-          <PinPad pin={pin} setPin={setPin} onComplete={handleFinalPin} />
+          <PinPad
+            pin={pin}
+            setPin={setPin}
+            shuffled={true}
+            onComplete={handleFinalPin}
+          />
         </div>
       )}
 

@@ -1,16 +1,33 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Delete } from "lucide-react";
 
 interface PinPadProps {
   pin: string;
   length?: number;
+  shuffled?: boolean;
   setPin: (pin: string) => void;
   onComplete: (pin: string) => void;
 }
 
-const PinPad = ({ pin, length = 6, setPin, onComplete }: PinPadProps) => {
+const PinPad = ({
+  pin,
+  length = 6,
+  shuffled = false,
+  setPin,
+  onComplete,
+}: PinPadProps) => {
   // We separate the 0 from the others for the keyboard layout
   const numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
+
+  const [shuffledNumbers] = useState(() => {
+    // More randomization
+    const nums = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+    for (let i = nums.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [nums[i], nums[j]] = [nums[j], nums[i]];
+    }
+    return nums;
+  }, []);
 
   const handlePress = (val: string) => {
     // Usage of the 'length' prop instead of '6'
@@ -55,17 +72,33 @@ const PinPad = ({ pin, length = 6, setPin, onComplete }: PinPadProps) => {
 
       {/* Numbers grid */}
       <div className="grid grid-cols-3 gap-4">
-        {/* 1 à 9 */}
-        {numbers.map((num) => (
-          <button
-            key={num}
-            type="button"
-            onClick={() => handlePress(num)}
-            className="size-16 rounded-full bg-gray-100 hover:bg-gray-200 text-2xl font-semibold transition-all active:scale-90"
-          >
-            {num}
-          </button>
-        ))}
+        {shuffled ? (
+          <>
+            {shuffledNumbers.map((num) => (
+              <button
+                key={num}
+                type="button"
+                onClick={() => handlePress(num)}
+                className="size-16 rounded-full bg-gray-100 hover:bg-gray-200 text-2xl font-semibold transition-all active:scale-90"
+              >
+                {num}
+              </button>
+            ))}
+          </>
+        ) : (
+          <>
+            {numbers.map((num) => (
+              <button
+                key={num}
+                type="button"
+                onClick={() => handlePress(num)}
+                className="size-16 rounded-full bg-gray-100 hover:bg-gray-200 text-2xl font-semibold transition-all active:scale-90"
+              >
+                {num}
+              </button>
+            ))}
+          </>
+        )}
         {/* Last line : Empty | 0 | Delete */}
         <div /> {/* Empty space on the left */}
         <button
