@@ -59,6 +59,7 @@ export default function useLoginScreen({ masterPassword, pin }: LoginProps) {
 
   return {
     step,
+    isLoading,
     handleNavigateBack,
     handleLogIn,
     handleForgot,

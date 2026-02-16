@@ -110,6 +110,7 @@ export default function useSignUpScreen({
     copyButtonText,
     showInput,
     showValidatePasswordButton,
+    isLoading,
     handleSaveMasterPassword,
     handleNavigateBack,
     handleMnemonicCopy,

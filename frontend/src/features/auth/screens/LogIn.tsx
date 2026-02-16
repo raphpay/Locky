@@ -1,5 +1,4 @@
 import { Button } from "../../../ui/components/radix/Button";
-import { Spinner } from "../../../ui/components/radix/Spinner";
 import LoadingSpinner from "../components/LoadingSpinner";
 import PinPad from "../components/PinPad";
 import LOGIN_METHOD from "../enum/loginMethod";
