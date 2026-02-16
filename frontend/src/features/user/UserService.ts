@@ -6,6 +6,7 @@ import COLLECTIONS from "../firebase/collections";
 import CacheService from "../cache/CacheService";
 import CACHE_KEYS from "../cache/CACHE_KEYS";
 import CryptoJS from "crypto-js";
+import SecurityService from "../security/SecurityService";
 
 const UserService = {
   /**
@@ -27,24 +28,26 @@ const UserService = {
    * @param mnemonic - The user's mnemonic phrase.
    * @param masterPassword - The user's master password.
    */
-  async create(uid: string, mnemonic: string, masterPassword: string) {
+  async create(mnemonic: string, masterPassword: string, pin: string) {
     const publicID = this.generatePublicID(mnemonic);
     const masterKey = SessionManager.generateMasterKey(mnemonic);
     const wrappedKey = generateWrappedKey(masterKey, masterPassword);
+    const localPinWrap = SecurityService.encryptData(masterKey, pin);
 
-    // TODO: Change the first uid with a crypted uid after master password creation ( Issue #2 )
     try {
       await setDoc(doc(db, COLLECTIONS.USERS, publicID), {
-        ownerUid: uid,
+        ownerUid: publicID,
         wrappedKey: wrappedKey,
         createdAt: new Date().toISOString(),
       });
+
+      CacheService.store(CACHE_KEYS.PIN_WRAP, localPinWrap);
+      CacheService.store(CACHE_KEYS.PUBLIC_ID, publicID);
     } catch (error) {
       console.error("Error creating user:", error);
     }
 
     SessionManager.setMasterKey(masterKey);
-    CacheService.store(CACHE_KEYS.PUBLIC_ID, publicID);
   },
 };
 

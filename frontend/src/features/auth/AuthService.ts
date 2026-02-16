@@ -5,13 +5,13 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase/init";
 import SessionManager from "../session/SessionManager";
 import COLLECTIONS from "../firebase/collections";
+import SecurityService from "../security/SecurityService";
 
 const AuthService = {
   /**
-   * Login to the application using a master password.
-   * @param masterPassword The master password to use for authentication.
+   * Reconnect the user if needed.
    */
-  async login(masterPassword: string) {
+  async reconnectUserIfNeeded() {
     const auth = getAuth();
 
     // 1. S'assurer qu'on est connecté à Firebase Auth AVANT de lire Firestore
@@ -19,8 +19,14 @@ const AuthService = {
     if (!auth.currentUser) {
       await signInAnonymously(auth);
     }
+  },
 
-    const publicID = CacheService.retrieve(CACHE_KEYS.PUBLIC_ID) as string;
+  /**
+   * Get the current user's data from Firestore.
+   * @returns The current user's data from Firestore.
+   */
+  async getAuthDataFromFirestore(publicID: string) {
+    await this.reconnectUserIfNeeded();
 
     if (!publicID) {
       // If no ID, then the app is new
@@ -37,11 +43,21 @@ const AuthService = {
 
     const data = userSnap.data();
 
+    return data;
+  },
+
+  /**
+   * Login to the application using a master password.
+   * @param masterPassword The master password to use for authentication.
+   */
+  async login(masterPassword: string) {
+    const publicID = CacheService.retrieve(CACHE_KEYS.PUBLIC_ID) as string;
+    const authData = await this.getAuthDataFromFirestore(publicID);
+
     // 3. Ici tu utiliseras ton SecurityService pour déchiffrer la wrappedKey
     // avec le masterPassword reçu en argument...
-
     const masterKey = SessionManager.unlockMasterKey(
-      data.wrappedKey,
+      authData.wrappedKey,
       masterPassword,
     );
 
@@ -50,6 +66,32 @@ const AuthService = {
     }
 
     SessionManager.setMasterKey(masterKey);
+  },
+
+  async loginWithPin(pin: string) {
+    const publicID = CacheService.retrieve(CACHE_KEYS.PUBLIC_ID) as string;
+
+    try {
+      const localPin = CacheService.retrieve(CACHE_KEYS.PIN_WRAP) as string;
+
+      if (!localPin || !publicID) {
+        throw new Error("No local account found on this device");
+      }
+
+      const decryptedMasterKey = SecurityService.decryptData(localPin, pin);
+
+      // If the pin is valid, decrypt the master key
+      if (!decryptedMasterKey) {
+        throw new Error("Invalid PIN");
+      }
+
+      SessionManager.setMasterKey(decryptedMasterKey);
+      await this.reconnectUserIfNeeded();
+      return true;
+    } catch (error) {
+      console.error("Error logging in with PIN:", error);
+      throw error;
+    }
   },
 
   /**

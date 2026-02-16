@@ -1,0 +1,8 @@
+enum SIGN_UP_STEP {
+  PHRASE = "PHRASE",
+  MASTER_PASSWORD = "MASTER_PASSWORD",
+  PIN = "PIN",
+  FINAL = "FINAL",
+}
+
+export default SIGN_UP_STEP;

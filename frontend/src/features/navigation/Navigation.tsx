@@ -15,6 +15,7 @@ import ViewPassword from "../password/screens/ViewPassword";
 
 function Navigation() {
   const navigate = useNavigate();
+  const [pin, setPin] = useState<string>("");
   const [masterPassword, setMasterPassword] = useState<string>("");
   const [userID, setUserID] = useState<string | null>(null);
 
@@ -37,8 +38,10 @@ function Navigation() {
         path="/signup"
         element={
           <SignUp
+            pin={pin}
             masterPassword={masterPassword}
             userID={userID}
+            setPin={setPin}
             setMasterPassword={setMasterPassword}
             setUserID={setUserID}
           />
@@ -49,7 +52,9 @@ function Navigation() {
         path="/login"
         element={
           <LogIn
+            pin={pin}
             masterPassword={masterPassword}
+            setPin={setPin}
             setMasterPassword={setMasterPassword}
           />
         }

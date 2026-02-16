@@ -1,110 +1,58 @@
-import { useEffect, useState } from "react";
+import { Button } from "../../../ui/components/radix/Button";
+import LoadingSpinner from "../components/LoadingSpinner";
+import PinPad from "../components/PinPad";
+import PHRASE_STATUS from "../enum/phraseStatus";
+import SIGN_UP_STEP from "../enum/signUpStep";
+import useSignUpScreen from "../hooks/useSignUpScreen";
 
-import { useNavigate } from "react-router";
-
-import AuthService from "../AuthService";
-import UserService from "../../user/UserService";
-import RecoverySeedService from "../../recoverySeed/RecoverySeedService";
-import ROUTES from "../../navigation/Routes";
-
-interface Props {
+export interface SignUpProps {
+  pin: string;
   masterPassword: string;
   userID: string | null;
+  setPin: (pin: string) => void;
   setMasterPassword: (password: string) => void;
   setUserID: (userID: string | null) => void;
 }
 
-enum PhraseStatus {
-  HIDDEN = "hidden",
-  SHOWN = "revealed",
-  COPIED = "copied",
-  COPIED_AND_REVEALED = "copied-and-revealed",
-}
-
 function SignUp({
+  pin,
   masterPassword,
   userID,
   setMasterPassword,
+  setPin,
   setUserID,
-}: Props) {
-  const navigate = useNavigate();
-
-  const [showPhrase, setShowPhrase] = useState<boolean>(false);
-  const [phraseStatus, setPhraseStatus] = useState<PhraseStatus>(
-    PhraseStatus.HIDDEN,
-  );
-  const [copyButtonText, setCopyButtonText] =
-    useState<string>("Copier la phrase");
-  const [showInput, setShowInput] = useState<boolean>(false);
-  const [phrase, setPhrase] = useState<string>("");
-
-  function handleMnemonicCopy() {
-    navigator.clipboard.writeText(phrase);
-
-    switch (phraseStatus) {
-      case PhraseStatus.SHOWN:
-        setPhraseStatus(PhraseStatus.COPIED);
-        setShowPhrase(false);
-        setShowInput(true);
-        setCopyButtonText("Revoir la phrase");
-        break;
-      case PhraseStatus.COPIED:
-        setShowPhrase(true);
-        setShowInput(false);
-        setPhraseStatus(PhraseStatus.COPIED_AND_REVEALED);
-        setCopyButtonText("Copier la phrase");
-        break;
-      case PhraseStatus.COPIED_AND_REVEALED:
-        setPhraseStatus(PhraseStatus.COPIED);
-        setShowPhrase(false);
-        setShowInput(true);
-        setCopyButtonText("Revoir la phrase");
-        break;
-      default:
-        setPhraseStatus(PhraseStatus.COPIED);
-        break;
-    }
-  }
-
-  async function handleSignIn() {
-    try {
-      const userCred = await AuthService.signIn();
-      setUserID(userCred);
-
-      const mnemonic = RecoverySeedService.generateRecoverySeed();
-      setPhrase(mnemonic);
-
-      if (userCred !== null)
-        await UserService.create(userCred, mnemonic, masterPassword);
-
-      console.log("1", userCred);
-      navigate(ROUTES.HOME);
-    } catch (error) {
-      console.error("Error signing in:", error);
-    }
-  }
-
-  function handleNavigateBack() {
-    navigate(-1);
-  }
-
-  useEffect(() => {
-    setTimeout(() => {
-      const mnemonic = RecoverySeedService.generateRecoverySeed();
-      setPhrase(mnemonic);
-      setPhraseStatus(PhraseStatus.SHOWN);
-      setShowPhrase(true);
-    }, 1500);
-  }, []);
+}: SignUpProps) {
+  const {
+    step,
+    phrase,
+    phraseStatus,
+    copyButtonText,
+    showValidatePasswordButton,
+    isLoading,
+    handleSaveMasterPassword,
+    handleNavigateBack,
+    handleMnemonicCopy,
+    handleSignIn,
+    handleFinalPin,
+  } = useSignUpScreen({
+    pin,
+    masterPassword,
+    userID,
+    setPin,
+    setMasterPassword,
+    setUserID,
+  });
 
   return (
     <div className="flex flex-1 flex-col gap-2">
+      <LoadingSpinner isLoading={isLoading} />
+
       <button className="absolute top-2 left-2" onClick={handleNavigateBack}>
         Retour
       </button>
       <h1>Bonjour, et bienvenue sur Locky!</h1>
 
-      {showPhrase && (
+      {step === SIGN_UP_STEP.PHRASE && (
         <div className="flex flex-col items-center gap-2">
           <h2 className="text-start">
             Pour commencer, veuillez noter précieusement la phrase suivante.
@@ -116,10 +64,10 @@ function SignUp({
           <p>{phrase}</p>
         </div>
       )}
-      {phraseStatus !== PhraseStatus.HIDDEN && (
+      {phraseStatus !== PHRASE_STATUS.HIDDEN && (
         <button onClick={handleMnemonicCopy}>{copyButtonText}</button>
       )}
-      {showInput && (
+      {step === SIGN_UP_STEP.MASTER_PASSWORD && (
         <div className="flex flex-col justify-center items-center">
           <p>Entrez maintenant votre mot de passe :</p>
           <input
@@ -132,8 +80,30 @@ function SignUp({
         </div>
       )}
 
-      {masterPassword !== "" && (
-        <button onClick={handleSignIn}>Entrer dans l'application</button>
+      {masterPassword !== "" && showValidatePasswordButton && (
+        <button onClick={handleSaveMasterPassword}>
+          Valider le mot de passe général
+        </button>
+      )}
+
+      {(step === SIGN_UP_STEP.PIN || step === SIGN_UP_STEP.FINAL) && (
+        <div className="flex flex-col items-center gap-6">
+          <div>
+            <h2 className="text-xl font-bold">Créez votre code PIN :</h2>
+            <p className="text-gray-500">Il sera demandé à chaque ouverture</p>
+          </div>
+
+          {/*TODO: On hover, display the current PIN */}
+          <PinPad
+            pin={pin}
+            setPin={setPin}
+            onComplete={(finalPin) => handleFinalPin(finalPin)}
+          />
+        </div>
+      )}
+
+      {step === SIGN_UP_STEP.FINAL && (
+        <Button onClick={handleSignIn}>Commencer à utiliser Locky</Button>
       )}
 
       {userID && (
