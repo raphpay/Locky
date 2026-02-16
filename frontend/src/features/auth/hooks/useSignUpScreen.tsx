@@ -79,11 +79,8 @@ export default function useSignUpScreen({
     try {
       const userCred = await AuthService.signIn();
 
-      const mnemonic = RecoverySeedService.generateRecoverySeed();
-      setPhrase(mnemonic);
-
       if (userCred !== null)
-        await UserService.create(mnemonic, masterPassword, pin);
+        await UserService.create(phrase, masterPassword, pin);
 
       setIsLoading(false);
       navigate(ROUTES.HOME);

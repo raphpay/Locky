@@ -37,7 +37,7 @@ const SessionManager = {
    */
   generateMasterKey(phrase: string) {
     const entropy = bip39.mnemonicToEntropy(
-      phrase.trim().toLowerCase(),
+      phrase.trim().toLowerCase().replace(/\s+/g, " "),
       french,
     );
     const masterKeyHex = Buffer.from(entropy).toString("hex");

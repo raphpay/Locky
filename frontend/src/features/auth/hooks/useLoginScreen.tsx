@@ -9,6 +9,7 @@ export default function useLoginScreen({ masterPassword, pin }: LoginProps) {
   const navigate = useNavigate();
   const [step, setStep] = useState<LOGIN_METHOD>(LOGIN_METHOD.PIN);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [recoveryPhrase, setRecoveryPhrase] = useState<string>("");
 
   function handleNavigateBack() {
     navigate(ROUTES.ROOT);
@@ -35,7 +36,14 @@ export default function useLoginScreen({ masterPassword, pin }: LoginProps) {
         throw error;
       }
     } else if (method === LOGIN_METHOD.RECOVERY_PHRASE) {
-      // TODO: Handle recovery phrase login
+      try {
+        await AuthService.loginWithRecoveryPhrase(recoveryPhrase);
+        setIsLoading(false);
+        navigate(ROUTES.HOME);
+      } catch (error) {
+        setIsLoading(false);
+        throw error;
+      }
     } else if (method === LOGIN_METHOD.BIOMETRICS) {
       // TODO: Handle biometrics login
     }
@@ -60,6 +68,8 @@ export default function useLoginScreen({ masterPassword, pin }: LoginProps) {
   return {
     step,
     isLoading,
+    recoveryPhrase,
+    setRecoveryPhrase,
     handleNavigateBack,
     handleLogIn,
     handleForgot,

@@ -1,4 +1,5 @@
 import { Button } from "../../../ui/components/radix/Button";
+import SessionManager from "../../session/SessionManager";
 import LoadingSpinner from "../components/LoadingSpinner";
 import PinPad from "../components/PinPad";
 import LOGIN_METHOD from "../enum/loginMethod";
@@ -15,6 +16,8 @@ function LogIn({ pin, masterPassword, setPin, setMasterPassword }: LoginProps) {
   const {
     step,
     isLoading,
+    recoveryPhrase,
+    setRecoveryPhrase,
     handleNavigateBack,
     handleLogIn,
     handleForgot,
@@ -60,6 +63,20 @@ function LogIn({ pin, masterPassword, setPin, setMasterPassword }: LoginProps) {
         </div>
       )}
 
+      {step === LOGIN_METHOD.RECOVERY_PHRASE && (
+        <div className="flex flex-col justify-center items-center">
+          <p>Entrez votre phrase de récupération pour dévérouiller l'app</p>
+          <p>Attention, c'est votre dernière chance pour débloquer l'app</p>
+          <input
+            value={recoveryPhrase}
+            onChange={(e) => setRecoveryPhrase(e.target.value)}
+            className="border border-gray-300 rounded-md p-2 w-full"
+            placeholder="lorem ipsum dolor"
+            type="text"
+          />
+        </div>
+      )}
+
       {step === LOGIN_METHOD.PIN && (
         <div className="flex flex-col gap-2">
           {pin !== "" && (
@@ -85,16 +102,15 @@ function LogIn({ pin, masterPassword, setPin, setMasterPassword }: LoginProps) {
           )}
           <Button
             variant={"link"}
-            onClick={() => handleForgot(LOGIN_METHOD.MASTER_PASSWORD)}
+            onClick={() => handleForgot(LOGIN_METHOD.RECOVERY_PHRASE)}
           >
             Je ne me souviens plus de mon mot de passe
           </Button>
         </div>
       )}
 
-      {/*TODO: Handle mnemonic login*/}
-      {step === LOGIN_METHOD.MASTER_PASSWORD && pin !== "" && (
-        <Button onClick={() => handleLogIn(LOGIN_METHOD.MASTER_PASSWORD)}>
+      {step === LOGIN_METHOD.RECOVERY_PHRASE && recoveryPhrase !== "" && (
+        <Button onClick={() => handleLogIn(LOGIN_METHOD.RECOVERY_PHRASE)}>
           Entrer dans l'application
         </Button>
       )}

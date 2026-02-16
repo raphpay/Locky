@@ -15,6 +15,7 @@ import ViewPassword from "../password/screens/ViewPassword";
 
 function Navigation() {
   const navigate = useNavigate();
+  // TODO: To be handled locally ?
   const [pin, setPin] = useState<string>("");
   const [masterPassword, setMasterPassword] = useState<string>("");
   const [userID, setUserID] = useState<string | null>(null);

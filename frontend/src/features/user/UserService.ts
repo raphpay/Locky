@@ -16,10 +16,8 @@ const UserService = {
    * @returns The generated public ID.
    */
   // TODO: Make it private
-  generatePublicID(mnemonic: string): string {
-    return CryptoJS.SHA256(mnemonic.trim().toLowerCase()).toString(
-      CryptoJS.enc.Hex,
-    );
+  generatePublicID(masterKey: string): string {
+    return CryptoJS.SHA256(masterKey).toString(CryptoJS.enc.Hex);
   },
 
   /**
@@ -29,8 +27,8 @@ const UserService = {
    * @param masterPassword - The user's master password.
    */
   async create(mnemonic: string, masterPassword: string, pin: string) {
-    const publicID = this.generatePublicID(mnemonic);
     const masterKey = SessionManager.generateMasterKey(mnemonic);
+    const publicID = this.generatePublicID(masterKey);
     const wrappedKey = generateWrappedKey(masterKey, masterPassword);
     const localPinWrap = SecurityService.encryptData(masterKey, pin);
 
