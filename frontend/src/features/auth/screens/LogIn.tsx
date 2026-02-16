@@ -1,5 +1,6 @@
 import { Button } from "../../../ui/components/radix/Button";
 import { Spinner } from "../../../ui/components/radix/Spinner";
+import LoadingSpinner from "../components/LoadingSpinner";
 import PinPad from "../components/PinPad";
 import LOGIN_METHOD from "../enum/loginMethod";
 import useLoginScreen from "../hooks/useLoginScreen";
@@ -14,6 +15,7 @@ export interface LoginProps {
 function LogIn({ pin, masterPassword, setPin, setMasterPassword }: LoginProps) {
   const {
     step,
+    isLoading,
     handleNavigateBack,
     handleLogIn,
     handleForgot,
@@ -26,7 +28,9 @@ function LogIn({ pin, masterPassword, setPin, setMasterPassword }: LoginProps) {
   });
 
   return (
-    <div className="flex flex-col gap-2 bg-amber-300">
+    <div className="flex flex-col gap-2">
+      <LoadingSpinner isLoading={isLoading} />
+
       <button className="absolute top-2 left-2" onClick={handleNavigateBack}>
         Retour
       </button>

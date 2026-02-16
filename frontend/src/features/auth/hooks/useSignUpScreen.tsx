@@ -27,6 +27,7 @@ export default function useSignUpScreen({
   const [phrase, setPhrase] = useState<string>("");
   const [showValidatePasswordButton, setShowValidatePasswordButton] =
     useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   function handleMnemonicCopy() {
     navigator.clipboard.writeText(phrase);
@@ -74,6 +75,7 @@ export default function useSignUpScreen({
   }
 
   async function handleSignIn() {
+    setIsLoading(true);
     try {
       const userCred = await AuthService.signIn();
 
@@ -83,8 +85,10 @@ export default function useSignUpScreen({
       if (userCred !== null)
         await UserService.create(mnemonic, masterPassword, pin);
 
+      setIsLoading(false);
       navigate(ROUTES.HOME);
     } catch (error) {
+      setIsLoading(false);
       console.error("Error signing in:", error);
     }
   }

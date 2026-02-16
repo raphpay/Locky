@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router";
 import ROUTES from "../../navigation/Routes";
 import AuthService from "../AuthService";
-import CacheService from "../../cache/CacheService";
 import type { LoginProps } from "../screens/LogIn";
 import { useState } from "react";
 import LOGIN_METHOD from "../enum/loginMethod";
@@ -9,18 +8,32 @@ import LOGIN_METHOD from "../enum/loginMethod";
 export default function useLoginScreen({ masterPassword, pin }: LoginProps) {
   const navigate = useNavigate();
   const [step, setStep] = useState<LOGIN_METHOD>(LOGIN_METHOD.PIN);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   function handleNavigateBack() {
     navigate(ROUTES.ROOT);
   }
 
   async function handleLogIn(method: LOGIN_METHOD) {
+    setIsLoading(true);
     if (method === LOGIN_METHOD.PIN) {
-      await AuthService.loginWithPin(pin);
-      navigate(ROUTES.HOME);
+      try {
+        await AuthService.loginWithPin(pin);
+        setIsLoading(false);
+        navigate(ROUTES.HOME);
+      } catch (error) {
+        setIsLoading(false);
+        throw error;
+      }
     } else if (method === LOGIN_METHOD.MASTER_PASSWORD) {
-      await AuthService.login(masterPassword);
-      navigate(ROUTES.HOME);
+      try {
+        await AuthService.login(masterPassword);
+        setIsLoading(false);
+        navigate(ROUTES.HOME);
+      } catch (error) {
+        setIsLoading(false);
+        throw error;
+      }
     } else if (method === LOGIN_METHOD.RECOVERY_PHRASE) {
       // TODO: Handle recovery phrase login
     } else if (method === LOGIN_METHOD.BIOMETRICS) {
@@ -33,11 +46,13 @@ export default function useLoginScreen({ masterPassword, pin }: LoginProps) {
   }
 
   async function handleFinalPin(pin: string) {
-    // TODO: Handle loading
+    setIsLoading(true);
     try {
       await AuthService.loginWithPin(pin);
+      setIsLoading(false);
       navigate(ROUTES.HOME);
     } catch (error) {
+      setIsLoading(false);
       console.error(error);
     }
   }

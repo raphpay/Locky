@@ -1,4 +1,5 @@
 import { Button } from "../../../ui/components/radix/Button";
+import LoadingSpinner from "../components/LoadingSpinner";
 import PinPad from "../components/PinPad";
 import PHRASE_STATUS from "../enum/phraseStatus";
 import SIGN_UP_STEP from "../enum/signUpStep";
@@ -27,6 +28,7 @@ function SignUp({
     phraseStatus,
     copyButtonText,
     showValidatePasswordButton,
+    isLoading,
     handleSaveMasterPassword,
     handleNavigateBack,
     handleMnemonicCopy,
@@ -43,6 +45,8 @@ function SignUp({
 
   return (
     <div className="flex flex-1 flex-col gap-2">
+      <LoadingSpinner isLoading={isLoading} />
+
       <button className="absolute top-2 left-2" onClick={handleNavigateBack}>
         Retour
       </button>
