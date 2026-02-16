@@ -6,6 +6,9 @@ import { db } from "../firebase/init";
 import SessionManager from "../session/SessionManager";
 import COLLECTIONS from "../firebase/collections";
 import SecurityService from "../security/SecurityService";
+import RecoverySeedService from "../recoverySeed/RecoverySeedService";
+import UserService from "../user/UserService";
+import { CalendarCheck } from "lucide-react";
 
 const AuthService = {
   /**
@@ -92,6 +95,24 @@ const AuthService = {
       console.error("Error logging in with PIN:", error);
       throw error;
     }
+  },
+
+  async loginWithRecoveryPhrase(mnemonic: string) {
+    const isValid = RecoverySeedService.validateMnemonic(mnemonic);
+    if (!isValid) {
+      throw new Error("Invalid recovery phrase");
+    }
+
+    const masterKey = SessionManager.generateMasterKey(mnemonic);
+    console.log("masterKey", masterKey);
+
+    const publicID = UserService.generatePublicID(masterKey);
+
+    await this.getAuthDataFromFirestore(publicID);
+    await this.reconnectUserIfNeeded();
+
+    SessionManager.setMasterKey(masterKey);
+    CacheService.store(CACHE_KEYS.PUBLIC_ID, publicID);
   },
 
   /**

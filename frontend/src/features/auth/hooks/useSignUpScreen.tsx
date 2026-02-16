@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import type { SignUpProps } from "../screens/SignUp";
 import PHRASE_STATUS from "../enum/phraseStatus";
 import AuthService from "../AuthService";
 import RecoverySeedService from "../../recoverySeed/RecoverySeedService";
@@ -8,14 +7,11 @@ import UserService from "../../user/UserService";
 import ROUTES from "../../navigation/Routes";
 import SIGN_UP_STEP from "../enum/signUpStep";
 
-export default function useSignUpScreen({
-  pin,
-  setPin,
-  setMasterPassword,
-  masterPassword,
-}: SignUpProps) {
+export default function useSignUpScreen() {
   const navigate = useNavigate();
 
+  const [pin, setPin] = useState<string>("");
+  const [masterPassword, setMasterPassword] = useState<string>("");
   const [step, setStep] = useState<SIGN_UP_STEP>(SIGN_UP_STEP.PHRASE);
   const [showPhrase, setShowPhrase] = useState<boolean>(false);
   const [phraseStatus, setPhraseStatus] = useState<PHRASE_STATUS>(
@@ -79,11 +75,8 @@ export default function useSignUpScreen({
     try {
       const userCred = await AuthService.signIn();
 
-      const mnemonic = RecoverySeedService.generateRecoverySeed();
-      setPhrase(mnemonic);
-
       if (userCred !== null)
-        await UserService.create(mnemonic, masterPassword, pin);
+        await UserService.create(phrase, masterPassword, pin);
 
       setIsLoading(false);
       navigate(ROUTES.HOME);
@@ -103,6 +96,10 @@ export default function useSignUpScreen({
   }, []);
 
   return {
+    pin,
+    setPin,
+    masterPassword,
+    setMasterPassword,
     step,
     showPhrase,
     phrase,
@@ -110,6 +107,7 @@ export default function useSignUpScreen({
     copyButtonText,
     showInput,
     showValidatePasswordButton,
+    isLoading,
     handleSaveMasterPassword,
     handleNavigateBack,
     handleMnemonicCopy,

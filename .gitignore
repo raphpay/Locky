@@ -148,7 +148,6 @@ app-info.txt
 
 # Sample data
 */sampleData/*
-securityService.ts
 
 # Zed settings
 .zed/settings.json
