@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Route } from "react-router";
 import { Routes } from "react-router";
 import App from "../../App";
@@ -6,7 +6,7 @@ import SignUp from "../auth/screens/SignUp";
 import LogIn from "../auth/screens/LogIn";
 import Home from "../home/screens/Home";
 import SessionManager from "../session/SessionManager";
-import ROUTES from "./ROUTES";
+import ROUTES from "./Routes";
 import { useNavigate } from "react-router";
 import CacheService from "../cache/CacheService";
 import CACHE_KEYS from "../cache/CACHE_KEYS";
@@ -19,13 +19,14 @@ function Navigation() {
   useEffect(() => {
     const masterKey = SessionManager.getMasterKey();
     if (!masterKey) {
-      navigate(ROUTES.ROOT);
       const publicID = CacheService.retrieve(CACHE_KEYS.PUBLIC_ID);
       if (publicID) {
         navigate(ROUTES.LOGIN);
+      } else {
+        navigate(ROUTES.ROOT);
       }
     }
-  }, [navigate]);
+  }, []);
 
   return (
     <Routes>
