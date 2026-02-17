@@ -1,9 +1,10 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import ROUTES from "../../navigation/Routes";
 import AuthService from "../AuthService";
-import type { LoginProps } from "../screens/LogIn";
-import { useState } from "react";
 import LOGIN_METHOD from "../enum/loginMethod";
+import CacheService from "../../cache/CacheService";
+import CACHE_KEYS from "../../cache/CACHE_KEYS";
 
 export default function useLoginScreen() {
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ export default function useLoginScreen() {
   const [step, setStep] = useState<LOGIN_METHOD>(LOGIN_METHOD.PIN);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [recoveryPhrase, setRecoveryPhrase] = useState<string>("");
+  const [hasBio, setHasBio] = useState<boolean>(false);
 
   function handleNavigateBack() {
     navigate(ROUTES.ROOT);
@@ -47,7 +49,14 @@ export default function useLoginScreen() {
         throw error;
       }
     } else if (method === LOGIN_METHOD.BIOMETRICS) {
-      // TODO: Handle biometrics login
+      try {
+        await AuthService.loginWithTouchID();
+        setIsLoading(false);
+        navigate(ROUTES.HOME);
+      } catch (error) {
+        setIsLoading(false);
+        console.error(error);
+      }
     }
   }
 
@@ -67,6 +76,16 @@ export default function useLoginScreen() {
     }
   }
 
+  async function retriveBio() {
+    return !!CacheService.retrieve(CACHE_KEYS.BIOMETRICS_WRAP);
+  }
+
+  useEffect(() => {
+    retriveBio().then((result) => {
+      setHasBio(result);
+    });
+  }, []);
+
   return {
     pin,
     setPin,
@@ -76,6 +95,7 @@ export default function useLoginScreen() {
     isLoading,
     recoveryPhrase,
     setRecoveryPhrase,
+    hasBio,
     handleNavigateBack,
     handleLogIn,
     handleForgot,

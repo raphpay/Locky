@@ -1,4 +1,6 @@
 import { Button } from "../../../ui/components/radix/Button";
+import CACHE_KEYS from "../../cache/CACHE_KEYS";
+import CacheService from "../../cache/CacheService";
 import LoadingSpinner from "../components/LoadingSpinner";
 import PinPad from "../components/PinPad";
 import LOGIN_METHOD from "../enum/loginMethod";
@@ -14,6 +16,7 @@ function LogIn() {
     isLoading,
     recoveryPhrase,
     setRecoveryPhrase,
+    hasBio,
     handleNavigateBack,
     handleLogIn,
     handleForgot,
@@ -27,8 +30,17 @@ function LogIn() {
       <button className="absolute top-2 left-2" onClick={handleNavigateBack}>
         Retour
       </button>
+
       <h2 className="font-bold text-2xl">Les mots de passe sont bloqués</h2>
 
+      {hasBio && (
+        <button
+          className="btn btn-primary"
+          onClick={() => handleLogIn(LOGIN_METHOD.BIOMETRICS)}
+        >
+          Utiliser la biometrie
+        </button>
+      )}
       {step === LOGIN_METHOD.PIN && (
         <div className="flex flex-col justify-center items-center">
           <p>Entrez votre code PIN pour dévérouiller l'app</p>
