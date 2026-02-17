@@ -82,6 +82,7 @@ const AuthService = {
       }
 
       const decryptedMasterKey = SecurityService.decryptData(localPin, pin);
+      console.log("pin", decryptedMasterKey);
 
       // If the pin is valid, decrypt the master key
       if (!decryptedMasterKey) {
@@ -113,6 +114,23 @@ const AuthService = {
 
     SessionManager.setMasterKey(masterKey);
     CacheService.store(CACHE_KEYS.PUBLIC_ID, publicID);
+  },
+
+  async loginWithTouchID() {
+    const blob = CacheService.retrieve(CACHE_KEYS.BIOMETRICS_WRAP) as string;
+    if (!blob) return;
+
+    const res = await window.electron.promptTouchID(
+      "Dévérouiller votre session.",
+    );
+
+    if (!res) {
+      throw new Error("User cancelled touch ID");
+    }
+
+    const decryptedKey = await window.electron.decrypt(blob);
+    SessionManager.setMasterKey(decryptedKey);
+    await this.reconnectUserIfNeeded();
   },
 
   /**

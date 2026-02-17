@@ -90,7 +90,7 @@ export default function useSignUpScreen() {
       if (res === true) {
         const masterKey = SessionManager.getMasterKey();
         if (!masterKey) throw new Error("Invalid session");
-        const encryptedKey = window.electron.encrypt(masterKey);
+        const encryptedKey = await window.electron.encrypt(masterKey);
         CacheService.store(CACHE_KEYS.BIOMETRICS_WRAP, encryptedKey);
       }
 
