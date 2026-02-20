@@ -19,6 +19,7 @@ export default async function savePassword(formData: PasswordFormData) {
     username_enc: SecurityService.encryptData(formData.username, masterKey),
     password_enc: SecurityService.encryptData(formData.password, masterKey),
     website_enc: SecurityService.encryptData(formData.website, masterKey),
+    title_enc: SecurityService.encryptData(formData.title, masterKey),
     notes_enc: SecurityService.encryptData(formData.notes, masterKey),
     createdAt: new Date().toISOString(),
   };
