@@ -3,6 +3,9 @@ import { useNavigate } from "react-router";
 import type PasswordFormData from "../model/PasswordFormData";
 import ROUTES from "../../navigation/Routes";
 import savePassword from "../api/savePassword";
+import { useForm } from "@tanstack/react-form";
+import { passwordFormSchema } from "../model/PasswordFormData";
+import { extractSiteName } from "../api/extractSiteName";
 
 enum DIALOG_STATUS {
   SUCCESS = "SUCCESS",
@@ -11,16 +14,26 @@ enum DIALOG_STATUS {
 
 export default function useCreatePasswordScreen() {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState<PasswordFormData>({
-    username: "",
-    password: "",
-    website: "",
-    notes: "",
-  });
   const [sendButtonDisabled, setSendButtonDisabled] = useState<boolean>(false);
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [dialogTitle, setDialogTitle] = useState<string>("");
   const [dialogDescription, setDialogDescription] = useState<string>("");
+  const [suggestedTitle, setSuggestedTitle] = useState<string>("");
+  const form = useForm({
+    defaultValues: {
+      title: "",
+      username: "",
+      password: "",
+      website: "",
+      notes: "",
+    },
+    validators: {
+      onSubmit: passwordFormSchema,
+    },
+    onSubmit: async (formData) => {
+      await handleSubmit(formData.value as PasswordFormData);
+    },
+  });
 
   function handleNavigateBack() {
     navigate(ROUTES.HOME);
@@ -42,10 +55,40 @@ export default function useCreatePasswordScreen() {
     setIsDialogOpen(true);
   }
 
-  async function handleSubmit() {
+  function onWebsiteLosesFocus(url: string) {
+    if (!url) {
+      setSuggestedTitle("");
+      return;
+    }
+
+    const extractedName = extractSiteName(url);
+
+    // Automatically update the title
+    // Logic: We only replace the placeholder of the title if empty or
+    // if the user hasn't already changed it.
+    const currentTitle = form.getFieldValue("title");
+
+    if (
+      !currentTitle ||
+      currentTitle.length <= 1 ||
+      url.includes(currentTitle.toLowerCase())
+    ) {
+      setSuggestedTitle(extractedName);
+    }
+  }
+
+  async function handleSubmit(value: PasswordFormData) {
     setSendButtonDisabled(true);
     try {
-      await savePassword(formData);
+      const finalTitle =
+        value.title.trim() !== ""
+          ? value.title
+          : suggestedTitle || extractSiteName(value.website) || "Sans Titre";
+      const dataToSave: PasswordFormData = {
+        ...value,
+        title: finalTitle,
+      };
+      await savePassword(dataToSave);
       handleDialogOpen(DIALOG_STATUS.SUCCESS);
       setSendButtonDisabled(false);
       setTimeout(() => {
@@ -58,13 +101,13 @@ export default function useCreatePasswordScreen() {
   }
 
   return {
-    formData,
-    setFormData,
+    form,
     sendButtonDisabled,
     isDialogOpen,
     dialogTitle,
     dialogDescription,
+    suggestedTitle,
     handleNavigateBack,
-    handleSubmit,
+    onWebsiteLosesFocus,
   };
 }
