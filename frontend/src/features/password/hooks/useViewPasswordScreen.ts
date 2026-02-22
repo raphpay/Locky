@@ -8,6 +8,8 @@ import type FIRPasswordDecrypted from "../model/FIRPasswordDecrypted";
 import updatePassword from "../api/updatePassword";
 import ROUTES from "../../navigation/Routes";
 import deletePassword from "../api/deletePassword";
+import { useForm } from "@tanstack/react-form";
+import { firPasswordFormSchema } from "../model/PasswordFormData";
 
 enum TOAST_MESSAGE {
   WEBSITE_COPIED = "Le site web a été copié.",
@@ -39,9 +41,22 @@ export default function useViewPasswordScreen() {
     useState<boolean>(false);
   const [showDeletionAlert, setShowDeletionAlert] = useState<boolean>(false);
 
-  function handleNavigateBack() {
-    navigate(-1);
-  }
+  const form = useForm({
+    defaultValues: {
+      id: data?.id || "",
+      title: data?.title || "",
+      username: data?.username || "",
+      password: data?.password || "",
+      website: data?.website || "",
+      notes: data?.notes || "",
+    },
+    validators: {
+      onChange: firPasswordFormSchema,
+    },
+    onSubmit: async ({ value }) => {
+      await handleSubmit(value);
+    },
+  });
 
   function navigateBackWithTimeout() {
     setTimeout(() => {
@@ -49,32 +64,9 @@ export default function useViewPasswordScreen() {
     }, 1500);
   }
 
-  function handleCopyWebsite() {
-    if (data) {
-      navigator.clipboard.writeText(data.website);
-      displayToast(TOAST_MESSAGE.WEBSITE_COPIED);
-    }
-  }
-
-  function handleCopyUsername() {
-    if (data) {
-      navigator.clipboard.writeText(data.username);
-      displayToast(TOAST_MESSAGE.USERNAME_COPIED);
-    }
-  }
-
-  function handleCopyPassword() {
-    if (data) {
-      navigator.clipboard.writeText(data.password);
-      displayToast(TOAST_MESSAGE.PASSWORD_COPIED);
-    }
-  }
-
-  function handleCopyNotes() {
-    if (data) {
-      navigator.clipboard.writeText(data.password);
-      displayToast(TOAST_MESSAGE.NOTES_COPIED);
-    }
+  function handleCopy(text: string, message: string) {
+    navigator.clipboard.writeText(text);
+    displayToast(message);
   }
 
   function displayToast(
@@ -125,12 +117,26 @@ export default function useViewPasswordScreen() {
     }
   }
 
+  async function handleSubmit(value: FIRPasswordDecrypted) {
+    try {
+      await updatePassword(value);
+      displayToast(TOAST_MESSAGE.PASSWORD_EDITED);
+      setIsEditing(false);
+    } catch (err) {
+      console.error(err);
+      displayToast(TOAST_MESSAGE.PASSWORD_EDITION_ERROR, TOAST_TYPE.ERROR);
+    }
+  }
+
   useEffect(() => {
-    setEditingData(data);
-  }, [data]);
+    if (data) {
+      form.reset(data);
+    }
+  }, [data, form]);
 
   return {
     data,
+    form,
     isLoading,
     error,
     isHovered,
@@ -142,11 +148,8 @@ export default function useViewPasswordScreen() {
     isSaveButtonDisabled,
     showDeletionAlert,
     setShowDeletionAlert,
-    handleNavigateBack,
-    handleCopyWebsite,
-    handleCopyUsername,
-    handleCopyPassword,
-    handleCopyNotes,
+    handleNavigateBack: () => navigate(-1),
+    handleCopy,
     handleSave,
     confirmDeletion,
   };

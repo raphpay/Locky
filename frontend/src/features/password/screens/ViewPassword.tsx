@@ -9,10 +9,14 @@ import {
   AlertDialogTitle,
 } from "../../../ui/components/radix/AlertDialog";
 import { Toaster } from "../../../ui/components/radix/Sonner";
+import { Input } from "../../../ui/components/radix/Input";
+import { Button } from "../../../ui/components/radix/Button";
 import useViewPasswordScreen from "../hooks/useViewPasswordScreen";
+import { Label } from "../../../ui/components/radix/Label";
 
 function ViewPassword() {
   const {
+    form,
     data,
     isLoading,
     error,
@@ -20,185 +24,231 @@ function ViewPassword() {
     setIsHovered,
     isEditing,
     setIsEditing,
-    editingData,
-    setEditingData,
-    isSaveButtonDisabled,
     showDeletionAlert,
     setShowDeletionAlert,
     handleNavigateBack,
-    handleCopyWebsite,
-    handleCopyUsername,
-    handleCopyPassword,
-    handleCopyNotes,
-    handleSave,
+    handleCopy,
     confirmDeletion,
   } = useViewPasswordScreen();
 
   if (isLoading)
     return (
-      <div className="h-full w-full flex items-center justify-center">
-        Loading...
+      <div className="flex h-full w-full items-center justify-center">
+        Chargement...
       </div>
     );
-
-  if (error)
+  if (error || !data)
     return (
-      <div className="h-full w-full flex items-center justify-center">
-        Error while loading password
+      <div className="flex h-full w-full items-center justify-center text-red-500">
+        Erreur de chargement
       </div>
     );
 
   return (
-    <div className="flex flex-1 flex-col gap-2">
-      <div className="absolute top-2 right-2 flex gap-2">
-        <button onClick={handleNavigateBack}>Retour</button>
-        <button
-          className={isEditing ? "text-green-600 font-bold" : "text-blue-600"}
-          onClick={() => (isEditing ? handleSave() : setIsEditing(true))}
-          disabled={isSaveButtonDisabled}
-        >
-          {isEditing ? "Enregistrer" : "Modifier"}
-        </button>
-        {isEditing && (
-          <button onClick={() => setIsEditing(false)}>Annuler</button>
-        )}
-      </div>
-
-      {data ? (
-        <div className="flex flex-col gap-2">
-          <div>
-            {isEditing && editingData ? (
-              <input
-                id="title"
-                type="text"
-                className="border rounded-sm p-1"
-                placeholder="Titre"
-                value={editingData.title}
-                onChange={(e) =>
-                  setEditingData({ ...editingData, title: e.target.value })
-                }
-              />
-            ) : (
-              <div className="cursor-copy" onClick={handleCopyWebsite}>
-                <h2 className="font-bold text-2xl">{data.title}</h2>
-              </div>
-            )}
-          </div>
-
-          <div>
-            <span className="text-sm text-gray-500 block">Site web</span>
-            {isEditing && editingData ? (
-              <input
-                id="website"
-                type="text"
-                className="border rounded-sm p-1"
-                placeholder="Site Web"
-                value={editingData.website}
-                onChange={(e) =>
-                  setEditingData({ ...editingData, website: e.target.value })
-                }
-              />
-            ) : (
-              <div className="cursor-copy" onClick={handleCopyWebsite}>
-                <p className="font-medium">{data.website}</p>
-              </div>
-            )}
-          </div>
-          <div>
-            <span className="text-sm text-gray-500 block">Identifiant</span>
-            {isEditing && editingData ? (
-              <input
-                id="username"
-                type="text"
-                className="border rounded-sm p-1"
-                placeholder="Identifiant"
-                value={editingData.username}
-                onChange={(e) =>
-                  setEditingData({ ...editingData, username: e.target.value })
-                }
-              />
-            ) : (
-              <div className="cursor-copy" onClick={handleCopyUsername}>
-                <p className="font-medium">{data.username}</p>
-              </div>
-            )}
-          </div>
-
-          <div>
-            <span className="text-sm text-gray-500 block">Password</span>
-            {isEditing && editingData ? (
-              <input
-                id="password"
-                type="text"
-                className="border rounded-sm p-1"
-                value={editingData.password}
-                onChange={(e) =>
-                  setEditingData({ ...editingData, password: e.target.value })
-                }
-              />
-            ) : (
-              <div
-                className="p-2 rounded cursor-copy transition-all duration-200"
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
-                onClick={handleCopyPassword}
-              >
-                {/* Logique d'affichage conditionnel */}
-                <p className="font-mono text-lg tracking-wider">
-                  {isHovered ? data.password : "••••••••••••"}
-                </p>
-              </div>
-            )}
-          </div>
-
-          <div>
-            <span className="text-sm text-gray-500 block">Notes</span>
-            {isEditing && editingData ? (
-              <input
-                id="notes"
-                type="text"
-                className="border rounded-sm p-1"
-                value={editingData.notes}
-                onChange={(e) =>
-                  setEditingData({ ...editingData, notes: e.target.value })
-                }
-              />
-            ) : (
-              <div className="cursor-copy" onClick={handleCopyNotes}>
-                <p className="font-medium">{data.notes}</p>
-              </div>
-            )}
-          </div>
-        </div>
-      ) : (
-        <p>Données invalides</p>
-      )}
-
-      {isEditing && (
-        <button
-          className="bg-red-400 hover:bg-red-300 cursor-pointer"
-          onClick={() => setShowDeletionAlert(true)}
-        >
-          Supprimer
-        </button>
-      )}
-
+    <div className="flex flex-1 flex-col gap-6 p-4">
       <Toaster />
 
-      <AlertDialog defaultOpen={false} open={showDeletionAlert}>
+      {/* Header avec Navigation et Actions */}
+      <div className="flex justify-between items-center">
+        <Button variant="ghost" onClick={handleNavigateBack}>
+          ← Retour
+        </Button>
+        <div className="flex gap-2">
+          {isEditing ? (
+            <>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  form.reset();
+                  setIsEditing(false);
+                }}
+              >
+                Annuler
+              </Button>
+              <Button
+                type="submit"
+                form="edit-password-form"
+                className="bg-green-600 hover:bg-green-700"
+                disabled={!form.state.canSubmit}
+              >
+                Enregistrer
+              </Button>
+            </>
+          ) : (
+            <Button onClick={() => setIsEditing(true)}>Modifier</Button>
+          )}
+        </div>
+      </div>
+
+      {/* Formulaire Principal */}
+      <form
+        id="edit-password-form"
+        onSubmit={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          form.handleSubmit();
+        }}
+        className="flex flex-col gap-4"
+      >
+        {/* TITRE */}
+        <form.Field
+          name="title"
+          children={(field) => (
+            <div className="mb-4">
+              {isEditing ? (
+                <Input
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  className="text-2xl font-bold h-auto py-1"
+                  placeholder="Titre"
+                />
+              ) : (
+                <h2
+                  className="text-3xl font-bold cursor-copy hover:text-blue-600 transition-colors"
+                  onClick={() => handleCopy(field.state.value, "Titre copié")}
+                >
+                  {field.state.value}
+                </h2>
+              )}
+            </div>
+          )}
+        />
+
+        {/* SITE WEB */}
+        <form.Field
+          name="website"
+          children={(field) => (
+            <>
+              <Label className="text-gray-500">Site Web</Label>
+              <div>
+                {isEditing ? (
+                  <Input
+                    value={field.state.value}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                  />
+                ) : (
+                  <p
+                    className="font-medium cursor-copy p-2 rounded hover:bg-gray-100"
+                    onClick={() => handleCopy(field.state.value, "Lien copié")}
+                  >
+                    {field.state.value}
+                  </p>
+                )}
+              </div>
+            </>
+          )}
+        />
+
+        {/* IDENTIFIANT */}
+        <form.Field
+          name="username"
+          children={(field) => (
+            <>
+              <Label className="text-gray-500">Identifiant</Label>
+              <div>
+                {isEditing ? (
+                  <Input
+                    value={field.state.value}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                  />
+                ) : (
+                  <p
+                    className="font-medium cursor-copy p-2 rounded hover:bg-gray-100"
+                    onClick={() =>
+                      handleCopy(field.state.value, "Identifiant copié")
+                    }
+                  >
+                    {field.state.value}
+                  </p>
+                )}
+              </div>
+            </>
+          )}
+        />
+
+        <form.Field
+          name="password"
+          children={(field) => (
+            <>
+              <Label className="text-gray-500">Mot de passe</Label>
+              <div>
+                {isEditing ? (
+                  <Input
+                    value={field.state.value}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                  />
+                ) : (
+                  <div
+                    className="p-2 rounded cursor-copy hover:bg-gray-100 transition-all font-mono text-lg tracking-wider"
+                    onMouseEnter={() => setIsHovered(true)}
+                    onMouseLeave={() => setIsHovered(false)}
+                    onClick={() =>
+                      handleCopy(field.state.value, "Mot de passe copié")
+                    }
+                  >
+                    {isHovered ? field.state.value : "••••••••••••"}
+                  </div>
+                )}
+              </div>
+            </>
+          )}
+        />
+
+        {/* NOTES */}
+        <form.Field
+          name="notes"
+          children={(field) => (
+            <>
+              <Label className="text-gray-500">Notes</Label>
+              <div>
+                {isEditing ? (
+                  <Input
+                    value={field.state.value}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                  />
+                ) : (
+                  <p
+                    className="font-medium cursor-copy p-2 rounded hover:bg-gray-100 min-h-10"
+                    onClick={() =>
+                      handleCopy(field.state.value, "Notes copiées")
+                    }
+                  >
+                    {field.state.value || (
+                      <span className="text-gray-300 italic">Aucune note</span>
+                    )}
+                  </p>
+                )}
+              </div>
+            </>
+          )}
+        />
+      </form>
+
+      {/* Bouton de Suppression */}
+      {isEditing && (
+        <Button
+          variant="destructive"
+          className="mt-8 w-full"
+          onClick={() => setShowDeletionAlert(true)}
+        >
+          Supprimer ce mot de passe
+        </Button>
+      )}
+
+      {/* Dialog de confirmation */}
+      <AlertDialog open={showDeletionAlert} onOpenChange={setShowDeletionAlert}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Supprimer le mot de passe</AlertDialogTitle>
+            <AlertDialogTitle>Confirmation</AlertDialogTitle>
             <AlertDialogDescription>
-              Êtes-vous sûr de vouloir supprimer ce mot de passe ?
+              Cette action est irréversible. Voulez-vous vraiment supprimer ce
+              compte ?
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setShowDeletionAlert(false)}>
-              Annuler
-            </AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDeletion}>
-              Confirmer
+            <AlertDialogCancel>Annuler</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDeletion} className="bg-red-600">
+              Supprimer
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

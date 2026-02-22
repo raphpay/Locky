@@ -38,6 +38,7 @@ function CreatePassword() {
           id="password-creation-form"
           onSubmit={(e) => {
             e.preventDefault();
+            e.stopPropagation();
             form.handleSubmit();
           }}
         >
