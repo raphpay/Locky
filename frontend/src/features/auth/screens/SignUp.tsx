@@ -22,70 +22,23 @@ function SignUp() {
     handleMnemonicCopy,
     handleSignIn,
     handleFinalPin,
+    handleNavigationToLogIn,
   } = useSignUpScreen();
 
   return (
-    <div className="flex flex-1 flex-col gap-2">
+    <div className="flex flex-1 flex-col items-center justify-center h-full w-full gap-4">
       <LoadingSpinner isLoading={isLoading} />
+      <div className="flex flex-col items-center justify-center w-full">
+        <h1 className="text-primary-text text-4xl">Bienvenue sur Locky</h1>
+        <p className="text-xl text-secondary-text text-center">
+          Vos mots de passe sécurisés, et sans compte à créer. <br /> Que
+          demander de plus ?
+        </p>
+      </div>
 
-      <button className="absolute top-2 left-2" onClick={handleNavigateBack}>
-        Retour
-      </button>
-      <h1>Bonjour, et bienvenue sur Locky!</h1>
-
-      {step === SIGN_UP_STEP.PHRASE && (
-        <div className="flex flex-col items-center gap-2">
-          <h2 className="text-start">
-            Pour commencer, veuillez noter précieusement la phrase suivante.
-          </h2>
-          <p>
-            Elle vous permettra de vous authentifier dans le cas où vous
-            perdriez votre mot de passe.
-          </p>
-          <p>{phrase}</p>
-        </div>
-      )}
-      {phraseStatus !== PHRASE_STATUS.HIDDEN && (
-        <button onClick={handleMnemonicCopy}>{copyButtonText}</button>
-      )}
-      {step === SIGN_UP_STEP.MASTER_PASSWORD && (
-        <div className="flex flex-col justify-center items-center">
-          <p>Entrez maintenant votre mot de passe :</p>
-          <input
-            value={masterPassword}
-            onChange={(e) => setMasterPassword(e.target.value)}
-            className="border border-gray-300 rounded-md p-2 w-full"
-            placeholder="Master Password"
-            type="password"
-          />
-        </div>
-      )}
-
-      {masterPassword !== "" && showValidatePasswordButton && (
-        <button onClick={handleSaveMasterPassword}>
-          Valider le mot de passe général
-        </button>
-      )}
-
-      {(step === SIGN_UP_STEP.PIN || step === SIGN_UP_STEP.FINAL) && (
-        <div className="flex flex-col items-center gap-6">
-          <div>
-            <h2 className="text-xl font-bold">Créez votre code PIN :</h2>
-            <p className="text-gray-500">Il sera demandé à chaque ouverture</p>
-          </div>
-
-          {/*TODO: On hover, display the current PIN */}
-          <PinPad
-            pin={pin}
-            setPin={setPin}
-            onComplete={(finalPin) => handleFinalPin(finalPin)}
-          />
-        </div>
-      )}
-
-      {step === SIGN_UP_STEP.FINAL && (
-        <Button onClick={handleSignIn}>Commencer à utiliser Locky</Button>
-      )}
+      <Button variant={"link"} onClick={handleNavigationToLogIn}>
+        J'ai déjà un coffre-fort
+      </Button>
     </div>
   );
 }

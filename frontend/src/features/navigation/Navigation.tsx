@@ -11,6 +11,7 @@ import CreatePassword from "../password/screens/CreatePassword";
 import ViewPassword from "../password/screens/ViewPassword";
 import { Navigate } from "react-router";
 import LockScreen from "../auth/screens/LockScreen";
+import LoginWithPhrase from "../auth/screens/LoginWithPhrase";
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const masterKey = SessionManager.getMasterKey();
@@ -75,6 +76,15 @@ function Navigation() {
           element={
             <PublicRoute>
               <LockScreen />
+            </PublicRoute>
+          }
+        />
+
+        <Route
+          path={ROUTES.LOGIN_WITH_PHRASE}
+          element={
+            <PublicRoute>
+              <LoginWithPhrase />
             </PublicRoute>
           }
         />

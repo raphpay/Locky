@@ -73,6 +73,10 @@ export default function useSignUpScreen() {
     setPin(finalPin);
   }
 
+  function handleNavigationToLogIn() {
+    navigate(ROUTES.LOGIN_WITH_PHRASE);
+  }
+
   async function handleSignIn() {
     setIsLoading(true);
     try {
@@ -128,5 +132,6 @@ export default function useSignUpScreen() {
     handleMnemonicCopy,
     handleSignIn,
     handleFinalPin,
+    handleNavigationToLogIn,
   };
 }
