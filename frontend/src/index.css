@@ -55,19 +55,20 @@
     --primary-text: hsl(217.24, 32.58%, 17.45%);
     --secondary-text: hsl(215.38, 16.32%, 46.86%);
   }
-}
 
-html,
-body,
-#root {
-  height: 100%;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-}
+  html,
+  body,
+  #root {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
 
-body {
-  @apply bg-background text-foreground;
-  font-family: sans-serif;
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family: sans-serif;
+  }
 }

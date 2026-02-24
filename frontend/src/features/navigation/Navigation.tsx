@@ -58,7 +58,7 @@ function Navigation() {
   }, []);
 
   return (
-    <div className="flex flex-1 flex-col overflow-hidden bg-background">
+    <div className="flex flex-1 flex-col h-full w-full overflow-hidden bg-background">
       <Routes>
         <Route path={ROUTES.ROOT} element={<InitialRedirect />} />
 
