@@ -22,7 +22,9 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
 const PublicRoute = ({ children }: { children: JSX.Element }) => {
   const masterKey = SessionManager.getMasterKey();
   if (masterKey) return <Navigate to={ROUTES.HOME} replace />;
-  return children;
+  const publicID = CacheService.retrieve(CACHE_KEYS.PUBLIC_ID);
+  if (publicID) return children;
+  return <SignUp />;
 };
 
 function InitialRedirect() {

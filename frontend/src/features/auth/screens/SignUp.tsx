@@ -1,9 +1,12 @@
+import { ArrowLeft, ClipboardCopy } from "lucide-react";
+import { cn } from "../../../lib/utils";
 import { Button } from "../../../ui/components/radix/Button";
+import { Toaster } from "../../../ui/components/radix/Sonner";
+
 import LoadingSpinner from "../components/LoadingSpinner";
-import PinPad from "../components/PinPad";
-import PHRASE_STATUS from "../enum/phraseStatus";
-import SIGN_UP_STEP from "../enum/signUpStep";
 import useSignUpScreen from "../hooks/useSignUpScreen";
+import { SecureInput } from "../../../ui/components/radix/SecureInput";
+import PinPad from "../components/PinPad";
 
 function SignUp() {
   const {
@@ -13,32 +16,84 @@ function SignUp() {
     setMasterPassword,
     step,
     phrase,
-    phraseStatus,
-    copyButtonText,
-    showValidatePasswordButton,
     isLoading,
-    handleSaveMasterPassword,
-    handleNavigateBack,
+    currentConfig,
+    isContinueDisabled,
+    nextStep,
+    previousStep,
     handleMnemonicCopy,
-    handleSignIn,
-    handleFinalPin,
     handleNavigationToLogIn,
   } = useSignUpScreen();
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center h-full w-full gap-4">
+    <div className="flex flex-1 flex-col items-center justify-center h-full w-full gap-4 m-auto">
       <LoadingSpinner isLoading={isLoading} />
+
+      {step !== 0 && (
+        <Button
+          variant={"outline"}
+          className="absolute top-8 left-8"
+          onClick={previousStep}
+        >
+          <ArrowLeft />
+          Retour
+        </Button>
+      )}
+
       <div className="flex flex-col items-center justify-center w-full">
-        <h1 className="text-primary-text text-4xl">Bienvenue sur Locky</h1>
-        <p className="text-xl text-secondary-text text-center">
-          Vos mots de passe sécurisés, et sans compte à créer. <br /> Que
-          demander de plus ?
+        <h1
+          className={cn(
+            "text-primary-text",
+            step === 0 ? "text-5xl" : "text-2xl",
+          )}
+        >
+          {currentConfig.title}
+        </h1>
+        <p className="text-xl text-secondary-text text-center max-w-150">
+          {currentConfig.description}
         </p>
       </div>
+
+      {step === 1 && (
+        <div className="flex flex-row max-w-200">
+          <p className="text-2xl font-semibold text-center">{phrase}</p>
+          <Button variant={"accent"} onClick={handleMnemonicCopy}>
+            <ClipboardCopy />
+          </Button>
+        </div>
+      )}
+
+      {step == 2 && (
+        <SecureInput
+          value={masterPassword}
+          onChange={(e) => setMasterPassword(e.target.value)}
+          placeholder={"Mot_de_passe123"}
+          className="w-150"
+          type="password"
+        />
+      )}
+
+      {step === 3 && (
+        <PinPad
+          pin={pin}
+          setPin={setPin}
+          onComplete={() => console.log("Pin entered")}
+        />
+      )}
+
+      <Button
+        className="w-150"
+        onClick={nextStep}
+        disabled={isContinueDisabled}
+      >
+        {currentConfig.button}
+      </Button>
 
       <Button variant={"link"} onClick={handleNavigationToLogIn}>
         J'ai déjà un coffre-fort
       </Button>
+
+      <Toaster />
     </div>
   );
 }
