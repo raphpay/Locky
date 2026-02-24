@@ -9,6 +9,8 @@
   --color-primary-light: hsl(var(--primary-light));
   --color-primary-dark: hsl(var(--primary-dark));
   --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-primary-text: hsl(var(--primary-text));
+  --color-secondary-text: hsl(var(--secondary-text));
 
   --color-accent: hsl(var(--accent));
   --color-accent-light: hsl(var(--accent-light));
@@ -33,6 +35,9 @@
     --accent-dark: 0 65% 55%;
     --accent-foreground: 217 33% 17%;
 
+    --primary-text: 217.24, 32.58%, 17.45%;
+    --secondary-text: 215.38, 16.32%, 46.86%;
+
     --background: 210 40% 98%;
     --foreground: 217 33% 17%;
 
@@ -46,5 +51,23 @@
     --background: 217 33% 17%;
     --foreground: 210 40% 98%;
     /* ... le reste de tes variables dark */
+
+    --primary-text: hsl(217.24, 32.58%, 17.45%);
+    --secondary-text: hsl(215.38, 16.32%, 46.86%);
   }
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+body {
+  @apply bg-background text-foreground;
+  font-family: sans-serif;
 }

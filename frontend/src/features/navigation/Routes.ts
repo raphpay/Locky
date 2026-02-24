@@ -1,6 +1,6 @@
 enum ROUTES {
   ROOT = "/",
-  LOGIN = "/login",
+  LOCKSCREEN = "/lockscreen",
   SIGNUP = "/signup",
   HOME = "/home",
   CREATE_PASSWORD = "/home/create-password",

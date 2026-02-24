@@ -6,7 +6,7 @@ function App() {
   const navigate = useNavigate();
 
   function handleLogIn() {
-    navigate(ROUTES.LOGIN);
+    navigate(ROUTES.LOCKSCREEN);
   }
 
   function handleSignUp() {
