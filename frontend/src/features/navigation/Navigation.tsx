@@ -1,7 +1,6 @@
 import { useEffect, type JSX } from "react";
 import { Route } from "react-router";
 import { Routes } from "react-router";
-import App from "../../App";
 import SignUp from "../auth/screens/SignUp";
 import Home from "../home/screens/Home";
 import SessionManager from "../session/SessionManager";
@@ -30,7 +29,7 @@ function InitialRedirect() {
   const publicID = CacheService.retrieve(CACHE_KEYS.PUBLIC_ID);
   if (masterKey) return <Navigate to={ROUTES.HOME} replace />;
   if (publicID) return <Navigate to={ROUTES.LOCKSCREEN} replace />;
-  return <App />;
+  return <SignUp />;
 }
 
 function Navigation() {
