@@ -34,7 +34,7 @@ function LockScreen() {
       <LoadingSpinner isLoading={isLoading} />
 
       <SVGLock className="text-primary-text" />
-      <div className="flex-col">
+      <div className="flex-col flex items-center">
         <h1 className="text-primary-text text-2xl">Coffre fort vérrouillé</h1>
         <p className="text-xl text-secondary-text">{description}</p>
       </div>
