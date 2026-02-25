@@ -48,7 +48,7 @@ function SignUp() {
       {step === 1 && (
         <div className="flex flex-row max-w-200">
           <p className="text-2xl font-semibold text-center">{phrase}</p>
-          <Button variant={"accent"} onClick={handleMnemonicCopy}>
+          <Button variant={"secondary"} onClick={handleMnemonicCopy}>
             <ClipboardCopy />
           </Button>
         </div>
