@@ -7,6 +7,7 @@ import LoadingSpinner from "../components/LoadingSpinner";
 import useSignUpScreen from "../hooks/useSignUpScreen";
 import { SecureInput } from "../../../ui/components/radix/SecureInput";
 import PinPad from "../components/PinPad";
+import BackButton from "../../../ui/components/custom/BackButton";
 
 function SignUp() {
   const {
@@ -29,16 +30,7 @@ function SignUp() {
     <div className="flex flex-1 flex-col items-center justify-center h-full w-full gap-4 m-auto">
       <LoadingSpinner isLoading={isLoading} />
 
-      {step !== 0 && (
-        <Button
-          variant={"outline"}
-          className="absolute top-8 left-8"
-          onClick={previousStep}
-        >
-          <ArrowLeft />
-          Retour
-        </Button>
-      )}
+      {step !== 0 && <BackButton onClick={previousStep} />}
 
       <div className="flex flex-col items-center justify-center w-full">
         <h1

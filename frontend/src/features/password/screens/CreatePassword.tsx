@@ -14,6 +14,7 @@ import {
 import { Input } from "../../../ui/components/radix/Input";
 import { Textarea } from "../../../ui/components/radix/Textarea";
 import { Button } from "../../../ui/components/radix/Button";
+import BackButton from "../../../ui/components/custom/BackButton";
 
 function CreatePassword() {
   const {
@@ -29,9 +30,7 @@ function CreatePassword() {
 
   return (
     <div className="flex flex-1 flex-col gap-2">
-      <button onClick={handleNavigateBack} className="absolute top-2 left-2">
-        Retour
-      </button>
+      <BackButton onClick={handleNavigateBack} />
       <div className="flex flex-col gap-2 w-full">
         <form
           className="w-full"
