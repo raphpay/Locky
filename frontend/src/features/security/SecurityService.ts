@@ -25,6 +25,7 @@ const SecurityService = {
    * @returns The decrypted data as a string.
    */
   decryptData(cipherText: string, masterKeyHex: string): string {
+    if (!cipherText) return "";
     try {
       const bytes = CryptoJS.AES.decrypt(cipherText, masterKeyHex);
       const originalText = bytes.toString(CryptoJS.enc.Utf8);
