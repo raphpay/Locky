@@ -2,10 +2,6 @@ import { Toaster } from "../../../ui/components/radix/Sonner";
 import { Spinner } from "../../../ui/components/radix/Spinner";
 import PasswordCard from "../../password/components/PasswordCard";
 import useHomeScreen from "../hooks/useHomeScreen";
-import SortingDropdown from "../components/SortingDropdown";
-import { Button } from "../../../ui/components/radix/Button";
-import { ArrowUpDown, Plus, User } from "lucide-react";
-import { SearchInput } from "../../../ui/components/custom/SearchInput";
 import TopBar from "../components/TopBar";
 import NoPassword from "../components/NoPassword";
 
@@ -55,7 +51,19 @@ function Home() {
       />
 
       {/*No Password*/}
-      <NoPassword handleImport={handleImport} />
+      <div className="flex flex-col gap-2 overflow-y-auto pt-15">
+        {sortedPasswords.length === 0 ? (
+          <NoPassword handleImport={handleImport} />
+        ) : (
+          sortedPasswords.map((password, index) => (
+            <PasswordCard
+              key={password.id ?? index}
+              password={password}
+              navigateToViewPassword={navigateToViewPassword}
+            />
+          ))
+        )}
+      </div>
 
       {/* Hidden Input */}
       <input

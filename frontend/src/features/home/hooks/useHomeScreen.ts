@@ -7,6 +7,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import QUERY_KEYS from "../../cache/QUERY_KEYS";
 import { toast } from "sonner";
 import SORTING_SELECTION from "../sort/sortingSelection";
+import type FIRPasswordDecrypted from "../../password/model/FIRPasswordDecrypted";
 
 enum TOAST_MESSAGE {
   IMPORT_SUCCESS = "Mots de passe importés avec succès !",
@@ -26,7 +27,7 @@ export default function useHomeScreen() {
 
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const sortedPasswords = useMemo(() => {
+  const sortedPasswords: FIRPasswordDecrypted[] = useMemo(() => {
     if (!passwords) return [];
 
     return [...passwords].sort((a, b) => {
