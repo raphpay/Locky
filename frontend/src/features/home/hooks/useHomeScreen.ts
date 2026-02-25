@@ -22,6 +22,7 @@ export default function useHomeScreen() {
     SORTING_SELECTION.TITLE,
   );
   const [isSortingAscending, setIsSortingAscending] = useState<boolean>(true);
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -108,6 +109,8 @@ export default function useHomeScreen() {
     isSendingPasswords,
     sortingSelection,
     isSortingAscending,
+    searchQuery,
+    setSearchQuery,
     createPassword,
     navigateToViewPassword,
     handleImport,
