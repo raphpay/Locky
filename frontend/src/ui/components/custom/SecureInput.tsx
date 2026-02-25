@@ -6,7 +6,7 @@ import {
   InputGroupAddon,
   InputGroupButton,
   InputGroupInput,
-} from "./InputGroup";
+} from "../radix/InputGroup";
 import { Eye, EyeClosed } from "lucide-react";
 
 export function SecureInput({ ...props }: React.ComponentProps<"input">) {

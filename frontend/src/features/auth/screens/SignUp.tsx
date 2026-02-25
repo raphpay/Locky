@@ -1,11 +1,10 @@
-import { ArrowLeft, ClipboardCopy } from "lucide-react";
+import { ClipboardCopy } from "lucide-react";
 import { cn } from "../../../lib/utils";
 import { Button } from "../../../ui/components/radix/Button";
 import { Toaster } from "../../../ui/components/radix/Sonner";
-
 import LoadingSpinner from "../components/LoadingSpinner";
 import useSignUpScreen from "../hooks/useSignUpScreen";
-import { SecureInput } from "../../../ui/components/radix/SecureInput";
+import { SecureInput } from "../../../ui/components/custom/SecureInput";
 import PinPad from "../components/PinPad";
 import BackButton from "../../../ui/components/custom/BackButton";
 
