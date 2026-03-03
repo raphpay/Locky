@@ -4,6 +4,7 @@ import PasswordCard from "../../password/components/PasswordCard";
 import useHomeScreen from "../hooks/useHomeScreen";
 import TopBar from "../components/TopBar";
 import NoPassword from "../components/NoPassword";
+import CreatePasswordModal from "../../password/components/CreatePasswordModal";
 
 function Home() {
   const {
@@ -16,7 +17,8 @@ function Home() {
     isSortingAscending,
     searchQuery,
     setSearchQuery,
-    createPassword,
+    displayCreatePasswordModal,
+    setDisplayCreatePasswordModal,
     navigateToViewPassword,
     handleImport,
     handleFileChange,
@@ -48,6 +50,7 @@ function Home() {
         onSortSelectionChange={handleSortSelection}
         isSortingAscending={isSortingAscending}
         onSortIsAscendingChange={handleSortIsAscendingChange}
+        setDisplayCreatePasswordModal={setDisplayCreatePasswordModal}
       />
 
       {/*No Password*/}
@@ -64,6 +67,11 @@ function Home() {
           ))
         )}
       </div>
+
+      <CreatePasswordModal
+        display={displayCreatePasswordModal}
+        setDisplay={setDisplayCreatePasswordModal}
+      />
 
       {/* Hidden Input */}
       <input

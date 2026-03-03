@@ -13,6 +13,7 @@ interface Props {
   onSortSelectionChange: (selection: SORTING_SELECTION) => void;
   isSortingAscending: boolean;
   onSortIsAscendingChange: (newValue: boolean) => void;
+  setDisplayCreatePasswordModal: (value: boolean) => void;
 }
 
 function TopBar({
@@ -22,6 +23,7 @@ function TopBar({
   onSortSelectionChange,
   isSortingAscending,
   onSortIsAscendingChange,
+  setDisplayCreatePasswordModal,
 }: Props) {
   const navigate = useNavigate();
 
@@ -37,7 +39,10 @@ function TopBar({
           isSortingAscending={isSortingAscending}
           onSortIsAscendingChange={onSortIsAscendingChange}
         />
-        <Button variant={"secondary"}>
+        <Button
+          onClick={() => setDisplayCreatePasswordModal(true)}
+          variant={"secondary"}
+        >
           <Plus />
         </Button>
       </div>

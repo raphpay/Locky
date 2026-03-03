@@ -1,0 +1,8 @@
+enum DIALOG_STATUS {
+  BASE = "BASE",
+  SENDING = "SENDING",
+  SUCCESS = "SUCCESS",
+  ERROR = "ERROR",
+}
+
+export default DIALOG_STATUS;

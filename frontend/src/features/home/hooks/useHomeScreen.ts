@@ -24,6 +24,8 @@ export default function useHomeScreen() {
   );
   const [isSortingAscending, setIsSortingAscending] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [displayCreatePasswordModal, setDisplayCreatePasswordModal] =
+    useState<boolean>(false);
 
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -112,6 +114,8 @@ export default function useHomeScreen() {
     isSortingAscending,
     searchQuery,
     setSearchQuery,
+    displayCreatePasswordModal,
+    setDisplayCreatePasswordModal,
     createPassword,
     navigateToViewPassword,
     handleImport,

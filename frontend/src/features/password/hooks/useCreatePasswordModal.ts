@@ -1,23 +1,30 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import type PasswordFormData from "../model/PasswordFormData";
 import ROUTES from "../../navigation/Routes";
 import savePassword from "../api/savePassword";
 import { useForm } from "@tanstack/react-form";
-import { passwordFormSchema } from "../model/PasswordFormData";
+import {
+  passwordFormSchema,
+  type PasswordFormData,
+} from "../model/PasswordFormData";
 import { extractSiteName } from "../api/extractSiteName";
+import type { CreatePasswordModalProps } from "../components/CreatePasswordModal";
+import DIALOG_STATUS from "../enum/DialogStatus";
 
-enum DIALOG_STATUS {
-  SUCCESS = "SUCCESS",
-  ERROR = "ERROR",
-}
-
-export default function useCreatePasswordScreen() {
+export default function useCreatePasswordModal({
+  setDisplay,
+}: Partial<CreatePasswordModalProps>) {
   const navigate = useNavigate();
   const [sendButtonDisabled, setSendButtonDisabled] = useState<boolean>(false);
-  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
-  const [dialogTitle, setDialogTitle] = useState<string>("");
-  const [dialogDescription, setDialogDescription] = useState<string>("");
+  const [dialogStatus, setDialogStatus] = useState<DIALOG_STATUS>(
+    DIALOG_STATUS.BASE,
+  );
+  const [dialogTitle, setDialogTitle] = useState<string>(
+    "Nouveau mot de passe",
+  );
+  const [dialogDescription, setDialogDescription] = useState<string>(
+    "Créer un nouveau mot de passe pour votre compte.",
+  );
   const [suggestedTitle, setSuggestedTitle] = useState<string>("");
   const form = useForm({
     defaultValues: {
@@ -31,7 +38,7 @@ export default function useCreatePasswordScreen() {
       onSubmit: passwordFormSchema,
     },
     onSubmit: async (formData) => {
-      await handleSubmit(formData.value as PasswordFormData);
+      await handleSubmit(formData.value);
     },
   });
 
@@ -39,8 +46,19 @@ export default function useCreatePasswordScreen() {
     navigate(ROUTES.HOME);
   }
 
-  function handleDialogOpen(status: DIALOG_STATUS) {
+  function handleStatusChange(status: DIALOG_STATUS) {
+    setDialogStatus(status);
     switch (status) {
+      case DIALOG_STATUS.BASE:
+        setDialogTitle("Nouveau mot de passe");
+        setDialogDescription(
+          "Créer un nouveau mot de passe pour votre compte.",
+        );
+        break;
+      case DIALOG_STATUS.SENDING:
+        setDialogTitle("Envoi en cours");
+        setDialogDescription("Veuillez patienter...");
+        break;
       case DIALOG_STATUS.SUCCESS:
         setDialogTitle("Succès");
         setDialogDescription("Mot de passe créé avec succès.");
@@ -52,7 +70,6 @@ export default function useCreatePasswordScreen() {
         );
         break;
     }
-    setIsDialogOpen(true);
   }
 
   function onWebsiteLosesFocus(url: string) {
@@ -79,6 +96,7 @@ export default function useCreatePasswordScreen() {
 
   async function handleSubmit(value: PasswordFormData) {
     setSendButtonDisabled(true);
+    handleStatusChange(DIALOG_STATUS.SENDING);
     try {
       const finalTitle =
         value.title.trim() !== ""
@@ -89,13 +107,19 @@ export default function useCreatePasswordScreen() {
         title: finalTitle,
       };
       await savePassword(dataToSave);
-      handleDialogOpen(DIALOG_STATUS.SUCCESS);
+      handleStatusChange(DIALOG_STATUS.SUCCESS);
       setSendButtonDisabled(false);
+      form.reset();
       setTimeout(() => {
-        navigate(ROUTES.HOME);
+        setDisplay?.(false);
+        handleStatusChange(DIALOG_STATUS.BASE);
       }, 1500);
     } catch (error) {
       console.error("Error creating password:", error);
+      handleStatusChange(DIALOG_STATUS.ERROR);
+      setTimeout(() => {
+        handleStatusChange(DIALOG_STATUS.BASE);
+      }, 1500);
       setSendButtonDisabled(false);
     }
   }
@@ -103,7 +127,7 @@ export default function useCreatePasswordScreen() {
   return {
     form,
     sendButtonDisabled,
-    isDialogOpen,
+    dialogStatus,
     dialogTitle,
     dialogDescription,
     suggestedTitle,

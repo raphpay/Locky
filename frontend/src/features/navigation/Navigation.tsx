@@ -7,7 +7,6 @@ import SessionManager from "../session/SessionManager";
 import ROUTES from "./Routes";
 import CacheService from "../cache/CacheService";
 import CACHE_KEYS from "../cache/CACHE_KEYS";
-import CreatePassword from "../password/screens/CreatePassword";
 import ViewPassword from "../password/screens/ViewPassword";
 import { Navigate } from "react-router";
 import LockScreen from "../auth/screens/LockScreen";
@@ -100,14 +99,14 @@ function Navigation() {
             </ProtectedRoute>
           }
         />
-        <Route
+        {/*<Route
           path={ROUTES.CREATE_PASSWORD}
           element={
             <ProtectedRoute>
               <CreatePassword />
             </ProtectedRoute>
           }
-        />
+        />*/}
         <Route
           path={ROUTES.VIEW_PASSWORD}
           element={
