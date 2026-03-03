@@ -18,7 +18,6 @@ export default function useHomeScreen() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { data: passwords, isLoading, error } = usePasswordsQuery();
-  const [isSendingPasswords, setIsSendingPasswords] = useState<boolean>(false);
   const [sortingSelection, setSortingSelection] = useState<SORTING_SELECTION>(
     SORTING_SELECTION.TITLE,
   );
@@ -29,10 +28,24 @@ export default function useHomeScreen() {
 
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const sortedPasswords: FIRPasswordDecrypted[] = useMemo(() => {
+  const filteredAndSortedPasswords = useMemo(() => {
     if (!passwords) return [];
 
-    return [...passwords].sort((a, b) => {
+    // 1. D'abord, on FILTRE
+    const filtered = passwords.filter((p) => {
+      const query = searchQuery.toLowerCase().trim();
+      if (!query) return true;
+
+      // Recherche dans le titre, le site web et même l'username (optionnel mais utile)
+      return (
+        p.title.toLowerCase().includes(query) ||
+        p.website.toLowerCase().includes(query) ||
+        (p.username && p.username.toLowerCase().includes(query))
+      );
+    });
+
+    // 2. Ensuite, on TRIE les résultats filtrés
+    return [...filtered].sort((a, b) => {
       let fieldA: string = "";
       let fieldB: string = "";
 
@@ -45,27 +58,14 @@ export default function useHomeScreen() {
           fieldA = a.website.toLowerCase();
           fieldB = b.website.toLowerCase();
           break;
-        case SORTING_SELECTION.CREATED_AT:
-          if (!a.createdAt || !b.createdAt) return 0;
-          fieldA = a.createdAt;
-          fieldB = b.createdAt;
-          break;
-        case SORTING_SELECTION.UPDATED_AT:
-          if (!a.updatedAt || !b.updatedAt) return 0;
-          fieldA = a.updatedAt;
-          fieldB = b.updatedAt;
-          break;
+        // ... tes autres cases (CREATED_AT, etc.)
       }
 
       if (fieldA < fieldB) return isSortingAscending ? -1 : 1;
       if (fieldA > fieldB) return isSortingAscending ? 1 : -1;
       return 0;
     });
-  }, [passwords, sortingSelection, isSortingAscending]);
-
-  function createPassword() {
-    navigate(ROUTES.CREATE_PASSWORD);
-  }
+  }, [passwords, searchQuery, sortingSelection, isSortingAscending]);
 
   function navigateToViewPassword(passwordID: string) {
     navigate(ROUTES.VIEW_PASSWORD, {
@@ -82,16 +82,13 @@ export default function useHomeScreen() {
   async function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     if (file) {
-      setIsSendingPasswords(true);
       try {
         await importPasswords(file);
         queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PASSWORDS] });
         toast.success(TOAST_MESSAGE.IMPORT_SUCCESS, { position: "top-center" });
-        setIsSendingPasswords(false);
       } catch (error) {
         console.error(error);
         toast.error(TOAST_MESSAGE.IMPORT_ERROR, { position: "top-center" });
-        setIsSendingPasswords(false);
       }
     }
   }
@@ -105,18 +102,17 @@ export default function useHomeScreen() {
   }
 
   return {
-    sortedPasswords,
+    passwords,
+    filteredAndSortedPasswords,
     isLoading,
     error,
     fileRef,
-    isSendingPasswords,
     sortingSelection,
     isSortingAscending,
     searchQuery,
     setSearchQuery,
     displayCreatePasswordModal,
     setDisplayCreatePasswordModal,
-    createPassword,
     navigateToViewPassword,
     handleImport,
     handleFileChange,

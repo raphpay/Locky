@@ -5,14 +5,15 @@ import useHomeScreen from "../hooks/useHomeScreen";
 import TopBar from "../components/TopBar";
 import NoPassword from "../components/NoPassword";
 import CreatePasswordModal from "../../password/components/CreatePasswordModal";
+import NoSearchedPassword from "../components/NoSearchedPassword";
 
 function Home() {
   const {
-    sortedPasswords,
+    passwords,
+    filteredAndSortedPasswords,
     isLoading,
     error,
     fileRef,
-    isSendingPasswords,
     sortingSelection,
     isSortingAscending,
     searchQuery,
@@ -55,16 +56,25 @@ function Home() {
 
       {/*No Password*/}
       <div className="flex flex-col gap-6 overflow-y-auto pt-15 w-full">
-        {sortedPasswords.length === 0 ? (
+        {passwords?.length === 0 ? (
           <NoPassword handleImport={handleImport} />
         ) : (
-          sortedPasswords.map((password, index) => (
-            <PasswordCard
-              key={password.id ?? index}
-              password={password}
-              navigateToViewPassword={navigateToViewPassword}
-            />
-          ))
+          <>
+            {filteredAndSortedPasswords.length === 0 ? (
+              <NoSearchedPassword
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+              />
+            ) : (
+              filteredAndSortedPasswords.map((password, index) => (
+                <PasswordCard
+                  key={password.id ?? index}
+                  password={password}
+                  navigateToViewPassword={navigateToViewPassword}
+                />
+              ))
+            )}
+          </>
         )}
       </div>
 
