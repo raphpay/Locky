@@ -1,4 +1,4 @@
-import { Plus, UserCog } from "lucide-react";
+import { Import, Plus, UserCog } from "lucide-react";
 import { Button } from "../../../ui/components/radix/Button";
 import { SearchInput } from "../../../ui/components/custom/SearchInput";
 import SortingDropdown from "./SortingDropdown";
@@ -14,6 +14,7 @@ interface Props {
   isSortingAscending: boolean;
   onSortIsAscendingChange: (newValue: boolean) => void;
   setDisplayCreatePasswordModal: (value: boolean) => void;
+  handleImport: () => void;
 }
 
 function TopBar({
@@ -24,6 +25,7 @@ function TopBar({
   isSortingAscending,
   onSortIsAscendingChange,
   setDisplayCreatePasswordModal,
+  handleImport,
 }: Props) {
   const navigate = useNavigate();
 
@@ -44,6 +46,9 @@ function TopBar({
           variant={"secondary"}
         >
           <Plus />
+        </Button>
+        <Button onClick={handleImport} variant={"secondary"}>
+          <Import />
         </Button>
       </div>
       <div className="pr-16">

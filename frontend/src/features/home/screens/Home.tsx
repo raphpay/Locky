@@ -52,6 +52,7 @@ function Home() {
         isSortingAscending={isSortingAscending}
         onSortIsAscendingChange={handleSortIsAscendingChange}
         setDisplayCreatePasswordModal={setDisplayCreatePasswordModal}
+        handleImport={handleImport}
       />
 
       {/*No Password*/}
