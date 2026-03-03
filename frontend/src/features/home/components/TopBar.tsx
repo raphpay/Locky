@@ -1,4 +1,4 @@
-import { Plus, User } from "lucide-react";
+import { Plus, UserCog } from "lucide-react";
 import { Button } from "../../../ui/components/radix/Button";
 import { SearchInput } from "../../../ui/components/custom/SearchInput";
 import SortingDropdown from "./SortingDropdown";
@@ -29,7 +29,7 @@ function TopBar({
     <div className="flex w-full justify-between absolute top-8 left-8">
       <div className="flex gap-2">
         <Button onClick={() => navigate(ROUTES.SETTINGS)} variant={"secondary"}>
-          <User />
+          <UserCog />
         </Button>
         <SortingDropdown
           sortingSelection={sortingSelection}
