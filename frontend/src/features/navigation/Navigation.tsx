@@ -12,6 +12,7 @@ import ViewPassword from "../password/screens/ViewPassword";
 import { Navigate } from "react-router";
 import LockScreen from "../auth/screens/LockScreen";
 import LoginWithPhrase from "../auth/screens/LoginWithPhrase";
+import SettingsScreen from "../settings/screens/SettingsScreen";
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const masterKey = SessionManager.getMasterKey();
@@ -112,6 +113,16 @@ function Navigation() {
           element={
             <ProtectedRoute>
               <ViewPassword />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route />
+        <Route
+          path={ROUTES.SETTINGS}
+          element={
+            <ProtectedRoute>
+              <SettingsScreen />
             </ProtectedRoute>
           }
         />

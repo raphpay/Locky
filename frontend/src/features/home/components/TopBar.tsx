@@ -3,6 +3,8 @@ import { Button } from "../../../ui/components/radix/Button";
 import { SearchInput } from "../../../ui/components/custom/SearchInput";
 import SortingDropdown from "./SortingDropdown";
 import type SORTING_SELECTION from "../sort/sortingSelection";
+import ROUTES from "../../navigation/Routes";
+import { useNavigate } from "react-router";
 
 interface Props {
   searchQuery: string;
@@ -21,10 +23,12 @@ function TopBar({
   isSortingAscending,
   onSortIsAscendingChange,
 }: Props) {
+  const navigate = useNavigate();
+
   return (
     <div className="flex w-full justify-between absolute top-8 left-8">
       <div className="flex gap-2">
-        <Button variant={"secondary"}>
+        <Button onClick={() => navigate(ROUTES.SETTINGS)} variant={"secondary"}>
           <User />
         </Button>
         <SortingDropdown

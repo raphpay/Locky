@@ -39,7 +39,7 @@ function Home() {
     );
 
   return (
-    <div className="flex flex-col h-full w-full justify-center p-4">
+    <div className="flex flex-col h-full w-full items-center justify-center p-4">
       {/* Absolute Top Bar */}
       <TopBar
         searchQuery={searchQuery}
