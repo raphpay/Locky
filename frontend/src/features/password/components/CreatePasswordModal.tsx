@@ -34,6 +34,7 @@ function CreatePasswordModal({
     dialogTitle,
     dialogDescription,
     suggestedTitle,
+    passwordMutation,
     onWebsiteLosesFocus,
   } = useCreatePasswordModal({ setDisplay });
 
@@ -185,7 +186,7 @@ function CreatePasswordModal({
             disabled={sendButtonDisabled}
             variant={"default"}
           >
-            Ajouter
+            {passwordMutation.isPending ? "En cours..." : "Ajouter"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </div>

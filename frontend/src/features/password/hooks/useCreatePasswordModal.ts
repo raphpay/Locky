@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
-import ROUTES from "../../navigation/Routes";
 import savePassword from "../api/savePassword";
 import { useForm } from "@tanstack/react-form";
 import {
@@ -10,12 +8,14 @@ import {
 import { extractSiteName } from "../api/extractSiteName";
 import type { CreatePasswordModalProps } from "../components/CreatePasswordModal";
 import DIALOG_STATUS from "../enum/DialogStatus";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import QUERY_KEYS from "../../cache/QUERY_KEYS";
 
 export default function useCreatePasswordModal({
   setDisplay,
 }: Partial<CreatePasswordModalProps>) {
-  const navigate = useNavigate();
-  const [sendButtonDisabled, setSendButtonDisabled] = useState<boolean>(false);
+  const queryClient = useQueryClient();
+
   const [dialogStatus, setDialogStatus] = useState<DIALOG_STATUS>(
     DIALOG_STATUS.BASE,
   );
@@ -41,10 +41,6 @@ export default function useCreatePasswordModal({
       await handleSubmit(formData.value);
     },
   });
-
-  function handleNavigateBack() {
-    navigate(ROUTES.HOME);
-  }
 
   function handleStatusChange(status: DIALOG_STATUS) {
     setDialogStatus(status);
@@ -94,8 +90,32 @@ export default function useCreatePasswordModal({
     }
   }
 
+  const passwordMutation = useMutation({
+    mutationFn: (data: PasswordFormData) => savePassword(data),
+    onMutate: () => {
+      handleStatusChange(DIALOG_STATUS.SENDING);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PASSWORDS] });
+
+      handleStatusChange(DIALOG_STATUS.SUCCESS);
+      form.reset();
+
+      setTimeout(() => {
+        setDisplay?.(false);
+        handleStatusChange(DIALOG_STATUS.BASE);
+      }, 1500);
+    },
+    onError: (error) => {
+      console.log("Mutation error", error);
+      handleStatusChange(DIALOG_STATUS.ERROR);
+      setTimeout(() => {
+        handleStatusChange(DIALOG_STATUS.BASE);
+      }, 1500);
+    },
+  });
+
   async function handleSubmit(value: PasswordFormData) {
-    setSendButtonDisabled(true);
     handleStatusChange(DIALOG_STATUS.SENDING);
     try {
       const finalTitle =
@@ -106,32 +126,25 @@ export default function useCreatePasswordModal({
         ...value,
         title: finalTitle,
       };
-      await savePassword(dataToSave);
-      handleStatusChange(DIALOG_STATUS.SUCCESS);
-      setSendButtonDisabled(false);
-      form.reset();
-      setTimeout(() => {
-        setDisplay?.(false);
-        handleStatusChange(DIALOG_STATUS.BASE);
-      }, 1500);
+
+      passwordMutation.mutate(dataToSave);
     } catch (error) {
       console.error("Error creating password:", error);
       handleStatusChange(DIALOG_STATUS.ERROR);
       setTimeout(() => {
         handleStatusChange(DIALOG_STATUS.BASE);
       }, 1500);
-      setSendButtonDisabled(false);
     }
   }
 
   return {
     form,
-    sendButtonDisabled,
+    sendButtonDisabled: passwordMutation.isPending,
     dialogStatus,
     dialogTitle,
     dialogDescription,
     suggestedTitle,
-    handleNavigateBack,
+    passwordMutation,
     onWebsiteLosesFocus,
   };
 }
