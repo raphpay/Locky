@@ -54,7 +54,7 @@ function Home() {
       />
 
       {/*No Password*/}
-      <div className="flex flex-col gap-6 overflow-y-auto pt-15">
+      <div className="flex flex-col gap-6 overflow-y-auto pt-15 w-full">
         {sortedPasswords.length === 0 ? (
           <NoPassword handleImport={handleImport} />
         ) : (
