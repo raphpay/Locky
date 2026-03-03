@@ -7,6 +7,7 @@ import ROUTES from "../../navigation/Routes";
 import { useNavigate } from "react-router";
 
 interface Props {
+  searchInputRef: React.RefObject<HTMLInputElement | null>;
   searchQuery: string;
   setSearchQuery: (value: string) => void;
   sortingSelection: SORTING_SELECTION;
@@ -18,6 +19,7 @@ interface Props {
 }
 
 function TopBar({
+  searchInputRef,
   searchQuery,
   setSearchQuery,
   sortingSelection,
@@ -53,6 +55,7 @@ function TopBar({
       </div>
       <div className="pr-16">
         <SearchInput
+          ref={searchInputRef}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />

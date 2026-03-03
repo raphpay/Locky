@@ -1,13 +1,12 @@
 import { useNavigate } from "react-router";
 import { usePasswordsQuery } from "../../password/hooks/usePasswords";
 import ROUTES from "../../navigation/Routes";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import importPasswords from "../../password/api/importPasswords";
 import { useQueryClient } from "@tanstack/react-query";
 import QUERY_KEYS from "../../cache/QUERY_KEYS";
 import { toast } from "sonner";
 import SORTING_SELECTION from "../sort/sortingSelection";
-import type FIRPasswordDecrypted from "../../password/model/FIRPasswordDecrypted";
 
 enum TOAST_MESSAGE {
   IMPORT_SUCCESS = "Mots de passe importés avec succès !",
@@ -27,6 +26,7 @@ export default function useHomeScreen() {
     useState<boolean>(false);
 
   const fileRef = useRef<HTMLInputElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   const filteredAndSortedPasswords = useMemo(() => {
     if (!passwords) return [];
@@ -101,6 +101,28 @@ export default function useHomeScreen() {
     setIsSortingAscending(newValue);
   }
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Detect Cmd (Mac) ou Ctrl (Windows/Linux) + K
+      if ((event.metaKey || event.ctrlKey) && event.key === "k") {
+        event.preventDefault(); // Empêche le comportement par défaut du navigateur
+        searchInputRef.current?.focus();
+      }
+
+      if (
+        event.key === "Escape" &&
+        document.activeElement === searchInputRef.current
+      ) {
+        setSearchQuery("");
+        searchInputRef.current?.blur();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   return {
     passwords,
     filteredAndSortedPasswords,
@@ -118,5 +140,6 @@ export default function useHomeScreen() {
     handleFileChange,
     handleSortSelection,
     handleSortIsAscendingChange,
+    searchInputRef,
   };
 }

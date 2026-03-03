@@ -25,6 +25,7 @@ function Home() {
     handleFileChange,
     handleSortSelection,
     handleSortIsAscendingChange,
+    searchInputRef,
   } = useHomeScreen();
 
   if (isLoading)
@@ -45,6 +46,7 @@ function Home() {
     <div className="flex flex-col h-full w-full items-center justify-center p-4">
       {/* Absolute Top Bar */}
       <TopBar
+        searchInputRef={searchInputRef}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         sortingSelection={sortingSelection}
