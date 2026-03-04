@@ -1,5 +1,7 @@
+import { Toaster } from "../../../ui/components/radix/Sonner";
 import CreatePasswordModal from "../../password/components/CreatePasswordModal";
 import PasswordCard from "../../password/components/PasswordCard";
+import ImportModal from "../components/ImportModal";
 import NoPassword from "../components/NoPassword";
 import NoSearchedPassword from "../components/NoSearchedPassword";
 import TopBar from "../components/TopBar";
@@ -16,6 +18,7 @@ function Home() {
     isSortingAscending,
     searchQuery,
     setSearchQuery,
+    isImportingPasswords,
     displayCreatePasswordModal,
     setDisplayCreatePasswordModal,
     navigateToViewPassword,
@@ -83,6 +86,10 @@ function Home() {
         display={displayCreatePasswordModal}
         setDisplay={setDisplayCreatePasswordModal}
       />
+
+      <ImportModal display={isImportingPasswords} />
+
+      <Toaster />
 
       {/* Hidden Input */}
       <input

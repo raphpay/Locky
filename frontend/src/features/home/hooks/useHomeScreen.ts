@@ -7,6 +7,7 @@ import ROUTES from "../../navigation/Routes";
 import importPasswords from "../../password/api/importPasswords";
 import { usePasswordsQuery } from "../../password/hooks/usePasswords";
 import SORTING_SELECTION from "../sort/sortingSelection";
+import ImportStatus from "../enum/ImportStatus";
 
 enum TOAST_MESSAGE {
   IMPORT_SUCCESS = "Mots de passe importés avec succès !",
@@ -23,6 +24,8 @@ export default function useHomeScreen() {
   const [isSortingAscending, setIsSortingAscending] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [displayCreatePasswordModal, setDisplayCreatePasswordModal] =
+    useState<boolean>(false);
+  const [isImportingPasswords, setIsImportingPasswords] =
     useState<boolean>(false);
 
   const fileRef = useRef<HTMLInputElement>(null);
@@ -76,7 +79,20 @@ export default function useHomeScreen() {
   }
 
   function handleImport() {
+    setIsImportingPasswords(true);
     fileRef.current?.click();
+
+    // Close the import dialog when the window regains focus
+    const checkCancel = () => {
+      setTimeout(() => {
+        if (fileRef.current?.files?.length === 0) {
+          setIsImportingPasswords(false);
+        }
+        window.removeEventListener("focus", checkCancel);
+      }, 500);
+    };
+
+    window.addEventListener("focus", checkCancel);
   }
 
   async function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -86,10 +102,14 @@ export default function useHomeScreen() {
         await importPasswords(file, passwords ?? []);
         queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PASSWORDS] });
         toast.success(TOAST_MESSAGE.IMPORT_SUCCESS, { position: "top-center" });
+        setIsImportingPasswords(false);
       } catch (error) {
         console.error(error);
         toast.error(TOAST_MESSAGE.IMPORT_ERROR, { position: "top-center" });
+        setIsImportingPasswords(false);
       }
+    } else {
+      setIsImportingPasswords(false);
     }
   }
 
@@ -133,6 +153,8 @@ export default function useHomeScreen() {
     isSortingAscending,
     searchQuery,
     setSearchQuery,
+    isImportingPasswords,
+    setIsImportingPasswords,
     displayCreatePasswordModal,
     setDisplayCreatePasswordModal,
     navigateToViewPassword,
