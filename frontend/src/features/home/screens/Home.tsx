@@ -1,11 +1,9 @@
-import { Toaster } from "../../../ui/components/radix/Sonner";
-import { Spinner } from "../../../ui/components/radix/Spinner";
-import PasswordCard from "../../password/components/PasswordCard";
-import useHomeScreen from "../hooks/useHomeScreen";
-import TopBar from "../components/TopBar";
-import NoPassword from "../components/NoPassword";
 import CreatePasswordModal from "../../password/components/CreatePasswordModal";
+import PasswordCard from "../../password/components/PasswordCard";
+import NoPassword from "../components/NoPassword";
 import NoSearchedPassword from "../components/NoSearchedPassword";
+import TopBar from "../components/TopBar";
+import useHomeScreen from "../hooks/useHomeScreen";
 
 function Home() {
   const {

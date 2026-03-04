@@ -1,11 +1,11 @@
-import { useNavigate } from "react-router";
-import { usePasswordsQuery } from "../../password/hooks/usePasswords";
-import ROUTES from "../../navigation/Routes";
-import { useEffect, useMemo, useRef, useState } from "react";
-import importPasswords from "../../password/api/importPasswords";
 import { useQueryClient } from "@tanstack/react-query";
-import QUERY_KEYS from "../../cache/QUERY_KEYS";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router";
 import { toast } from "sonner";
+import QUERY_KEYS from "../../cache/QUERY_KEYS";
+import ROUTES from "../../navigation/Routes";
+import importPasswords from "../../password/api/importPasswords";
+import { usePasswordsQuery } from "../../password/hooks/usePasswords";
 import SORTING_SELECTION from "../sort/sortingSelection";
 
 enum TOAST_MESSAGE {
@@ -83,7 +83,7 @@ export default function useHomeScreen() {
     const file = event.target.files?.[0];
     if (file) {
       try {
-        await importPasswords(file);
+        await importPasswords(file, passwords ?? []);
         queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PASSWORDS] });
         toast.success(TOAST_MESSAGE.IMPORT_SUCCESS, { position: "top-center" });
       } catch (error) {
