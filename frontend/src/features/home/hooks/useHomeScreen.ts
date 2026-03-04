@@ -8,6 +8,7 @@ import importPasswords from "../../password/api/importPasswords";
 import { usePasswordsQuery } from "../../password/hooks/usePasswords";
 import SORTING_SELECTION from "../sort/sortingSelection";
 import ImportStatus from "../enum/ImportStatus";
+import type FIRPasswordDecrypted from "../../password/model/FIRPasswordDecrypted";
 
 enum TOAST_MESSAGE {
   IMPORT_SUCCESS = "Mots de passe importés avec succès !",
@@ -27,6 +28,8 @@ export default function useHomeScreen() {
     useState<boolean>(false);
   const [isImportingPasswords, setIsImportingPasswords] =
     useState<boolean>(false);
+  const [selectedPassword, setSelectedPassword] =
+    useState<FIRPasswordDecrypted | null>(null);
 
   const fileRef = useRef<HTMLInputElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -153,8 +156,9 @@ export default function useHomeScreen() {
     isSortingAscending,
     searchQuery,
     setSearchQuery,
+    selectedPassword,
+    setSelectedPassword,
     isImportingPasswords,
-    setIsImportingPasswords,
     displayCreatePasswordModal,
     setDisplayCreatePasswordModal,
     navigateToViewPassword,

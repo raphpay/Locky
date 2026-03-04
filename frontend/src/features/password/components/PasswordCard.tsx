@@ -3,14 +3,14 @@ import type FIRPasswordDecrypted from "../../password/model/FIRPasswordDecrypted
 
 interface Props {
   password: FIRPasswordDecrypted;
-  navigateToViewPassword: (id: string) => void;
+  selectPassword: (password: FIRPasswordDecrypted | null) => void;
 }
 
-function PasswordCard({ password, navigateToViewPassword }: Props) {
+function PasswordCard({ password, selectPassword }: Props) {
   return (
     <span
       className="flex items-center justify-between w-full p-3 bg-white hover:bg-primary-light/70 cursor-pointer rounded-lg shadow-sm"
-      onClick={() => navigateToViewPassword(password.id)}
+      onClick={() => selectPassword(password)}
     >
       <div className="flex items-center gap-4">
         <div className="rounded-full bg-primary-light text-primary-text font-bold w-12 h-12 shrink-0 flex items-center justify-center">

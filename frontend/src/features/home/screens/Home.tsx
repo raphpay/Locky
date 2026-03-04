@@ -1,9 +1,11 @@
+import { cn } from "../../../lib/utils";
 import { Toaster } from "../../../ui/components/radix/Sonner";
 import CreatePasswordModal from "../../password/components/CreatePasswordModal";
 import PasswordCard from "../../password/components/PasswordCard";
 import ImportModal from "../components/ImportModal";
 import NoPassword from "../components/NoPassword";
 import NoSearchedPassword from "../components/NoSearchedPassword";
+import PasswordDetails from "../components/PasswordDetails";
 import TopBar from "../components/TopBar";
 import useHomeScreen from "../hooks/useHomeScreen";
 
@@ -18,6 +20,8 @@ function Home() {
     isSortingAscending,
     searchQuery,
     setSearchQuery,
+    selectedPassword,
+    setSelectedPassword,
     isImportingPasswords,
     displayCreatePasswordModal,
     setDisplayCreatePasswordModal,
@@ -44,61 +48,72 @@ function Home() {
     );
 
   return (
-    <div className="flex flex-col h-full w-full items-center justify-center p-4">
-      {/* Absolute Top Bar */}
-      <TopBar
-        searchInputRef={searchInputRef}
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        sortingSelection={sortingSelection}
-        onSortSelectionChange={handleSortSelection}
-        isSortingAscending={isSortingAscending}
-        onSortIsAscendingChange={handleSortIsAscendingChange}
-        setDisplayCreatePasswordModal={setDisplayCreatePasswordModal}
-        handleImport={handleImport}
-      />
-
-      {/*No Password*/}
-      <div className="flex flex-col gap-6 overflow-y-auto pt-15 w-full">
-        {passwords?.length === 0 ? (
-          <NoPassword handleImport={handleImport} />
-        ) : (
-          <>
-            {filteredAndSortedPasswords.length === 0 ? (
-              <NoSearchedPassword
-                searchQuery={searchQuery}
-                setSearchQuery={setSearchQuery}
-              />
-            ) : (
-              filteredAndSortedPasswords.map((password, index) => (
-                <PasswordCard
-                  key={password.id ?? index}
-                  password={password}
-                  navigateToViewPassword={navigateToViewPassword}
-                />
-              ))
-            )}
-          </>
+    <div className="flex h-full w-full overflow-hidden p-4">
+      <div
+        className={cn(
+          "flex flex-col h-full items-center p-4 transition-all duration-300 ease-in-out border-r border-border",
+          selectedPassword ? "w-[50%]" : "w-full",
         )}
+      >
+        {/* Absolute Top Bar */}
+        <TopBar
+          searchInputRef={searchInputRef}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          sortingSelection={sortingSelection}
+          onSortSelectionChange={handleSortSelection}
+          isSortingAscending={isSortingAscending}
+          onSortIsAscendingChange={handleSortIsAscendingChange}
+          setDisplayCreatePasswordModal={setDisplayCreatePasswordModal}
+          handleImport={handleImport}
+        />
+
+        {/*No Password*/}
+        <div className="flex flex-col gap-6 overflow-y-auto pt-15 w-full">
+          {passwords?.length === 0 ? (
+            <NoPassword handleImport={handleImport} />
+          ) : (
+            <>
+              {filteredAndSortedPasswords.length === 0 ? (
+                <NoSearchedPassword
+                  searchQuery={searchQuery}
+                  setSearchQuery={setSearchQuery}
+                />
+              ) : (
+                filteredAndSortedPasswords.map((password, index) => (
+                  <PasswordCard
+                    key={password.id ?? index}
+                    password={password}
+                    selectPassword={(password) => setSelectedPassword(password)}
+                  />
+                ))
+              )}
+            </>
+          )}
+        </div>
+
+        <CreatePasswordModal
+          display={displayCreatePasswordModal}
+          setDisplay={setDisplayCreatePasswordModal}
+        />
+
+        <ImportModal display={isImportingPasswords} />
+
+        <Toaster />
+
+        {/* Hidden Input */}
+        <input
+          type="file"
+          ref={fileRef}
+          onChange={handleFileChange}
+          className="hidden"
+          accept=".csv"
+        />
       </div>
 
-      <CreatePasswordModal
-        display={displayCreatePasswordModal}
-        setDisplay={setDisplayCreatePasswordModal}
-      />
-
-      <ImportModal display={isImportingPasswords} />
-
-      <Toaster />
-
-      {/* Hidden Input */}
-      <input
-        type="file"
-        ref={fileRef}
-        onChange={handleFileChange}
-        className="hidden"
-        accept=".csv"
-      />
+      {selectedPassword && (
+        <PasswordDetails selectedPassword={selectedPassword} />
+      )}
     </div>
   );
 }

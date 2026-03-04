@@ -20,6 +20,8 @@
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
+
+  --color-destructive: hsl(var(--destructive));
 }
 
 @layer base {
@@ -40,6 +42,8 @@
 
     --background: 210 40% 98%;
     --foreground: 217 33% 17%;
+
+    --destructive: 9.5 82.11% 48.24%;
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
