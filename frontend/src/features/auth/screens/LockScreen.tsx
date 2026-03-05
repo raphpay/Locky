@@ -8,6 +8,11 @@ import { Input } from "../../../ui/components/radix/Input";
 import { ArrowRight } from "lucide-react";
 import LOGIN_METHOD from "../enum/loginMethod";
 import LoadingSpinner from "../components/LoadingSpinner";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "../../../ui/components/radix/HoverCard";
 
 function LockScreen() {
   const {
@@ -41,12 +46,21 @@ function LockScreen() {
       {lockScreenState === LOCK_SCREEN_STATES.PIN_OR_BIO && (
         <div className="flex flex-col items-center justify-center gap-2">
           {hasBio && (
-            <button
-              className="cursor-pointer"
-              onClick={() => handleLogIn(LOGIN_METHOD.BIOMETRICS)}
-            >
-              <SVGTouchID className="text-primary" />
-            </button>
+            <HoverCard openDelay={10} closeDelay={100}>
+              <HoverCardTrigger asChild>
+                <button
+                  className="cursor-pointer"
+                  onClick={() => handleLogIn(LOGIN_METHOD.BIOMETRICS)}
+                >
+                  <SVGTouchID className="text-primary" />
+                </button>
+              </HoverCardTrigger>
+              <HoverCardContent className="flex w-64 flex-col gap-0.5">
+                <p className="text-center text-primary-text text-sm font-medium">
+                  Déverrouiller avec Touch ID
+                </p>
+              </HoverCardContent>
+            </HoverCard>
           )}
           <PinPad
             pin={pin}
