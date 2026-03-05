@@ -50,8 +50,8 @@ function Home() {
     <div className="flex h-full w-full overflow-hidden p-4">
       <div
         className={cn(
-          "flex flex-col h-full items-center p-4 transition-all duration-300 ease-in-out border-r border-border",
-          selectedPassword ? "w-[50%]" : "w-full",
+          "flex flex-col h-full items-center p-4 transition-all duration-300 ease-in-out",
+          selectedPassword ? "w-[50%] border-r border-border" : "w-full",
         )}
       >
         {/* Absolute Top Bar */}
