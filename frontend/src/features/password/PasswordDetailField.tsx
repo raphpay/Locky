@@ -30,7 +30,7 @@ function DetailField({
           renderInput()
         ) : (
           <div
-            className="cursor-copy hover:bg-gray-50 px-3 py-1.5 rounded-md transition-all truncate text-right max-w-full relative"
+            className="cursor-copy hover:bg-gray-50 dark:hover:bg-tertiary-dark px-3 py-1.5 rounded-md transition-all truncate text-right max-w-full relative"
             onClick={onCopy}
             onMouseEnter={() => onHoverChange?.(true)}
             onMouseLeave={() => onHoverChange?.(false)}

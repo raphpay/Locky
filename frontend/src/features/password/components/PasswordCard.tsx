@@ -10,8 +10,8 @@ function PasswordCard({ password, selectPassword }: Props) {
   return (
     <span
       className="flex items-center justify-between w-full p-3
-                bg-tertiary-light hover:bg-tertiary-dark/10 dark:hover:bg-tertiary/70
-                cursor-pointer rounded-lg shadow-sm shadow-tertiary"
+                bg-white dark:bg-tertiary-dark hover:bg-tertiary-dark/10 dark:hover:bg-tertiary/70
+                cursor-pointer rounded-lg shadow-sm"
       onClick={() => selectPassword(password)}
     >
       <div className="flex items-center gap-4">

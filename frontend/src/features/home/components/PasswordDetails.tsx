@@ -98,9 +98,9 @@ function PasswordDetails({ selectedPassword, setSelectedPassword }: Props) {
           e.stopPropagation();
           form.handleSubmit();
         }}
-        className="flex flex-col w-full bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
+        className="flex flex-col w-full bg-white dark:bg-tertiary-light rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
       >
-        <div className="p-8 flex flex-col items-center bg-gray-50/50 border-b border-gray-100">
+        <div className="p-8 flex flex-col items-center bg-gray-50/50 dark:bg-tertiary-light border-b border-gray-100">
           <form.Field
             name="title"
             children={(field) => (
@@ -113,7 +113,7 @@ function PasswordDetails({ selectedPassword, setSelectedPassword }: Props) {
                   />
                 ) : (
                   <h1
-                    className="text-primary-text text-3xl font-bold text-center wrap-break-words cursor-copy hover:text-primary transition-colors"
+                    className="text-primary-text text-3xl font-bold text-center wrap-break-words cursor-copy hover:text-primary dark:hover:text-tertiary-dark transition-colors"
                     onClick={() => handleCopy(field.state.value, "Titre copié")}
                   >
                     {field.state.value}
@@ -206,7 +206,7 @@ function PasswordDetails({ selectedPassword, setSelectedPassword }: Props) {
                   />
                 ) : (
                   <p
-                    className="text-secondary-text text-sm leading-relaxed cursor-copy hover:bg-gray-50 p-2 rounded-md"
+                    className="text-secondary-text text-sm leading-relaxed cursor-copy hover:bg-gray-50 dark:hover:bg-tertiary-dark p-2 rounded-md"
                     onClick={() =>
                       handleCopy(field.state.value, "Notes copiées")
                     }
