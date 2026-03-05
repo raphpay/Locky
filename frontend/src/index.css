@@ -17,6 +17,10 @@
   --color-accent-dark: hsl(var(--accent-dark));
   --color-accent-foreground: hsl(var(--accent-foreground));
 
+  --color-tertiary: hsl(var(--tertiary));
+  --color-tertiary-light: hsl(var(--tertiary-light));
+  --color-tertiary-dark: hsl(var(--tertiary-dark));
+
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
@@ -37,6 +41,10 @@
     --accent-dark: 0 65% 55%;
     --accent-foreground: 217 33% 17%;
 
+    --tertiary: 215.38 16.32% 46.86%;
+    --tertiary-light: 220 13.76% 21.37%;
+    --tertiary-dark: 217.24 32.58% 17.45%;
+
     --primary-text: 217.24, 32.58%, 17.45%;
     --secondary-text: 215.38, 16.32%, 46.86%;
 
@@ -52,7 +60,8 @@
   }
 
   .dark {
-    --background: 217 33% 17%;
+    /*--background: 217 33% 17%;*/
+    --background: 218.18, 12.09%, 17.84%;
     --foreground: 210 40% 98%;
     /* ... le reste de tes variables dark */
 
