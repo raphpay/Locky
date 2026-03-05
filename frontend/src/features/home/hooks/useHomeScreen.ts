@@ -7,7 +7,6 @@ import ROUTES from "../../navigation/Routes";
 import importPasswords from "../../password/api/importPasswords";
 import { usePasswordsQuery } from "../../password/hooks/usePasswords";
 import SORTING_SELECTION from "../sort/sortingSelection";
-import ImportStatus from "../enum/ImportStatus";
 import type FIRPasswordDecrypted from "../../password/model/FIRPasswordDecrypted";
 
 enum TOAST_MESSAGE {
@@ -37,12 +36,12 @@ export default function useHomeScreen() {
   const filteredAndSortedPasswords = useMemo(() => {
     if (!passwords) return [];
 
-    // 1. D'abord, on FILTRE
+    // 1. First we FILTER
     const filtered = passwords.filter((p) => {
       const query = searchQuery.toLowerCase().trim();
       if (!query) return true;
 
-      // Recherche dans le titre, le site web et même l'username (optionnel mais utile)
+      // Search in the title, the website and even the username (optional but useful)
       return (
         p.title.toLowerCase().includes(query) ||
         p.website.toLowerCase().includes(query) ||
@@ -50,7 +49,7 @@ export default function useHomeScreen() {
       );
     });
 
-    // 2. Ensuite, on TRIE les résultats filtrés
+    // 2. Then, we SORT the filtered results
     return [...filtered].sort((a, b) => {
       let fieldA: string = "";
       let fieldB: string = "";
@@ -64,7 +63,6 @@ export default function useHomeScreen() {
           fieldA = a.website.toLowerCase();
           fieldB = b.website.toLowerCase();
           break;
-        // ... tes autres cases (CREATED_AT, etc.)
       }
 
       if (fieldA < fieldB) return isSortingAscending ? -1 : 1;
@@ -72,14 +70,6 @@ export default function useHomeScreen() {
       return 0;
     });
   }, [passwords, searchQuery, sortingSelection, isSortingAscending]);
-
-  function navigateToViewPassword(passwordID: string) {
-    navigate(ROUTES.VIEW_PASSWORD, {
-      state: {
-        passwordID: passwordID,
-      },
-    });
-  }
 
   function handleImport() {
     setIsImportingPasswords(true);
@@ -161,7 +151,6 @@ export default function useHomeScreen() {
     isImportingPasswords,
     displayCreatePasswordModal,
     setDisplayCreatePasswordModal,
-    navigateToViewPassword,
     handleImport,
     handleFileChange,
     handleSortSelection,
