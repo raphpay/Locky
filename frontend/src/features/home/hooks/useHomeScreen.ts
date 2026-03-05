@@ -15,7 +15,6 @@ enum TOAST_MESSAGE {
 }
 
 export default function useHomeScreen() {
-  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { data: passwords, isLoading, error } = usePasswordsQuery();
   const [sortingSelection, setSortingSelection] = useState<SORTING_SELECTION>(

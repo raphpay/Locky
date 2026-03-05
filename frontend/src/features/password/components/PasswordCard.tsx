@@ -21,12 +21,13 @@ function PasswordCard({ password, selectPassword }: Props) {
           <p className="font-semibold text-lg text-primary-text leading-tight">
             {password.title}
           </p>
+
           <p className="text-sm text-secondary-text">{password.username}</p>
           <p className="text-sm text-secondary-text">{password.website}</p>
         </div>
       </div>
 
-      <CircleChevronRight color="#3366FF" />
+      <CircleChevronRight />
     </span>
   );
 }
