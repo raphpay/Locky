@@ -7,6 +7,7 @@ import DetailField from "../../password/PasswordDetailField";
 import type FIRPasswordDecrypted from "../../password/model/FIRPasswordDecrypted";
 import DeletePasswordModal from "../../password/components/DeletePasswordModal";
 import { ArrowLeft } from "lucide-react";
+import { formatDate } from "../../dates/formatDate";
 
 interface Props {
   selectedPassword: FIRPasswordDecrypted;
@@ -121,15 +122,10 @@ function PasswordDetails({ selectedPassword, setSelectedPassword }: Props) {
               </div>
             )}
           />
-          {data.updatedAt ||
-            (data.createdAt && (
-              <p className="text-gray-400 text-[10px] mt-2 uppercase tracking-widest">
-                Dernière modification :{" "}
-                {new Date(
-                  data.updatedAt || data.createdAt,
-                ).toLocaleDateString()}
-              </p>
-            ))}
+          <p className="text-secondary-text text-[10px] mt-2 uppercase tracking-widest">
+            Dernière modification :{" "}
+            {formatDate(data.updatedAt || data.createdAt)}
+          </p>
         </div>
 
         <div className="p-6">
