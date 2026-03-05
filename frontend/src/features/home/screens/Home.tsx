@@ -25,7 +25,6 @@ function Home() {
     isImportingPasswords,
     displayCreatePasswordModal,
     setDisplayCreatePasswordModal,
-    navigateToViewPassword,
     handleImport,
     handleFileChange,
     handleSortSelection,
@@ -112,7 +111,10 @@ function Home() {
       </div>
 
       {selectedPassword && (
-        <PasswordDetails selectedPassword={selectedPassword} />
+        <PasswordDetails
+          selectedPassword={selectedPassword}
+          setSelectedPassword={setSelectedPassword}
+        />
       )}
     </div>
   );

@@ -10,6 +10,8 @@ import ROUTES from "../../navigation/Routes";
 import deletePassword from "../api/deletePassword";
 import { useForm } from "@tanstack/react-form";
 import { firPasswordFormSchema } from "../model/PasswordFormData";
+import { useQueryClient } from "@tanstack/react-query";
+import QUERY_KEYS from "../../cache/QUERY_KEYS";
 
 enum TOAST_MESSAGE {
   WEBSITE_COPIED = "Le site web a été copié.",
@@ -27,11 +29,17 @@ enum TOAST_TYPE {
   ERROR = "error",
 }
 
-export default function useViewPasswordScreen() {
-  const location = useLocation();
+export default function useViewPasswordScreen({
+  selectedPassword,
+  setSelectedPassword,
+}: {
+  selectedPassword: FIRPasswordDecrypted;
+  setSelectedPassword: (password: FIRPasswordDecrypted | null) => void;
+}) {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const { passwordID } = location.state;
-  const { data, isLoading, error } = usePasswordQuery(passwordID);
+
+  const { data, isLoading, error } = usePasswordQuery(selectedPassword.id);
   const [isHovered, setIsHovered] = useState<boolean>(false);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [editingData, setEditingData] = useState<
@@ -57,12 +65,6 @@ export default function useViewPasswordScreen() {
       await handleSubmit(value);
     },
   });
-
-  function navigateBackWithTimeout() {
-    setTimeout(() => {
-      navigate(ROUTES.HOME);
-    }, 1500);
-  }
 
   function handleCopy(text: string, message: string) {
     navigator.clipboard.writeText(text);
@@ -94,7 +96,6 @@ export default function useViewPasswordScreen() {
           position: "top-center",
         });
         displayToast(TOAST_MESSAGE.PASSWORD_EDITED);
-        navigateBackWithTimeout();
       } catch (error) {
         console.error(error);
         displayToast(TOAST_MESSAGE.PASSWORD_EDITION_ERROR, TOAST_TYPE.ERROR);
@@ -107,9 +108,16 @@ export default function useViewPasswordScreen() {
   async function confirmDeletion() {
     if (data) {
       try {
+        setSelectedPassword(null);
+
         await deletePassword(data.id);
+        // Reload passwords
+        await queryClient.invalidateQueries({
+          queryKey: [QUERY_KEYS.PASSWORDS],
+        });
+        queryClient.setQueryData([QUERY_KEYS.PASSWORDS, data.id], null);
+
         displayToast(TOAST_MESSAGE.PASSWORD_DELETED);
-        navigateBackWithTimeout();
       } catch (error) {
         console.error(error);
         displayToast(TOAST_MESSAGE.PASSWORD_DELETION_ERROR, TOAST_TYPE.ERROR);
@@ -120,6 +128,10 @@ export default function useViewPasswordScreen() {
   async function handleSubmit(value: FIRPasswordDecrypted) {
     try {
       await updatePassword(value);
+      // Reload passwords
+      await queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PASSWORDS] });
+      queryClient.setQueryData([QUERY_KEYS.PASSWORDS, value.id], value);
+      // Tell the user the password has been updated
       displayToast(TOAST_MESSAGE.PASSWORD_EDITED);
       setIsEditing(false);
     } catch (err) {
