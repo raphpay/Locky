@@ -100,7 +100,7 @@ const PinPad = ({
           variant={"accent"}
           type="button"
           onClick={handleDelete}
-          className="size-16 rounded-full bg-background hover:bg-accent flex items-center justify-center transition-all active:scale-90"
+          className="size-16 rounded-full bg-background hover:bg-accent hover:text-primary-light text-destructive border-destructive flex items-center justify-center transition-all active:scale-90"
         >
           <Delete size={24} />
         </Button>
