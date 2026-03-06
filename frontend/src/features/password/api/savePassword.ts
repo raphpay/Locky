@@ -1,5 +1,5 @@
 import { collection, addDoc } from "firebase/firestore";
-import type PasswordFormData from "../model/PasswordFormData";
+import type { PasswordFormData } from "../model/PasswordFormData";
 import COLLECTIONS from "../../firebase/collections";
 import { db } from "../../firebase/init";
 import CacheService from "../../cache/CacheService";

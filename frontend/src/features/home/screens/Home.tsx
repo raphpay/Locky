@@ -1,95 +1,120 @@
+import { cn } from "../../../lib/utils";
 import { Toaster } from "../../../ui/components/radix/Sonner";
-import { Spinner } from "../../../ui/components/radix/Spinner";
+import CreatePasswordModal from "../../password/components/CreatePasswordModal";
 import PasswordCard from "../../password/components/PasswordCard";
+import ImportModal from "../components/ImportModal";
+import NoPassword from "../components/NoPassword";
+import NoSearchedPassword from "../components/NoSearchedPassword";
+import PasswordDetails from "../components/PasswordDetails";
+import TopBar from "../components/TopBar";
 import useHomeScreen from "../hooks/useHomeScreen";
-import SortingDropdown from "../components/SortingDropdown";
 
 function Home() {
   const {
-    sortedPasswords,
+    passwords,
+    filteredAndSortedPasswords,
     isLoading,
     error,
     fileRef,
-    isSendingPasswords,
     sortingSelection,
     isSortingAscending,
-    createPassword,
-    navigateToViewPassword,
+    searchQuery,
+    setSearchQuery,
+    selectedPassword,
+    setSelectedPassword,
+    isImportingPasswords,
+    displayCreatePasswordModal,
+    setDisplayCreatePasswordModal,
     handleImport,
     handleFileChange,
     handleSortSelection,
     handleSortIsAscendingChange,
+    searchInputRef,
   } = useHomeScreen();
 
   if (isLoading)
     return (
       <div className="h-full w-full flex items-center justify-center">
-        Loading...
+        Chargement...
       </div>
     );
 
   if (error)
     return (
       <div className="h-full w-full flex items-center justify-center">
-        Error while loading passwords
+        Erreur lors du chargement des mots de passe
       </div>
     );
 
   return (
-    <div className="flex flex-col h-full p-4">
-      <div className="flex gap-2 absolute top-4 right-4">
-        <SortingDropdown
+    <div className="flex h-full w-full overflow-hidden p-4">
+      <div
+        className={cn(
+          "flex flex-col h-full items-center p-4 transition-all duration-300 ease-in-out",
+          selectedPassword ? "w-[50%] border-r border-border" : "w-full",
+        )}
+      >
+        {/* Absolute Top Bar */}
+        <TopBar
+          searchInputRef={searchInputRef}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
           sortingSelection={sortingSelection}
           onSortSelectionChange={handleSortSelection}
           isSortingAscending={isSortingAscending}
           onSortIsAscendingChange={handleSortIsAscendingChange}
+          setDisplayCreatePasswordModal={setDisplayCreatePasswordModal}
+          handleImport={handleImport}
         />
 
-        <button className="rounded-md" onClick={createPassword}>
-          + Create a password
-        </button>
-
-        <button onClick={handleImport}>Importer des mots de passe</button>
-      </div>
-
-      <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
-        <div className="flex flex-col gap-2">
-          {sortedPasswords.length === 0 ? (
-            <p className="text-center text-gray-500 mt-10">
-              No passwords found
-            </p>
+        {/*No Password*/}
+        <div className="flex flex-col gap-6 overflow-y-auto pt-15 w-full">
+          {passwords?.length === 0 ? (
+            <NoPassword handleImport={handleImport} />
           ) : (
-            sortedPasswords?.map((password, index) => (
-              <PasswordCard
-                password={password}
-                key={password.id ?? index}
-                navigateToViewPassword={navigateToViewPassword}
-              />
-            ))
+            <>
+              {filteredAndSortedPasswords.length === 0 ? (
+                <NoSearchedPassword
+                  searchQuery={searchQuery}
+                  setSearchQuery={setSearchQuery}
+                />
+              ) : (
+                filteredAndSortedPasswords.map((password, index) => (
+                  <PasswordCard
+                    key={password.id ?? index}
+                    password={password}
+                    selectPassword={(password) => setSelectedPassword(password)}
+                  />
+                ))
+              )}
+            </>
           )}
         </div>
+
+        <CreatePasswordModal
+          display={displayCreatePasswordModal}
+          setDisplay={setDisplayCreatePasswordModal}
+        />
+
+        <ImportModal display={isImportingPasswords} />
+
+        <Toaster />
+
+        {/* Hidden Input */}
+        <input
+          type="file"
+          ref={fileRef}
+          onChange={handleFileChange}
+          className="hidden"
+          accept=".csv"
+        />
       </div>
 
-      <input
-        type="file"
-        ref={fileRef}
-        onChange={handleFileChange}
-        className="hidden"
-        accept=".csv"
-      />
-
-      <Toaster />
-
-      {isSendingPasswords && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-[1px]">
-          {/* Box blanche ou transparente pour le spinner */}
-          <div className="bg-white p-6 rounded-xl shadow-xl flex flex-col items-center gap-3">
-            <Spinner className="size-10" />
-            <p className="text-sm font-medium text-gray-700">
-              Traitement en cours...
-            </p>
-          </div>
-        </div>
+      {selectedPassword && (
+        <PasswordDetails
+          selectedPassword={selectedPassword}
+          setSelectedPassword={setSelectedPassword}
+        />
       )}
     </div>
   );

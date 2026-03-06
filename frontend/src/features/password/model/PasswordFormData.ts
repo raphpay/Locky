@@ -1,5 +1,13 @@
 import * as z from "zod";
 
+export type PasswordFormData = {
+  title: string;
+  username: string;
+  password: string;
+  website: string;
+  notes: string;
+};
+
 export const passwordFormSchema = z.object({
   title: z.string(),
   username: z.string().min(1, "L'identifiant est requis"),

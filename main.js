@@ -11,6 +11,7 @@ function createWindow() {
   const mainWindow = new BrowserWindow({
     width: 1000,
     height: 700,
+    titleBarStyle: "hidden",
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
@@ -51,7 +52,6 @@ ipcMain.handle("touch-id:encrypt", async (event, data) => {
   try {
     // safeStorage chiffre la donnée spécifiquement pour cet utilisateur/machine
     const encryptedBuffer = safeStorage.encryptString(data);
-    console.log("enc 2", encryptedBuffer);
     return encryptedBuffer.toString("base64");
   } catch (e) {
     console.error("Encryption error:", e);

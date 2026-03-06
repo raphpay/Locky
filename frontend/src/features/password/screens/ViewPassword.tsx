@@ -13,6 +13,7 @@ import { Input } from "../../../ui/components/radix/Input";
 import { Button } from "../../../ui/components/radix/Button";
 import useViewPasswordScreen from "../hooks/useViewPasswordScreen";
 import { Label } from "../../../ui/components/radix/Label";
+import BackButton from "../../../ui/components/custom/BackButton";
 
 function ViewPassword() {
   const {
@@ -50,9 +51,7 @@ function ViewPassword() {
 
       {/* Header avec Navigation et Actions */}
       <div className="flex justify-between items-center">
-        <Button variant="ghost" onClick={handleNavigateBack}>
-          ← Retour
-        </Button>
+        <BackButton onClick={handleNavigateBack} />
         <div className="flex gap-2">
           {isEditing ? (
             <>

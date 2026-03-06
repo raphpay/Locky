@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Delete } from "lucide-react";
+import { Button } from "../../../ui/components/radix/Button";
 
 interface PinPadProps {
   pin: string;
@@ -65,8 +66,8 @@ const PinPad = ({
             key={i}
             className={`size-4 rounded-full border-2 transition-all duration-200 ${
               i < pin.length
-                ? "bg-blue-600 border-blue-600 scale-125 shadow-[0_0_10px_rgba(37,99,235,0.4)]"
-                : "border-gray-300"
+                ? "bg-primary border-primary-light scale-125"
+                : "border-foreground"
             }`}
           />
         ))}
@@ -75,31 +76,34 @@ const PinPad = ({
       {/* Numbers grid */}
       <div className="grid grid-cols-3 gap-4">
         {shuffledNumbers.map((num) => (
-          <button
+          <Button
+            variant={"outline"}
             key={num}
             type="button"
             onClick={() => handlePress(num)}
-            className="size-16 rounded-full bg-gray-100 hover:bg-gray-200 text-2xl font-semibold transition-all active:scale-90"
+            className="size-16 rounded-full text-2xl font-semibold transition-all active:scale-90"
           >
             {num}
-          </button>
+          </Button>
         ))}
         {/* Last line : Empty | 0 | Delete */}
         <div /> {/* Empty space on the left */}
-        <button
+        <Button
+          variant={"outline"}
           type="button"
           onClick={() => handlePress("0")}
-          className="size-16 rounded-full bg-gray-100 hover:bg-gray-200 text-2xl font-semibold transition-all active:scale-90"
+          className="size-16 rounded-full  text-2xl font-semibold transition-all active:scale-90"
         >
           0
-        </button>
-        <button
+        </Button>
+        <Button
+          variant={"accent"}
           type="button"
           onClick={handleDelete}
-          className="size-16 rounded-full flex items-center justify-center hover:bg-red-50 text-red-500 transition-all active:scale-90"
+          className="size-16 rounded-full bg-background hover:bg-accent hover:text-primary-light text-destructive border-destructive flex items-center justify-center transition-all active:scale-90"
         >
           <Delete size={24} />
-        </button>
+        </Button>
       </div>
     </div>
   );

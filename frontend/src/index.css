@@ -1,70 +1,87 @@
 @import "tailwindcss";
 
-:root {
-    font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-    line-height: 1.5;
-    font-weight: 400;
+@theme {
+  /* On lie les classes Tailwind aux variables CSS */
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
 
-    color-scheme: light dark;
-    color: rgba(255, 255, 255, 0.87);
-    background-color: #242424;
+  --color-primary: hsl(var(--primary));
+  --color-primary-light: hsl(var(--primary-light));
+  --color-primary-dark: hsl(var(--primary-dark));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-primary-text: hsl(var(--primary-text));
+  --color-secondary-text: hsl(var(--secondary-text));
 
-    font-synthesis: none;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  --color-accent: hsl(var(--accent));
+  --color-accent-light: hsl(var(--accent-light));
+  --color-accent-dark: hsl(var(--accent-dark));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-tertiary: hsl(var(--tertiary));
+  --color-tertiary-light: hsl(var(--tertiary-light));
+  --color-tertiary-dark: hsl(var(--tertiary-dark));
+
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  --color-destructive: hsl(var(--destructive));
 }
 
-a {
-    font-weight: 500;
-    color: #646cff;
-    text-decoration: inherit;
-}
-a:hover {
-    color: #535bf2;
-}
+@layer base {
+  :root {
+    /* Tes variables HSL restent ici identiques */
+    --primary: 226 100% 61%;
+    --primary-light: 226 100% 92%;
+    --primary-dark: 227 76% 41%;
+    --primary-foreground: 210 40% 98%;
 
-body {
+    --accent: 0 100% 71%;
+    --accent-light: 12 100% 96%;
+    --accent-dark: 0 65% 55%;
+    --accent-foreground: 217 33% 17%;
+
+    --tertiary: 215.38 16.32% 46.86%;
+    --tertiary-light: 220 13.76% 21.37%;
+    --tertiary-dark: 217.24 32.58% 17.45%;
+
+    --primary-text: 217.24, 32.58%, 17.45%;
+    --secondary-text: 215.38, 16.32%, 46.86%;
+
+    --background: 210 40% 98%;
+    --foreground: 217 33% 17%;
+
+    --destructive: 9.5 82.11% 48.24%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 226 100% 61%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    /*--background: 217 33% 17%;*/
+    --background: 218.18, 12.09%, 17.84%;
+    --foreground: 210 40% 98%;
+    /* ... le reste de tes variables dark */
+
+    --primary-text: hsl(217.24, 32.58%, 17.45%);
+    --secondary-text: hsl(215.38, 16.32%, 46.86%);
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+    width: 100%;
     margin: 0;
-    display: flex;
-    place-items: center;
-    min-width: 320px;
-    min-height: 100vh;
-}
+    padding: 0;
+    overflow: hidden;
+  }
 
-h1 {
-    font-size: 3.2em;
-    line-height: 1.1;
-}
-
-button {
-    border-radius: 8px;
-    border: 1px solid transparent;
-    padding: 0.6em 1.2em;
-    font-size: 1em;
-    font-weight: 500;
-    font-family: inherit;
-    background-color: #1a1a1a;
-    cursor: pointer;
-    transition: border-color 0.25s;
-}
-button:hover {
-    border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-    outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-    :root {
-        color: #213547;
-        background-color: #ffffff;
-    }
-    a:hover {
-        color: #747bff;
-    }
-    button {
-        background-color: #f9f9f9;
-    }
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family: sans-serif;
+  }
 }

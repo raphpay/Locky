@@ -36,6 +36,8 @@ export async function fetchPasswords(): Promise<FIRPasswordDecrypted[]> {
       notes: data.notes_enc
         ? SecurityService.decryptData(data.notes_enc, masterKey)
         : "",
+      createdAt: data.createdAt,
+      updatedAt: data.updatedAt,
     };
 
     return decrypted;
