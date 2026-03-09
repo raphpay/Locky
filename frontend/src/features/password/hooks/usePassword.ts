@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import QUERY_KEYS from "../../cache/QUERY_KEYS";
-import type FIRPasswordDecrypted from "../model/FIRPasswordDecrypted";
+import { QUERY_KEYS } from "../../cache/QUERY_KEYS";
 import { fetchPassword } from "../api/fetchPassword";
+import type FIRPasswordDecrypted from "../model/FIRPasswordDecrypted";
 
 export function usePasswordQuery(passwordID: string) {
   const query = useQuery<FIRPasswordDecrypted, Error>({

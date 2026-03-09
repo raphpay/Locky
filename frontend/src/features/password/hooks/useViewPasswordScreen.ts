@@ -1,33 +1,33 @@
-import { useLocation } from "react-router";
-import { usePasswordQuery } from "./usePassword";
-import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import { toast } from "sonner";
+import { usePasswordQuery } from "./usePassword";
 
-import type FIRPasswordDecrypted from "../model/FIRPasswordDecrypted";
-import updatePassword from "../api/updatePassword";
-import ROUTES from "../../navigation/Routes";
-import deletePassword from "../api/deletePassword";
 import { useForm } from "@tanstack/react-form";
-import { firPasswordFormSchema } from "../model/PasswordFormData";
 import { useQueryClient } from "@tanstack/react-query";
-import QUERY_KEYS from "../../cache/QUERY_KEYS";
+import { QUERY_KEYS } from "../../cache/QUERY_KEYS";
+import deletePassword from "../api/deletePassword";
+import updatePassword from "../api/updatePassword";
+import type FIRPasswordDecrypted from "../model/FIRPasswordDecrypted";
+import { firPasswordFormSchema } from "../model/PasswordFormData";
 
-enum TOAST_MESSAGE {
-  WEBSITE_COPIED = "Le site web a été copié.",
-  USERNAME_COPIED = "Le nom d'utilisateur a été copié.",
-  PASSWORD_COPIED = "Le mot de passe a été copié.",
-  NOTES_COPIED = "Les notes ont été copiées.",
-  PASSWORD_EDITED = "Le mot de passe a été modifié.",
-  PASSWORD_EDITION_ERROR = "Une erreur s'est produite lors de la modification du mot de passe.",
-  PASSWORD_DELETED = "Le mot de passe a été supprimé.",
-  PASSWORD_DELETION_ERROR = "Une erreur s'est produite lors de la suppression du mot de passe.",
+const TOAST_MESSAGE = {
+  WEBSITE_COPIED: "Le site web a été copié.",
+  USERNAME_COPIED: "Le nom d'utilisateur a été copié.",
+  PASSWORD_COPIED: "Le mot de passe a été copié.",
+  NOTES_COPIED: "Les notes ont été copiées.",
+  PASSWORD_EDITED: "Le mot de passe a été modifié.",
+  PASSWORD_EDITION_ERROR: "Une erreur s'est produite lors de la modification du mot de passe.",
+  PASSWORD_DELETED: "Le mot de passe a été supprimé.",
+  PASSWORD_DELETION_ERROR: "Une erreur s'est produite lors de la suppression du mot de passe.",
 }
 
-enum TOAST_TYPE {
-  SUCCESS = "success",
-  ERROR = "error",
+const TOAST_TYPE = {
+  SUCCESS: "success",
+  ERROR: "error",
 }
+
+type TOAST_TYPE = (typeof TOAST_TYPE)[keyof typeof TOAST_TYPE];
 
 export default function useViewPasswordScreen({
   selectedPassword,

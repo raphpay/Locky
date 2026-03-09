@@ -24,7 +24,13 @@ const CONTINUE_BUTTON_TEXT = {
   FINAL: "Terminer",
 };
 
-const SIGN_UP_STEPS = {
+interface SignUpStepConfig {
+  title: string;
+  description?: string;
+  button?: string;
+}
+
+const SIGN_UP_STEPS: Record<number, SignUpStepConfig> = {
   0: {
     title: SIGN_UP_TITLE.START,
     description: SIGN_UP_DESCRIPTION.START,

@@ -1,14 +1,13 @@
 import { getAuth, signInAnonymously, signOut } from "firebase/auth";
-import CacheService from "../cache/CacheService";
-import CACHE_KEYS from "../cache/CACHE_KEYS";
 import { doc, getDoc } from "firebase/firestore";
+import { CACHE_KEYS } from "../cache/CACHE_KEYS";
+import CacheService from "../cache/CacheService";
+import { COLLECTIONS } from "../firebase/collections";
 import { db } from "../firebase/init";
-import SessionManager from "../session/SessionManager";
-import COLLECTIONS from "../firebase/collections";
-import SecurityService from "../security/SecurityService";
 import RecoverySeedService from "../recoverySeed/RecoverySeedService";
+import SecurityService from "../security/SecurityService";
+import SessionManager from "../session/SessionManager";
 import UserService from "../user/UserService";
-import { CalendarCheck } from "lucide-react";
 
 const AuthService = {
   /**

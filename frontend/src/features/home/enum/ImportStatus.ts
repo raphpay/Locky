@@ -1,7 +1,9 @@
-enum ImportStatus {
-  SUCCESS = "success",
-  ERROR = "error",
-  PENDING = "pending",
-}
+const ImportStatus = {
+  SUCCESS: "success",
+  ERROR: "error",
+  PENDING: "pending",
+} as const;
 
-export default ImportStatus;
+type ImportStatus = (typeof ImportStatus)[keyof typeof ImportStatus];
+
+export { ImportStatus };

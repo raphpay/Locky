@@ -1,10 +1,10 @@
 import { Import, Plus, UserCog } from "lucide-react";
-import { Button } from "../../../ui/components/radix/Button";
-import { SearchInput } from "../../../ui/components/custom/SearchInput";
-import SortingDropdown from "./SortingDropdown";
-import type SORTING_SELECTION from "../sort/sortingSelection";
-import ROUTES from "../../navigation/Routes";
 import { useNavigate } from "react-router";
+import { SearchInput } from "../../../ui/components/custom/SearchInput";
+import { Button } from "../../../ui/components/radix/Button";
+import { ROUTES } from "../../navigation/Routes";
+import { SORTING_SELECTION } from "../sort/sortingSelection";
+import SortingDropdown from "./SortingDropdown";
 
 interface Props {
   searchInputRef: React.RefObject<HTMLInputElement | null>;

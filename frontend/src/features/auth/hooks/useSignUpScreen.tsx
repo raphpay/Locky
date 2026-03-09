@@ -1,21 +1,20 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import AuthService from "../AuthService";
-import RecoverySeedService from "../../recoverySeed/RecoverySeedService";
-import UserService from "../../user/UserService";
-import ROUTES from "../../navigation/Routes";
-import { SIGN_UP_STEPS, TOAST_MESSAGE } from "../enum/signUpStates";
-import SessionManager from "../../session/SessionManager";
-import CacheService from "../../cache/CacheService";
-import CACHE_KEYS from "../../cache/CACHE_KEYS";
 import { toast } from "sonner";
+import { CACHE_KEYS } from "../../cache/CACHE_KEYS";
+import CacheService from "../../cache/CacheService";
+import { ROUTES } from "../../navigation/Routes";
+import RecoverySeedService from "../../recoverySeed/RecoverySeedService";
+import SessionManager from "../../session/SessionManager";
+import UserService from "../../user/UserService";
+import AuthService from "../AuthService";
+import { SIGN_UP_STEPS, TOAST_MESSAGE } from "../enum/signUpStates";
 
 export default function useSignUpScreen() {
   const navigate = useNavigate();
 
   const [step, setStep] = useState<number>(0);
-  const currentConfig =
-    SIGN_UP_STEPS[step as keyof SIGN_UP_STEPS] || SIGN_UP_STEPS[0];
+  const currentConfig = SIGN_UP_STEPS[step] || SIGN_UP_STEPS[0];
 
   const [pin, setPin] = useState<string>("");
   const [masterPassword, setMasterPassword] = useState<string>("");

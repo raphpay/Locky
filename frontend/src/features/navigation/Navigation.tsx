@@ -1,17 +1,14 @@
 import { useEffect, type JSX } from "react";
-import { Route } from "react-router";
-import { Routes } from "react-router";
-import SignUp from "../auth/screens/SignUp";
-import Home from "../home/screens/Home";
-import SessionManager from "../session/SessionManager";
-import ROUTES from "./Routes";
-import CacheService from "../cache/CacheService";
-import CACHE_KEYS from "../cache/CACHE_KEYS";
-import ViewPassword from "../password/screens/ViewPassword";
-import { Navigate } from "react-router";
+import { Navigate, Route, Routes } from "react-router";
 import LockScreen from "../auth/screens/LockScreen";
 import LoginWithPhrase from "../auth/screens/LoginWithPhrase";
+import SignUp from "../auth/screens/SignUp";
+import { CACHE_KEYS } from "../cache/CACHE_KEYS";
+import CacheService from "../cache/CacheService";
+import Home from "../home/screens/Home";
+import SessionManager from "../session/SessionManager";
 import SettingsScreen from "../settings/screens/SettingsScreen";
+import { ROUTES } from "./Routes";
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const masterKey = SessionManager.getMasterKey();
@@ -107,14 +104,14 @@ function Navigation() {
             </ProtectedRoute>
           }
         />*/}
-        <Route
+        {/* <Route
           path={ROUTES.VIEW_PASSWORD}
           element={
             <ProtectedRoute>
               <ViewPassword />
             </ProtectedRoute>
           }
-        />
+        /> */}
 
         <Route />
         <Route

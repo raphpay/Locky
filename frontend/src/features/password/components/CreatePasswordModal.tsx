@@ -15,7 +15,7 @@ import {
 } from "../../../ui/components/radix/Field";
 import { Input } from "../../../ui/components/radix/Input";
 import { Textarea } from "../../../ui/components/radix/Textarea";
-import DIALOG_STATUS from "../enum/DialogStatus";
+import { DIALOG_STATUS } from "../enum/DialogStatus";
 import useCreatePasswordModal from "../hooks/useCreatePasswordModal";
 
 export interface CreatePasswordModalProps {
