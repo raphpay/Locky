@@ -8,13 +8,14 @@
   "private": false,
   "scripts": {
     "dev": "concurrently \"yarn dev:frontend\" \"yarn dev:electron\"",
-    "dev:frontend": "cd frontend && yarn dev",
+    "dev:frontend": "yarn --cwd frontend dev",
     "dev:electron": "wait-on http://localhost:5173 && electron .",
-    "build": "electron-builder",
-    "dev-two": "concurrently \"yarn --cwd frontend dev\" \"wait-on http://localhost:5173 && electron .\"",
-    "build-two": "yarn --cwd frontend build",
-    "build-three": "cd frontend && yarn build",
-    "make": "electron-forge make",
+
+    "build:frontend": "yarn --cwd frontend build",
+    "build:electron": "electron-builder",
+
+    "build": "yarn build:frontend && yarn build:electron",
+
     "start": "electron ."
   },
   "build": {
@@ -30,15 +31,20 @@
     "mac": {
       "target": "dmg",
       "icon": "assets/icons/icon.icns"
-    }
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "frontend/dist/**/*",
+      "assets/**/*"
+    ]
   },
   "devDependencies": {
     "@electron-forge/cli": "^7.11.1",
     "concurrently": "^9.2.1",
-    "elecron": "^0.0.1-security",
-    "electron": "^40.1.0",
+    "electron": "^40.8.0",
     "electron-builder": "^26.8.1",
-    "wait-on": "^9.0.3"
+    "wait-on": "^9.0.4"
   },
   "dependencies": {
     "electron-serve": "^3.0.1"

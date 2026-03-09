@@ -34,6 +34,7 @@ function InitialRedirect() {
 
 function Navigation() {
   // TODO: To be checked
+
   useEffect(() => {
     // 1. Vérifie la préférence système
     const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
