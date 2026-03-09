@@ -151,3 +151,4 @@ app-info.txt
 
 # Zed settings
 .zed/settings.json
+.DS_Store
