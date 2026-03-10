@@ -22,10 +22,9 @@ function createWindow() {
   const isDev = !app.isPackaged;
   if (isDev) {
     mainWindow.loadURL("http://localhost:5173");
-    // mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
   } else {
     mainWindow.loadFile(path.join(app.getAppPath(), "frontend/dist/index.html"));
-    // mainWindow.loadFile(path.join(__dirname, "../frontend/dist/index.html"));
   }
 }
 
