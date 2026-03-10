@@ -8,7 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../../../ui/components/radix/DropdownMenu";
-import SORTING_SELECTION from "../sort/sortingSelection";
+import { SORTING_SELECTION } from "../sort/sortingSelection";
 
 interface Props {
   sortingSelection: SORTING_SELECTION;

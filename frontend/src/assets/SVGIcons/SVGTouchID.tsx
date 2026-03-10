@@ -1,6 +1,8 @@
 import * as React from "react";
 
-const SVGTouchID = (props) => (
+interface Props extends React.SVGProps<SVGSVGElement> {}
+
+const SVGTouchID = React.memo((props: Props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={44}
@@ -21,5 +23,6 @@ const SVGTouchID = (props) => (
       </clipPath>
     </defs>
   </svg>
-);
+));
+
 export default SVGTouchID;

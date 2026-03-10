@@ -1,18 +1,18 @@
-import useLockScreen from "../hooks/useLockScreen";
+import { ArrowRight } from "lucide-react";
 import SVGLock from "../../../assets/SVGIcons/SVGLock";
 import SVGTouchID from "../../../assets/SVGIcons/SVGTouchID";
-import PinPad from "../components/PinPad";
 import { Button } from "../../../ui/components/radix/Button";
-import { LOCK_SCREEN_STATES } from "../enum/lockScreenStates";
-import { Input } from "../../../ui/components/radix/Input";
-import { ArrowRight } from "lucide-react";
-import LOGIN_METHOD from "../enum/loginMethod";
-import LoadingSpinner from "../components/LoadingSpinner";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "../../../ui/components/radix/HoverCard";
+import { Input } from "../../../ui/components/radix/Input";
+import LoadingSpinner from "../components/LoadingSpinner";
+import PinPad from "../components/PinPad";
+import { LOCK_SCREEN_STATES } from "../enum/lockScreenStates";
+import { LOGIN_METHOD } from "../enum/loginMethod";
+import useLockScreen from "../hooks/useLockScreen";
 
 function LockScreen() {
   const {

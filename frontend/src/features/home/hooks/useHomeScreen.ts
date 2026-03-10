@@ -1,17 +1,15 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router";
 import { toast } from "sonner";
-import QUERY_KEYS from "../../cache/QUERY_KEYS";
-import ROUTES from "../../navigation/Routes";
+import { QUERY_KEYS } from "../../cache/QUERY_KEYS";
 import importPasswords from "../../password/api/importPasswords";
 import { usePasswordsQuery } from "../../password/hooks/usePasswords";
-import SORTING_SELECTION from "../sort/sortingSelection";
 import type FIRPasswordDecrypted from "../../password/model/FIRPasswordDecrypted";
+import { SORTING_SELECTION } from "../sort/sortingSelection";
 
-enum TOAST_MESSAGE {
-  IMPORT_SUCCESS = "Mots de passe importés avec succès !",
-  IMPORT_ERROR = "Une erreur est survenue lors de l'importation des mots de passe.",
+const TOAST_MESSAGE = {
+  IMPORT_SUCCESS: "Mots de passe importés avec succès !",
+  IMPORT_ERROR: "Une erreur est survenue lors de l'importation des mots de passe.",
 }
 
 export default function useHomeScreen() {

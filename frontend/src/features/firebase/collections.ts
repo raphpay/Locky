@@ -1,6 +1,8 @@
-enum COLLECTIONS {
-  USERS = "users",
-  PASSWORDS = "passwords",
-}
+const COLLECTIONS = {
+  USERS: "users",
+  PASSWORDS: "passwords",
+} as const;
 
-export default COLLECTIONS;
+type COLLECTIONS = (typeof COLLECTIONS)[keyof typeof COLLECTIONS];
+
+export { COLLECTIONS };

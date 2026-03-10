@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import ROUTES from "../../navigation/Routes";
-import AuthService from "../AuthService";
-import LOGIN_METHOD from "../enum/loginMethod";
+import { CACHE_KEYS } from "../../cache/CACHE_KEYS";
 import CacheService from "../../cache/CacheService";
-import CACHE_KEYS from "../../cache/CACHE_KEYS";
+import { ROUTES } from "../../navigation/Routes";
+import AuthService from "../AuthService";
 import {
-  LOCK_SCREEN_STATES,
   LOCK_SCREEN_BOTTOM_BUTTON_TEXTS,
   LOCK_SCREEN_BUTTON_TOP_TEXTS,
   LOCK_SCREEN_DESCRIPTIONS,
+  LOCK_SCREEN_STATES,
 } from "../enum/lockScreenStates";
+import { LOGIN_METHOD } from "../enum/loginMethod";
 
 export default function useLockScreen() {
   const navigate = useNavigate();

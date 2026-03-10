@@ -1,8 +1,8 @@
 import { deleteDoc, doc } from "firebase/firestore";
-import COLLECTIONS from "../../firebase/collections";
-import { db } from "../../firebase/init";
+import { CACHE_KEYS } from "../../cache/CACHE_KEYS";
 import CacheService from "../../cache/CacheService";
-import CACHE_KEYS from "../../cache/CACHE_KEYS";
+import { COLLECTIONS } from "../../firebase/collections";
+import { db } from "../../firebase/init";
 import SessionManager from "../../session/SessionManager";
 
 export default async function deletePassword(id: string) {

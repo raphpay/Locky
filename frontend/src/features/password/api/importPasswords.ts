@@ -1,8 +1,8 @@
 import { collection, doc, writeBatch } from "firebase/firestore";
 import Papa from "papaparse";
-import CACHE_KEYS from "../../cache/CACHE_KEYS";
+import { CACHE_KEYS } from "../../cache/CACHE_KEYS";
 import CacheService from "../../cache/CacheService";
-import COLLECTIONS from "../../firebase/collections";
+import { COLLECTIONS } from "../../firebase/collections";
 import { db } from "../../firebase/init";
 import SecurityService from "../../security/SecurityService";
 import SessionManager from "../../session/SessionManager";
