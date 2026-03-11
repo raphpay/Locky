@@ -4,7 +4,7 @@
   "description": "Secure and private password manager",
   "main": "main.js",
   "author": "raphpay",
-  "license": "none",
+  "license": "UNLICENSED",
   "private": false,
   "scripts": {
     "dev": "concurrently \"yarn dev:frontend\" \"yarn dev:electron\"",
