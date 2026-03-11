@@ -5,4 +5,6 @@ export default interface FIRPasswordEncrypted {
   password_enc: string;
   website_enc: string;
   notes_enc: string;
+  createdAt: string;
+  updatedAt: string;
 }

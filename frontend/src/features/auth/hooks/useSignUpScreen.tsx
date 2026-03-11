@@ -1,76 +1,47 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import PHRASE_STATUS from "../enum/phraseStatus";
-import AuthService from "../AuthService";
-import RecoverySeedService from "../../recoverySeed/RecoverySeedService";
-import UserService from "../../user/UserService";
-import ROUTES from "../../navigation/Routes";
-import SIGN_UP_STEP from "../enum/signUpStep";
-import SessionManager from "../../session/SessionManager";
+import { toast } from "sonner";
+import { CACHE_KEYS } from "../../cache/CACHE_KEYS";
 import CacheService from "../../cache/CacheService";
-import CACHE_KEYS from "../../cache/CACHE_KEYS";
+import { ROUTES } from "../../navigation/Routes";
+import RecoverySeedService from "../../recoverySeed/RecoverySeedService";
+import SessionManager from "../../session/SessionManager";
+import UserService from "../../user/UserService";
+import AuthService from "../AuthService";
+import { SIGN_UP_STEPS, TOAST_MESSAGE } from "../enum/signUpStates";
 
 export default function useSignUpScreen() {
   const navigate = useNavigate();
 
+  const [step, setStep] = useState<number>(0);
+  const currentConfig = SIGN_UP_STEPS[step] || SIGN_UP_STEPS[0];
+
   const [pin, setPin] = useState<string>("");
   const [masterPassword, setMasterPassword] = useState<string>("");
-  const [step, setStep] = useState<SIGN_UP_STEP>(SIGN_UP_STEP.PHRASE);
-  const [showPhrase, setShowPhrase] = useState<boolean>(false);
-  const [phraseStatus, setPhraseStatus] = useState<PHRASE_STATUS>(
-    PHRASE_STATUS.HIDDEN,
-  );
-  const [copyButtonText, setCopyButtonText] =
-    useState<string>("Copier la phrase");
-  const [showInput, setShowInput] = useState<boolean>(false);
   const [phrase, setPhrase] = useState<string>("");
-  const [showValidatePasswordButton, setShowValidatePasswordButton] =
-    useState<boolean>(true);
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isContinueDisabled, setIsContinueDisabled] = useState<boolean>(false);
 
   function handleMnemonicCopy() {
     navigator.clipboard.writeText(phrase);
+    toast.success(TOAST_MESSAGE.PHRASE_COPIED, { position: "top-center" });
+  }
 
-    switch (phraseStatus) {
-      case PHRASE_STATUS.SHOWN:
-        setStep(SIGN_UP_STEP.MASTER_PASSWORD);
-        setPhraseStatus(PHRASE_STATUS.COPIED);
-        setShowPhrase(false);
-        setShowInput(true);
-        setCopyButtonText("Revoir la phrase");
-        break;
-      case PHRASE_STATUS.COPIED:
-        setShowPhrase(true);
-        setShowInput(false);
-        setPhraseStatus(PHRASE_STATUS.COPIED_AND_REVEALED);
-        setCopyButtonText("Copier la phrase");
-        setStep(SIGN_UP_STEP.PHRASE);
-        break;
-      case PHRASE_STATUS.COPIED_AND_REVEALED:
-        setStep(SIGN_UP_STEP.MASTER_PASSWORD);
-        setPhraseStatus(PHRASE_STATUS.COPIED);
-        setShowPhrase(false);
-        setShowInput(true);
-        setCopyButtonText("Revoir la phrase");
-        break;
-      default:
-        setPhraseStatus(PHRASE_STATUS.COPIED);
-        break;
+  function handleNavigationToLogIn() {
+    navigate(ROUTES.LOGIN_WITH_PHRASE);
+  }
+
+  async function nextStep() {
+    if (step === 3 && pin.length === 6) {
+      await handleSignIn();
+    } else {
+      setStep((s) => s + 1);
     }
   }
 
-  function handleSaveMasterPassword() {
-    setStep(SIGN_UP_STEP.PIN);
-    setShowValidatePasswordButton(false);
-  }
-
-  function handleNavigateBack() {
-    navigate(-1);
-  }
-
-  function handleFinalPin(finalPin: string) {
-    setStep(SIGN_UP_STEP.FINAL);
-    setPin(finalPin);
+  function previousStep() {
+    setStep((s) => Math.max(0, s - 1));
   }
 
   async function handleSignIn() {
@@ -102,13 +73,29 @@ export default function useSignUpScreen() {
   }
 
   useEffect(() => {
-    setTimeout(() => {
-      const mnemonic = RecoverySeedService.generateRecoverySeed();
-      setPhrase(mnemonic);
-      setPhraseStatus(PHRASE_STATUS.SHOWN);
-      setShowPhrase(true);
-    }, 1500);
+    const mnemonic = RecoverySeedService.generateRecoverySeed();
+    setPhrase(mnemonic);
   }, []);
+
+  useEffect(() => {
+    if (step === 2) {
+      if (masterPassword.length === 0) {
+        setIsContinueDisabled(true);
+      } else {
+        setIsContinueDisabled(false);
+      }
+    }
+  }, [step, masterPassword]);
+
+  useEffect(() => {
+    if (step === 3) {
+      if (pin.length !== 6) {
+        setIsContinueDisabled(true);
+      } else {
+        setIsContinueDisabled(false);
+      }
+    }
+  }, [step, pin]);
 
   return {
     pin,
@@ -116,17 +103,15 @@ export default function useSignUpScreen() {
     masterPassword,
     setMasterPassword,
     step,
-    showPhrase,
+    setStep,
     phrase,
-    phraseStatus,
-    copyButtonText,
-    showInput,
-    showValidatePasswordButton,
     isLoading,
-    handleSaveMasterPassword,
-    handleNavigateBack,
+    currentConfig,
+    isContinueDisabled,
+    nextStep,
+    previousStep,
     handleMnemonicCopy,
     handleSignIn,
-    handleFinalPin,
+    handleNavigationToLogIn,
   };
 }

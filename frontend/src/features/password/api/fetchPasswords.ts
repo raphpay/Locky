@@ -1,10 +1,10 @@
 import { collection, getDocs } from "firebase/firestore";
-import CACHE_KEYS from "../../cache/CACHE_KEYS";
+import { CACHE_KEYS } from "../../cache/CACHE_KEYS";
 import CacheService from "../../cache/CacheService";
-import SessionManager from "../../session/SessionManager";
+import { COLLECTIONS } from "../../firebase/collections";
 import { db } from "../../firebase/init";
-import COLLECTIONS from "../../firebase/collections";
 import SecurityService from "../../security/SecurityService";
+import SessionManager from "../../session/SessionManager";
 import type FIRPasswordDecrypted from "../model/FIRPasswordDecrypted";
 import type FIRPasswordEncrypted from "../model/FIRPasswordEncrypted";
 
@@ -36,6 +36,8 @@ export async function fetchPasswords(): Promise<FIRPasswordDecrypted[]> {
       notes: data.notes_enc
         ? SecurityService.decryptData(data.notes_enc, masterKey)
         : "",
+      createdAt: data.createdAt,
+      updatedAt: data.updatedAt,
     };
 
     return decrypted;

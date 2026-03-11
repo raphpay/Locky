@@ -1,9 +1,12 @@
+import { ClipboardCopy } from "lucide-react";
+import { cn } from "../../../lib/utils";
 import { Button } from "../../../ui/components/radix/Button";
+import { Toaster } from "../../../ui/components/radix/Sonner";
 import LoadingSpinner from "../components/LoadingSpinner";
-import PinPad from "../components/PinPad";
-import PHRASE_STATUS from "../enum/phraseStatus";
-import SIGN_UP_STEP from "../enum/signUpStep";
 import useSignUpScreen from "../hooks/useSignUpScreen";
+import { SecureInput } from "../../../ui/components/custom/SecureInput";
+import PinPad from "../components/PinPad";
+import BackButton from "../../../ui/components/custom/BackButton";
 
 function SignUp() {
   const {
@@ -13,79 +16,75 @@ function SignUp() {
     setMasterPassword,
     step,
     phrase,
-    phraseStatus,
-    copyButtonText,
-    showValidatePasswordButton,
     isLoading,
-    handleSaveMasterPassword,
-    handleNavigateBack,
+    currentConfig,
+    isContinueDisabled,
+    nextStep,
+    previousStep,
     handleMnemonicCopy,
-    handleSignIn,
-    handleFinalPin,
+    handleNavigationToLogIn,
   } = useSignUpScreen();
 
   return (
-    <div className="flex flex-1 flex-col gap-2">
+    <div className="flex flex-1 flex-col items-center justify-center h-full w-full gap-4 m-auto">
       <LoadingSpinner isLoading={isLoading} />
 
-      <button className="absolute top-2 left-2" onClick={handleNavigateBack}>
-        Retour
-      </button>
-      <h1>Bonjour, et bienvenue sur Locky!</h1>
+      {step !== 0 && <BackButton onClick={previousStep} />}
 
-      {step === SIGN_UP_STEP.PHRASE && (
-        <div className="flex flex-col items-center gap-2">
-          <h2 className="text-start">
-            Pour commencer, veuillez noter précieusement la phrase suivante.
-          </h2>
-          <p>
-            Elle vous permettra de vous authentifier dans le cas où vous
-            perdriez votre mot de passe.
-          </p>
-          <p>{phrase}</p>
-        </div>
-      )}
-      {phraseStatus !== PHRASE_STATUS.HIDDEN && (
-        <button onClick={handleMnemonicCopy}>{copyButtonText}</button>
-      )}
-      {step === SIGN_UP_STEP.MASTER_PASSWORD && (
-        <div className="flex flex-col justify-center items-center">
-          <p>Entrez maintenant votre mot de passe :</p>
-          <input
-            value={masterPassword}
-            onChange={(e) => setMasterPassword(e.target.value)}
-            className="border border-gray-300 rounded-md p-2 w-full"
-            placeholder="Master Password"
-            type="password"
-          />
+      <div className="flex flex-col items-center justify-center w-full">
+        <h1
+          className={cn(
+            "text-primary-text",
+            step === 0 ? "text-5xl" : "text-2xl",
+          )}
+        >
+          {currentConfig.title}
+        </h1>
+        <p className="text-xl text-secondary-text text-center max-w-150">
+          {currentConfig.description}
+        </p>
+      </div>
+
+      {step === 1 && (
+        <div className="flex flex-row max-w-200">
+          <p className="text-2xl font-semibold text-center">{phrase}</p>
+          <Button variant={"secondary"} onClick={handleMnemonicCopy}>
+            <ClipboardCopy />
+          </Button>
         </div>
       )}
 
-      {masterPassword !== "" && showValidatePasswordButton && (
-        <button onClick={handleSaveMasterPassword}>
-          Valider le mot de passe général
-        </button>
+      {step == 2 && (
+        <SecureInput
+          value={masterPassword}
+          onChange={(e) => setMasterPassword(e.target.value)}
+          placeholder={"Mot_de_passe123"}
+          className="w-150"
+          type="password"
+        />
       )}
 
-      {(step === SIGN_UP_STEP.PIN || step === SIGN_UP_STEP.FINAL) && (
-        <div className="flex flex-col items-center gap-6">
-          <div>
-            <h2 className="text-xl font-bold">Créez votre code PIN :</h2>
-            <p className="text-gray-500">Il sera demandé à chaque ouverture</p>
-          </div>
-
-          {/*TODO: On hover, display the current PIN */}
-          <PinPad
-            pin={pin}
-            setPin={setPin}
-            onComplete={(finalPin) => handleFinalPin(finalPin)}
-          />
-        </div>
+      {step === 3 && (
+        <PinPad
+          pin={pin}
+          setPin={setPin}
+          onComplete={() => console.log("Pin entered")}
+        />
       )}
 
-      {step === SIGN_UP_STEP.FINAL && (
-        <Button onClick={handleSignIn}>Commencer à utiliser Locky</Button>
-      )}
+      <Button
+        className="w-150"
+        onClick={nextStep}
+        disabled={isContinueDisabled}
+      >
+        {currentConfig.button}
+      </Button>
+
+      <Button variant={"link"} onClick={handleNavigationToLogIn}>
+        J'ai déjà un coffre-fort
+      </Button>
+
+      <Toaster />
     </div>
   );
 }

@@ -1,0 +1,10 @@
+const DIALOG_STATUS = {
+  BASE: "BASE",
+  SENDING: "SENDING",
+  SUCCESS: "SUCCESS",
+  ERROR: "ERROR",
+}
+
+type DIALOG_STATUS = (typeof DIALOG_STATUS)[keyof typeof DIALOG_STATUS];
+
+export { DIALOG_STATUS };

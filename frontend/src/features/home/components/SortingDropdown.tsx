@@ -1,4 +1,4 @@
-import { Check } from "lucide-react";
+import { ArrowUpDown, Check } from "lucide-react";
 import { Button } from "../../../ui/components/radix/Button";
 import {
   DropdownMenu,
@@ -8,13 +8,31 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../../../ui/components/radix/DropdownMenu";
-import SORTING_SELECTION from "../sort/sortingSelection";
+import { SORTING_SELECTION } from "../sort/sortingSelection";
 
 interface Props {
   sortingSelection: SORTING_SELECTION;
   onSortSelectionChange: (selection: SORTING_SELECTION) => void;
   isSortingAscending: boolean;
   onSortIsAscendingChange: (newValue: boolean) => void;
+}
+
+interface ItemProps {
+  isSelected: boolean;
+  title: string;
+  onClick: () => void;
+}
+
+function Item({ isSelected, title, onClick }: ItemProps) {
+  return (
+    <DropdownMenuItem
+      onClick={onClick}
+      className="flex justify-between items-center cursor-pointer"
+    >
+      {title}
+      {isSelected && <Check className="ml-2 h-4 w-4" />}
+    </DropdownMenuItem>
+  );
 }
 
 function SortingDropdown({
@@ -26,69 +44,56 @@ function SortingDropdown({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline">Ranger par</Button>
+        <Button variant="secondary">
+          <ArrowUpDown />
+        </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuGroup>
-          <DropdownMenuItem
+          <Item
             onClick={() => {
               onSortSelectionChange(SORTING_SELECTION.TITLE);
             }}
-            className="flex items-center"
-          >
-            {sortingSelection === SORTING_SELECTION.TITLE && (
-              <Check className="ml-2 h-4 w-4" />
-            )}
-            Titre
-          </DropdownMenuItem>
-          <DropdownMenuItem
+            isSelected={sortingSelection === SORTING_SELECTION.TITLE}
+            title={"Titre"}
+          />
+          <Item
             onClick={() => {
               onSortSelectionChange(SORTING_SELECTION.WEBSITE);
             }}
-          >
-            {sortingSelection === SORTING_SELECTION.WEBSITE && (
-              <Check className="ml-2 h-4 w-4" />
-            )}
-            Site Web
-          </DropdownMenuItem>
-          <DropdownMenuItem
+            isSelected={sortingSelection === SORTING_SELECTION.WEBSITE}
+            title={"Site Web"}
+          />
+          <Item
             onClick={() => {
               onSortSelectionChange(SORTING_SELECTION.CREATED_AT);
             }}
-          >
-            {sortingSelection === SORTING_SELECTION.CREATED_AT && (
-              <Check className="ml-2 h-4 w-4" />
-            )}
-            Date de création
-          </DropdownMenuItem>
-          <DropdownMenuItem
+            isSelected={sortingSelection === SORTING_SELECTION.CREATED_AT}
+            title={"Date de création"}
+          />
+          <Item
             onClick={() => {
               onSortSelectionChange(SORTING_SELECTION.UPDATED_AT);
             }}
-          >
-            {sortingSelection === SORTING_SELECTION.UPDATED_AT && (
-              <Check className="ml-2 h-4 w-4" />
-            )}
-            Date de modification
-          </DropdownMenuItem>
+            isSelected={sortingSelection === SORTING_SELECTION.UPDATED_AT}
+            title={"Date de modification"}
+          />
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem
+        <Item
           onClick={() => {
             onSortIsAscendingChange(true);
           }}
-        >
-          {isSortingAscending && <Check className="ml-2 h-4 w-4" />}
-          Ascendant
-        </DropdownMenuItem>
-        <DropdownMenuItem
+          isSelected={isSortingAscending}
+          title={"Ascendant"}
+        />
+        <Item
           onClick={() => {
             onSortIsAscendingChange(false);
           }}
-        >
-          {!isSortingAscending && <Check className="ml-2 h-4 w-4" />}
-          Descendant
-        </DropdownMenuItem>
+          isSelected={!isSortingAscending}
+          title={"Descendant"}
+        />
       </DropdownMenuContent>
     </DropdownMenu>
   );

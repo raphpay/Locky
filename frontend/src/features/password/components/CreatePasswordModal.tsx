@@ -1,11 +1,13 @@
+import { SecureInput } from "../../../ui/components/custom/SecureInput";
 import {
   AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
-  AlertDialogHeader,
+  AlertDialogFooter,
   AlertDialogTitle,
 } from "../../../ui/components/radix/AlertDialog";
-import useCreatePasswordScreen from "../hooks/useCreatePasswordScreen";
 import {
   Field,
   FieldGroup,
@@ -13,30 +15,37 @@ import {
 } from "../../../ui/components/radix/Field";
 import { Input } from "../../../ui/components/radix/Input";
 import { Textarea } from "../../../ui/components/radix/Textarea";
-import { Button } from "../../../ui/components/radix/Button";
+import { DIALOG_STATUS } from "../enum/DialogStatus";
+import useCreatePasswordModal from "../hooks/useCreatePasswordModal";
 
-function CreatePassword() {
+export interface CreatePasswordModalProps {
+  display: boolean;
+  setDisplay: (value: boolean) => void;
+}
+
+function CreatePasswordModal({
+  display,
+  setDisplay,
+}: CreatePasswordModalProps) {
   const {
     form,
     sendButtonDisabled,
-    isDialogOpen,
+    dialogStatus,
     dialogTitle,
     dialogDescription,
     suggestedTitle,
-    handleNavigateBack,
+    passwordMutation,
     onWebsiteLosesFocus,
-  } = useCreatePasswordScreen();
+  } = useCreatePasswordModal({ setDisplay });
 
-  return (
-    <div className="flex flex-1 flex-col gap-2">
-      <button onClick={handleNavigateBack} className="absolute top-2 left-2">
-        Retour
-      </button>
-      <div className="flex flex-col gap-2 w-full">
+  function BaseState() {
+    return (
+      <div className="overflow-y-scroll overflow-x-clip">
         <form
           className="w-full"
-          id="password-creation-form"
+          id="create-password-form-modal"
           onSubmit={(e) => {
+            console.log("submit", e);
             e.preventDefault();
             e.stopPropagation();
             form.handleSubmit();
@@ -100,7 +109,7 @@ function CreatePassword() {
                 return (
                   <Field data-invalid={isInvalid}>
                     <FieldLabel htmlFor={field.name}>Mot de passe</FieldLabel>
-                    <Input
+                    <SecureInput
                       id={field.name}
                       name={field.name}
                       value={field.state.value}
@@ -109,7 +118,6 @@ function CreatePassword() {
                       aria-invalid={isInvalid}
                       placeholder="My_strong_password"
                       autoComplete="off"
-                      type="password"
                     />
                   </Field>
                 );
@@ -167,25 +175,33 @@ function CreatePassword() {
           </FieldGroup>
         </form>
 
-        <Button
-          type="submit"
-          form="password-creation-form"
-          disabled={sendButtonDisabled}
-        >
-          Créer le mot de passe
-        </Button>
-      </div>
+        <AlertDialogFooter>
+          <AlertDialogCancel onClick={() => setDisplay(false)}>
+            Fermer
+          </AlertDialogCancel>
 
-      <AlertDialog defaultOpen={false} open={isDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{dialogTitle}</AlertDialogTitle>
-            <AlertDialogDescription>{dialogDescription}</AlertDialogDescription>
-          </AlertDialogHeader>
-        </AlertDialogContent>
-      </AlertDialog>
-    </div>
+          <AlertDialogAction
+            type="submit"
+            form="create-password-form-modal"
+            disabled={sendButtonDisabled}
+            variant={"default"}
+          >
+            {passwordMutation.isPending ? "En cours..." : "Ajouter"}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </div>
+    );
+  }
+
+  return (
+    <AlertDialog open={display}>
+      <AlertDialogContent>
+        <AlertDialogTitle>{dialogTitle}</AlertDialogTitle>
+        <AlertDialogDescription>{dialogDescription}</AlertDialogDescription>
+        {dialogStatus === DIALOG_STATUS.BASE && BaseState()}
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }
 
-export default CreatePassword;
+export default CreatePasswordModal;

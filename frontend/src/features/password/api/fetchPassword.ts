@@ -1,12 +1,12 @@
 import { doc, getDoc } from "firebase/firestore"; // Import au singulier
-import SessionManager from "../../session/SessionManager";
+import { CACHE_KEYS } from "../../cache/CACHE_KEYS";
 import CacheService from "../../cache/CacheService";
-import type FIRPasswordDecrypted from "../model/FIRPasswordDecrypted";
-import COLLECTIONS from "../../firebase/collections";
+import { COLLECTIONS } from "../../firebase/collections";
 import { db } from "../../firebase/init";
 import SecurityService from "../../security/SecurityService";
+import SessionManager from "../../session/SessionManager";
+import type FIRPasswordDecrypted from "../model/FIRPasswordDecrypted";
 import type FIRPasswordEncrypted from "../model/FIRPasswordEncrypted";
-import CACHE_KEYS from "../../cache/CACHE_KEYS";
 
 export async function fetchPassword(id: string): Promise<FIRPasswordDecrypted> {
   const masterKey = SessionManager.getMasterKey();
@@ -41,5 +41,7 @@ export async function fetchPassword(id: string): Promise<FIRPasswordDecrypted> {
     notes: data.notes_enc
       ? SecurityService.decryptData(data.notes_enc, masterKey)
       : "",
+    createdAt: data.createdAt,
+    updatedAt: data.updatedAt,
   };
 }

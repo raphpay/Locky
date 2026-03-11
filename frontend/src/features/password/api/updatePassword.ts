@@ -1,10 +1,10 @@
 import { doc, updateDoc } from "firebase/firestore";
-import COLLECTIONS from "../../firebase/collections";
-import { db } from "../../firebase/init";
+import { CACHE_KEYS } from "../../cache/CACHE_KEYS";
 import CacheService from "../../cache/CacheService";
-import CACHE_KEYS from "../../cache/CACHE_KEYS";
-import SessionManager from "../../session/SessionManager";
+import { COLLECTIONS } from "../../firebase/collections";
+import { db } from "../../firebase/init";
 import SecurityService from "../../security/SecurityService";
+import SessionManager from "../../session/SessionManager";
 import type FIRPasswordDecrypted from "../model/FIRPasswordDecrypted";
 
 export default async function updatePassword(formData: FIRPasswordDecrypted) {

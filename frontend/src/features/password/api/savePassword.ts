@@ -1,11 +1,11 @@
-import { collection, addDoc } from "firebase/firestore";
-import type PasswordFormData from "../model/PasswordFormData";
-import COLLECTIONS from "../../firebase/collections";
-import { db } from "../../firebase/init";
+import { addDoc, collection } from "firebase/firestore";
+import { CACHE_KEYS } from "../../cache/CACHE_KEYS";
 import CacheService from "../../cache/CacheService";
-import CACHE_KEYS from "../../cache/CACHE_KEYS";
-import SessionManager from "../../session/SessionManager";
+import { COLLECTIONS } from "../../firebase/collections";
+import { db } from "../../firebase/init";
 import SecurityService from "../../security/SecurityService";
+import SessionManager from "../../session/SessionManager";
+import type { PasswordFormData } from "../model/PasswordFormData";
 
 export default async function savePassword(formData: PasswordFormData) {
   const publicID = CacheService.retrieve(CACHE_KEYS.PUBLIC_ID) as string;
