@@ -1,18 +1,18 @@
-import { ArrowRight } from "lucide-react";
+import useLockScreen from "../hooks/useLockScreen";
 import SVGLock from "../../../assets/SVGIcons/SVGLock";
 import SVGTouchID from "../../../assets/SVGIcons/SVGTouchID";
-import { Button } from "../../../ui/components/radix/Button";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "../../../ui/components/radix/HoverCard";
-import { Input } from "../../../ui/components/radix/Input";
-import LoadingSpinner from "../components/LoadingSpinner";
 import PinPad from "../components/PinPad";
+import { Button } from "../../../ui/components/radix/Button";
 import { LOCK_SCREEN_STATES } from "../enum/lockScreenStates";
+import { Input } from "../../../ui/components/radix/Input";
+import { ArrowRight } from "lucide-react";
 import { LOGIN_METHOD } from "../enum/loginMethod";
-import useLockScreen from "../hooks/useLockScreen";
+import LoadingSpinner from "../components/LoadingSpinner";
+import AuthService from "../AuthService";
+import CacheService from "../../cache/CacheService";
+import SessionManager from "../../session/SessionManager";
+import { useNavigate } from "react-router";
+import { ROUTES } from "../../navigation/Routes";
 
 function LockScreen() {
   const {
@@ -34,6 +34,17 @@ function LockScreen() {
     handleFinalPin,
   } = useLockScreen();
 
+  const navigate = useNavigate();
+
+  async function handleForceSignOut() {
+    console.log("1");
+    CacheService.clear();
+    await AuthService.signOut();
+    SessionManager.clear();
+    console.log("2");
+    navigate(ROUTES.ROOT);
+  }
+
   return (
     <div className="flex flex-1 flex-col items-center justify-center h-full w-full gap-4">
       <LoadingSpinner isLoading={isLoading} />
@@ -46,21 +57,12 @@ function LockScreen() {
       {lockScreenState === LOCK_SCREEN_STATES.PIN_OR_BIO && (
         <div className="flex flex-col items-center justify-center gap-2">
           {hasBio && (
-            <HoverCard openDelay={10} closeDelay={100}>
-              <HoverCardTrigger asChild>
-                <button
-                  className="cursor-pointer"
-                  onClick={() => handleLogIn(LOGIN_METHOD.BIOMETRICS)}
-                >
-                  <SVGTouchID className="text-primary" />
-                </button>
-              </HoverCardTrigger>
-              <HoverCardContent className="flex w-64 flex-col gap-0.5">
-                <p className="text-center text-primary-text text-sm font-medium">
-                  Déverrouiller avec Touch ID
-                </p>
-              </HoverCardContent>
-            </HoverCard>
+            <button
+              className="cursor-pointer"
+              onClick={() => handleLogIn(LOGIN_METHOD.BIOMETRICS)}
+            >
+              <SVGTouchID className="text-primary" />
+            </button>
           )}
           <PinPad
             pin={pin}
@@ -121,6 +123,7 @@ function LockScreen() {
         >
           {bottomButtonText}
         </Button>
+        <Button onClick={handleForceSignOut}>Force sign out</Button>
       </div>
     </div>
   );
