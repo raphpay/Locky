@@ -3,54 +3,58 @@ import { Navigate, Route, Routes } from "react-router";
 import LockScreen from "../auth/screens/LockScreen";
 import LoginWithPhrase from "../auth/screens/LoginWithPhrase";
 import SignUp from "../auth/screens/SignUp";
-import { CACHE_KEYS } from "../cache/CACHE_KEYS";
-import CacheService from "../cache/CacheService";
 import Home from "../home/screens/Home";
-import SessionManager from "../session/SessionManager";
 import SettingsScreen from "../settings/screens/SettingsScreen";
 import { ROUTES } from "./Routes";
+import getAuthState from "../auth/logic/getAuthState";
+
+function InitialRedirect() {
+  const { hasSession, hasAccount } = getAuthState();
+
+  if (hasSession) {
+    return <Navigate to={ROUTES.HOME} replace />;
+  }
+
+  if (hasAccount) {
+    return <Navigate to={ROUTES.LOCKSCREEN} replace />;
+  }
+
+  return <Navigate to={ROUTES.SIGNUP} replace />;
+}
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
-  const masterKey = SessionManager.getMasterKey();
-  if (!masterKey) return <Navigate to={ROUTES.ROOT} replace />;
+  const { hasSession } = getAuthState();
+
+  if (!hasSession) {
+    return <Navigate to={ROUTES.ROOT} replace />;
+  }
+
   return children;
 };
 
 const PublicRoute = ({ children }: { children: JSX.Element }) => {
-  console.log("public", location.pathname)
-  const masterKey = SessionManager.getMasterKey();
-  if (masterKey) return <Navigate to={ROUTES.HOME} replace />;
-  const publicID = CacheService.retrieve(CACHE_KEYS.PUBLIC_ID);
-  if (publicID) return children;
-  if (location.pathname === ROUTES.ROOT || location.pathname === ROUTES.SIGNUP) {
-      return children;
+  const { hasSession } = getAuthState();
+
+  if (hasSession) {
+    return <Navigate to={ROUTES.HOME} replace />;
   }
-  return <SignUp />;
+
+  return children;
 };
 
-function InitialRedirect() {
-  const masterKey = SessionManager.getMasterKey();
-  const publicID = CacheService.retrieve(CACHE_KEYS.PUBLIC_ID);
-  if (masterKey) return <Navigate to={ROUTES.HOME} replace />;
-  if (publicID) return <Navigate to={ROUTES.LOCKSCREEN} replace />;
-  return <SignUp />;
-}
-
 function Navigation() {
-  // TODO: To be checked
-
   useEffect(() => {
-    // 1. Vérifie la préférence système
+    // 1. Check the system preference
     const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
-    // 2. Applique la classe .dark à l'élément racine
+    // 2. Set the dark mode class on the root element
     if (isDark) {
       document.documentElement.classList.add("dark");
     } else {
       document.documentElement.classList.remove("dark");
     }
 
-    // 3. Optionnel : Écouter le changement en temps réel sans rafraîchir
+    // 3. Optional: Listen for real-time changes without refreshing
     const watcher = window.matchMedia("(prefers-color-scheme: dark)");
     const listener = (e: MediaQueryListEvent) => {
       if (e.matches) document.documentElement.classList.add("dark");
@@ -64,10 +68,12 @@ function Navigation() {
   return (
     <div className="flex flex-1 flex-col h-full w-full overflow-hidden bg-background">
       <Routes>
+        {/* Redirect Initial*/}
         <Route path={ROUTES.ROOT} element={<InitialRedirect />} />
 
+        {/* Public Routes */}
         <Route
-          path={ROUTES.ROOT}
+          path={ROUTES.SIGNUP}
           element={
             <PublicRoute>
               <SignUp />
@@ -93,6 +99,7 @@ function Navigation() {
           }
         />
 
+        {/* Private Routes */}
         <Route
           path={ROUTES.HOME}
           element={
@@ -101,24 +108,7 @@ function Navigation() {
             </ProtectedRoute>
           }
         />
-        {/*<Route
-          path={ROUTES.CREATE_PASSWORD}
-          element={
-            <ProtectedRoute>
-              <CreatePassword />
-            </ProtectedRoute>
-          }
-        />*/}
-        {/* <Route
-          path={ROUTES.VIEW_PASSWORD}
-          element={
-            <ProtectedRoute>
-              <ViewPassword />
-            </ProtectedRoute>
-          }
-        /> */}
 
-        <Route />
         <Route
           path={ROUTES.SETTINGS}
           element={
@@ -127,8 +117,6 @@ function Navigation() {
             </ProtectedRoute>
           }
         />
-
-        <Route />
       </Routes>
     </div>
   );
