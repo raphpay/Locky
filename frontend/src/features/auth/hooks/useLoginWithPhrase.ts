@@ -10,10 +10,13 @@ export default function useLoginWithPhrase() {
 
   const [recoveryPhrase, setRecoveryPhrase] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   async function setUpPassword() {
+    setIsLoading(true);
     const isValid = RecoverySeedService.validateMnemonic(recoveryPhrase);
     if (!isValid) {
+      setIsLoading(false);
       setErrorMessage(ERROR_MESSAGES.INVALID_PHRASE);
       return;
     } else {
@@ -24,7 +27,9 @@ export default function useLoginWithPhrase() {
     try {
       await AuthService.verifyAccountExistence(recoveryPhrase);
       navigate(ROUTES.LOGIN, { state: { recoveryPhrase } });
+      setIsLoading(false);
     } catch {
+      setIsLoading(false);
       setErrorMessage(ERROR_MESSAGES.NO_LINKED__ACCOUNT);
     }
   }
@@ -33,6 +38,7 @@ export default function useLoginWithPhrase() {
     errorMessage,
     recoveryPhrase,
     setRecoveryPhrase,
+    isLoading,
     setUpPassword,
   };
 }

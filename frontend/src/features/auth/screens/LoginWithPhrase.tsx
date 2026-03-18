@@ -3,13 +3,20 @@ import { Button } from "../../../ui/components/radix/Button";
 import { ArrowRight } from "lucide-react";
 import useLoginWithPhrase from "../hooks/useLoginWithPhrase";
 import BackButton from "../../../ui/components/custom/BackButton";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 function LoginWithPhrase() {
-  const { errorMessage, recoveryPhrase, setRecoveryPhrase, setUpPassword } =
-    useLoginWithPhrase();
+  const {
+    errorMessage,
+    recoveryPhrase,
+    setRecoveryPhrase,
+    isLoading,
+    setUpPassword,
+  } = useLoginWithPhrase();
 
   return (
     <div className="flex flex-1 flex-col items-center justify-center h-full w-full gap-4">
+      <LoadingSpinner isLoading={isLoading} />
       <BackButton />
 
       <h1 className="text-primary-text text-2xl">
