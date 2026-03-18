@@ -7,6 +7,7 @@ import UserService from "../../user/UserService";
 import SessionManager from "../../session/SessionManager";
 import CacheService from "../../cache/CacheService";
 import { CACHE_KEYS } from "../../cache/CACHE_KEYS";
+import promptTouchID from "../../bio/promptTouchID";
 
 export default function useLoginScreen() {
   const navigate = useNavigate();
@@ -39,18 +40,7 @@ export default function useLoginScreen() {
       await UserService.retrieveAccount(recoveryPhrase, pin);
       setIsLoading(false);
 
-      // Prompt touch ID
-      const res = await window.electron.promptTouchID(
-        "Utiliser votre empreinte pour sécuriser vos données.",
-      );
-
-      if (res === true) {
-        const masterKey = SessionManager.getMasterKey();
-        if (!masterKey) throw new Error("Invalid session");
-        const encryptedKey = await window.electron.encrypt(masterKey);
-        CacheService.store(CACHE_KEYS.BIOMETRICS_WRAP, encryptedKey);
-      }
-      // End Prompt touch ID
+      await promptTouchID();
 
       navigate(ROUTES.HOME);
     } catch (error) {
