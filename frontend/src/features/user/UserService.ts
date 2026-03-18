@@ -49,21 +49,24 @@ const UserService = {
     SessionManager.setMasterKey(masterKey);
   },
 
-  async retrieveAccount(mnemonic: string, pin: string) {
-    const masterKey = SessionManager.generateMasterKey(mnemonic);
-    const publicID = this.generatePublicID(masterKey);
+  async retrieveAccount(recoveryPhrase: string, pin: string) {
+    const masterKey = SessionManager.generateMasterKey(recoveryPhrase);
+    const publicID = CacheService.retrieve(CACHE_KEYS.PUBLIC_ID) as string;
+
+    if (!publicID) {
+      throw new Error("No master key found.");
+    }
+
     const localPinWrap = SecurityService.encryptData(masterKey, pin);
 
     try {
       await AuthService.getAuthDataFromFirestore(publicID);
-      await AuthService.reconnectUserIfNeeded();
     } catch (error) {
       console.error("Error retrieving account:", error);
       throw new Error("Error retrieving account.");
     }
 
     CacheService.store(CACHE_KEYS.PIN_WRAP, localPinWrap);
-    CacheService.store(CACHE_KEYS.PUBLIC_ID, publicID);
     SessionManager.setMasterKey(masterKey);
   },
 };

@@ -5,7 +5,7 @@ import useLoginWithPhrase from "../hooks/useLoginWithPhrase";
 import BackButton from "../../../ui/components/custom/BackButton";
 
 function LoginWithPhrase() {
-  const { recoveryPhrase, setRecoveryPhrase, setUpPassword } =
+  const { errorMessage, recoveryPhrase, setRecoveryPhrase, setUpPassword } =
     useLoginWithPhrase();
 
   return (
@@ -18,6 +18,7 @@ function LoginWithPhrase() {
       <p className="text-xl text-secondary-text">
         Seule cette phrase vous permettra de relier votre compte à cet appareil.
       </p>
+      {errorMessage && <p className="text-accent">{errorMessage}</p>}
       <div className="flex flex-row gap-2">
         <Input
           id={"recoveryPhrase"}
@@ -28,12 +29,14 @@ function LoginWithPhrase() {
           autoComplete="off"
           className="w-150"
         />
-        <Button onClick={setUpPassword}>
+        <Button disabled={recoveryPhrase.length === 0} onClick={setUpPassword}>
           <ArrowRight />
         </Button>
       </div>
 
-      <Button onClick={setUpPassword}>Continuer</Button>
+      <Button disabled={recoveryPhrase.length === 0} onClick={setUpPassword}>
+        Continuer
+      </Button>
     </div>
   );
 }

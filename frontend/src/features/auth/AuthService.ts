@@ -28,8 +28,8 @@ const AuthService = {
    * @returns The current user's data from Firestore.
    */
   async getAuthDataFromFirestore(publicID: string) {
+    // Force reconnection to ensure the user is authenticated with Firebase Auth
     await this.reconnectUserIfNeeded();
-
     if (!publicID) {
       // If no ID, then the app is new
       // TODO: Redirect to SignUp screen
@@ -72,7 +72,6 @@ const AuthService = {
 
   async loginWithPin(pin: string) {
     const publicID = CacheService.retrieve(CACHE_KEYS.PUBLIC_ID) as string;
-    console.log("login with pin publicID", publicID);
 
     try {
       const localPin = CacheService.retrieve(CACHE_KEYS.PIN_WRAP) as string;
@@ -108,7 +107,6 @@ const AuthService = {
     const publicID = UserService.generatePublicID(masterKey);
 
     await this.getAuthDataFromFirestore(publicID);
-    await this.reconnectUserIfNeeded();
 
     SessionManager.setMasterKey(masterKey);
     CacheService.store(CACHE_KEYS.PUBLIC_ID, publicID);
@@ -129,6 +127,16 @@ const AuthService = {
     const decryptedKey = await window.electron.decrypt(blob);
     SessionManager.setMasterKey(decryptedKey);
     await this.reconnectUserIfNeeded();
+  },
+
+  async verifyAccountExistence(recoveryPhrase: string) {
+    const masterKey = SessionManager.generateMasterKey(recoveryPhrase);
+    const publicID = UserService.generatePublicID(masterKey);
+
+    await this.getAuthDataFromFirestore(publicID);
+
+    // Don't save the master key to let the user choose its local PIN.
+    CacheService.store(CACHE_KEYS.PUBLIC_ID, publicID);
   },
 
   /**
