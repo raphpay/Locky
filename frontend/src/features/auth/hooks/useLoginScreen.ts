@@ -34,6 +34,13 @@ export default function useLoginScreen() {
     setStep((s) => Math.max(0, s - 1));
   }
 
+  async function backToRoot() {
+    CacheService.clear();
+    await AuthService.signOut();
+    SessionManager.clear();
+    navigate(ROUTES.ROOT);
+  }
+
   async function handleLogIn() {
     setIsLoading(true);
     try {
@@ -69,6 +76,7 @@ export default function useLoginScreen() {
     isContinueDisabled,
     nextStep,
     previousStep,
+    backToRoot,
     handleLogIn,
   };
 }

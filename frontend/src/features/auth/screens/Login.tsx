@@ -16,13 +16,14 @@ function Login() {
     isContinueDisabled,
     nextStep,
     previousStep,
+    backToRoot,
   } = useLoginScreen();
 
   return (
     <div className="flex flex-1 flex-col items-center justify-center h-full w-full gap-4 m-auto">
       <LoadingSpinner isLoading={isLoading} />
 
-      {step !== 0 && <BackButton onClick={previousStep} />}
+      {step !== 0 && <BackButton onClick={backToRoot} />}
 
       <div className="flex flex-col items-center justify-center w-full">
         <h1
