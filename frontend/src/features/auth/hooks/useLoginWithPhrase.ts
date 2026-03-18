@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import { ROUTES } from "../../navigation/Routes";
 import RecoverySeedService from "../../recoverySeed/RecoverySeedService";
 import AuthService from "../AuthService";
+import { ERROR_MESSAGES } from "../enum/errorMessages";
 
 export default function useLoginWithPhrase() {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ export default function useLoginWithPhrase() {
   async function setUpPassword() {
     const isValid = RecoverySeedService.validateMnemonic(recoveryPhrase);
     if (!isValid) {
-      setErrorMessage("Phrase de récupération invalide");
+      setErrorMessage(ERROR_MESSAGES.INVALID_PHRASE);
       return;
     } else {
       setErrorMessage(null);
@@ -24,7 +25,7 @@ export default function useLoginWithPhrase() {
       await AuthService.verifyAccountExistence(recoveryPhrase);
       navigate(ROUTES.LOGIN, { state: { recoveryPhrase } });
     } catch {
-      setErrorMessage("Pas de compte associé à cette phrase de récupération");
+      setErrorMessage(ERROR_MESSAGES.NO_LINKED__ACCOUNT);
     }
   }
 
