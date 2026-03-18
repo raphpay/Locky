@@ -45,7 +45,6 @@ function CreatePasswordModal({
           className="w-full"
           id="create-password-form-modal"
           onSubmit={(e) => {
-            console.log("submit", e);
             e.preventDefault();
             e.stopPropagation();
             form.handleSubmit();

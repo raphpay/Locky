@@ -7,6 +7,7 @@ import Home from "../home/screens/Home";
 import SettingsScreen from "../settings/screens/SettingsScreen";
 import { ROUTES } from "./Routes";
 import getAuthState from "../auth/logic/getAuthState";
+import Login from "../auth/screens/Login";
 
 function InitialRedirect() {
   const { hasSession, hasAccount } = getAuthState();
@@ -95,6 +96,15 @@ function Navigation() {
           element={
             <PublicRoute>
               <LoginWithPhrase />
+            </PublicRoute>
+          }
+        />
+
+        <Route
+          path={ROUTES.LOGIN}
+          element={
+            <PublicRoute>
+              <Login />
             </PublicRoute>
           }
         />

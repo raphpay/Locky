@@ -13,6 +13,7 @@ import CacheService from "../../cache/CacheService";
 import SessionManager from "../../session/SessionManager";
 import { useNavigate } from "react-router";
 import { ROUTES } from "../../navigation/Routes";
+import { SecureInput } from "../../../ui/components/custom/SecureInput";
 
 function LockScreen() {
   const {
@@ -37,11 +38,9 @@ function LockScreen() {
   const navigate = useNavigate();
 
   async function handleForceSignOut() {
-    console.log("1");
     CacheService.clear();
     await AuthService.signOut();
     SessionManager.clear();
-    console.log("2");
     navigate(ROUTES.ROOT);
   }
 
@@ -75,12 +74,12 @@ function LockScreen() {
 
       {lockScreenState === LOCK_SCREEN_STATES.MASTER_PASSWORD && (
         <div className="flex flex-row gap-2">
-          <Input
+          <SecureInput
             id={"masterPassword"}
             name={"masterPassword"}
             value={masterPassword}
             onChange={(e) => setMasterPassword(e.target.value)}
-            placeholder={"Mot_de_passe123"}
+            placeholder="Mot_de_passe123"
             autoComplete="off"
             className="w-150"
           />

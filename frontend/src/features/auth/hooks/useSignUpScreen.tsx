@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
-import { CACHE_KEYS } from "../../cache/CACHE_KEYS";
-import CacheService from "../../cache/CacheService";
 import { ROUTES } from "../../navigation/Routes";
 import RecoverySeedService from "../../recoverySeed/RecoverySeedService";
-import SessionManager from "../../session/SessionManager";
 import UserService from "../../user/UserService";
 import AuthService from "../AuthService";
 import { SIGN_UP_STEPS, TOAST_MESSAGE } from "../enum/signUpStates";
+import promptTouchID from "../../bio/promptTouchID";
 
 export default function useSignUpScreen() {
   const navigate = useNavigate();
@@ -54,16 +52,7 @@ export default function useSignUpScreen() {
 
       setIsLoading(false);
 
-      const res = await window.electron.promptTouchID(
-        "Utiliser votre empreinte pour sécuriser vos données.",
-      );
-
-      if (res === true) {
-        const masterKey = SessionManager.getMasterKey();
-        if (!masterKey) throw new Error("Invalid session");
-        const encryptedKey = await window.electron.encrypt(masterKey);
-        CacheService.store(CACHE_KEYS.BIOMETRICS_WRAP, encryptedKey);
-      }
+      await promptTouchID();
 
       navigate(ROUTES.HOME);
     } catch (error) {
