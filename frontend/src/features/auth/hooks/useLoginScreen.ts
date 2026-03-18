@@ -2,11 +2,10 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { ROUTES } from "../../navigation/Routes";
 import AuthService from "../AuthService";
-import { SIGN_UP_STEPS, TOAST_MESSAGE } from "../enum/signUpStates";
+import { SIGN_UP_STEPS } from "../enum/signUpStates";
 import UserService from "../../user/UserService";
 import SessionManager from "../../session/SessionManager";
 import CacheService from "../../cache/CacheService";
-import { CACHE_KEYS } from "../../cache/CACHE_KEYS";
 import promptTouchID from "../../bio/promptTouchID";
 
 export default function useLoginScreen() {
@@ -28,10 +27,6 @@ export default function useLoginScreen() {
     } else {
       setStep((s) => s + 1);
     }
-  }
-
-  function previousStep() {
-    setStep((s) => Math.max(0, s - 1));
   }
 
   async function backToRoot() {
@@ -75,7 +70,6 @@ export default function useLoginScreen() {
     currentConfig,
     isContinueDisabled,
     nextStep,
-    previousStep,
     backToRoot,
     handleLogIn,
   };

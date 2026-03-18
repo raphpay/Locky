@@ -15,7 +15,6 @@ function Login() {
     currentConfig,
     isContinueDisabled,
     nextStep,
-    previousStep,
     backToRoot,
   } = useLoginScreen();
 
