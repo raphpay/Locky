@@ -11,9 +11,7 @@ import { CACHE_KEYS } from "../../cache/CACHE_KEYS";
 export default function useLoginScreen() {
   const navigate = useNavigate();
   const location = useLocation();
-  console.log("location", location);
   const { recoveryPhrase } = location.state || {};
-  console.log("recoveryPhrase", recoveryPhrase);
 
   const [step, setStep] = useState<number>(3);
   const currentConfig = SIGN_UP_STEPS[step] || SIGN_UP_STEPS[0];
