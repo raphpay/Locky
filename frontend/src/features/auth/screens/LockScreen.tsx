@@ -37,11 +37,9 @@ function LockScreen() {
   const navigate = useNavigate();
 
   async function handleForceSignOut() {
-    console.log("1");
     CacheService.clear();
     await AuthService.signOut();
     SessionManager.clear();
-    console.log("2");
     navigate(ROUTES.ROOT);
   }
 

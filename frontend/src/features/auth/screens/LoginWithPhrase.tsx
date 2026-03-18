@@ -1,18 +1,16 @@
 import { Input } from "../../../ui/components/radix/Input";
 import { Button } from "../../../ui/components/radix/Button";
 import { ArrowRight } from "lucide-react";
-import LoadingSpinner from "../components/LoadingSpinner";
 import useLoginWithPhrase from "../hooks/useLoginWithPhrase";
 import BackButton from "../../../ui/components/custom/BackButton";
 
 function LoginWithPhrase() {
-  const { isLoading, recoveryPhrase, setRecoveryPhrase, handleLogIn } =
+  const { recoveryPhrase, setRecoveryPhrase, setUpPassword } =
     useLoginWithPhrase();
 
   return (
     <div className="flex flex-1 flex-col items-center justify-center h-full w-full gap-4">
       <BackButton />
-      <LoadingSpinner isLoading={isLoading} />
 
       <h1 className="text-primary-text text-2xl">
         Entrez votre phrase de récupération
@@ -30,12 +28,12 @@ function LoginWithPhrase() {
           autoComplete="off"
           className="w-150"
         />
-        <Button onClick={handleLogIn}>
+        <Button onClick={setUpPassword}>
           <ArrowRight />
         </Button>
       </div>
 
-      <Button onClick={handleLogIn}>Continuer</Button>
+      <Button onClick={setUpPassword}>Continuer</Button>
     </div>
   );
 }

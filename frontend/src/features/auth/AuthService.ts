@@ -72,6 +72,7 @@ const AuthService = {
 
   async loginWithPin(pin: string) {
     const publicID = CacheService.retrieve(CACHE_KEYS.PUBLIC_ID) as string;
+    console.log("login with pin publicID", publicID);
 
     try {
       const localPin = CacheService.retrieve(CACHE_KEYS.PIN_WRAP) as string;
@@ -81,7 +82,6 @@ const AuthService = {
       }
 
       const decryptedMasterKey = SecurityService.decryptData(localPin, pin);
-      console.log("pin", decryptedMasterKey);
 
       // If the pin is valid, decrypt the master key
       if (!decryptedMasterKey) {
@@ -104,7 +104,6 @@ const AuthService = {
     }
 
     const masterKey = SessionManager.generateMasterKey(mnemonic);
-    console.log("masterKey", masterKey);
 
     const publicID = UserService.generatePublicID(masterKey);
 

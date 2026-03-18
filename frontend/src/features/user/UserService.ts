@@ -7,6 +7,7 @@ import { db } from "../firebase/init";
 import SecurityService from "../security/SecurityService";
 import SessionManager from "../session/SessionManager";
 import generateWrappedKey from "../wrappedKey/generateWrappedKey";
+import AuthService from "../auth/AuthService";
 
 const UserService = {
   /**
@@ -45,6 +46,24 @@ const UserService = {
       console.error("Error creating user:", error);
     }
 
+    SessionManager.setMasterKey(masterKey);
+  },
+
+  async retrieveAccount(mnemonic: string, pin: string) {
+    const masterKey = SessionManager.generateMasterKey(mnemonic);
+    const publicID = this.generatePublicID(masterKey);
+    const localPinWrap = SecurityService.encryptData(masterKey, pin);
+
+    try {
+      await AuthService.getAuthDataFromFirestore(publicID);
+      await AuthService.reconnectUserIfNeeded();
+    } catch (error) {
+      console.error("Error retrieving account:", error);
+      throw new Error("Error retrieving account.");
+    }
+
+    CacheService.store(CACHE_KEYS.PIN_WRAP, localPinWrap);
+    CacheService.store(CACHE_KEYS.PUBLIC_ID, publicID);
     SessionManager.setMasterKey(masterKey);
   },
 };

@@ -54,6 +54,7 @@ export default function useSignUpScreen() {
 
       setIsLoading(false);
 
+      // Prompt touch ID
       const res = await window.electron.promptTouchID(
         "Utiliser votre empreinte pour sécuriser vos données.",
       );
@@ -64,6 +65,7 @@ export default function useSignUpScreen() {
         const encryptedKey = await window.electron.encrypt(masterKey);
         CacheService.store(CACHE_KEYS.BIOMETRICS_WRAP, encryptedKey);
       }
+      // End Prompt touch ID
 
       navigate(ROUTES.HOME);
     } catch (error) {
